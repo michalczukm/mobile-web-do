@@ -31,9 +31,13 @@ export class TestResult {
         const failed = [];
 
         tests.forEach(test => {
-            test()
-                ? passed.push(test)
-                : failed.push(test);
+            try {
+                test()
+                    ? passed.push(test)
+                    : failed.push(test);
+            } catch (ex) {
+                failed.push(test);
+            }
         });
 
         return new TestResult(passed, failed);
