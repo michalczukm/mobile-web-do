@@ -1,0 +1,28 @@
+{
+  "name": "mobile-web-do_server",
+  "version": "1.0.0",
+  "description": "Presentation of mobile web capabilities",
+  "main": "server.js",
+  "scripts": {
+    "eslint": "eslint",
+    "lint": "eslint . --ext .js",
+    "nodemon": "nodemon",
+    "start": "nodemon --inspect server.js 5050"
+  },
+  "private": true,
+  "author": "Michal Michalczuk <michalczukm@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^16.6.2",
+    "hapi-swagger": "^8.0.0",
+    "inert": "^4.2.1",
+    "vision": "^4.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.9.0",
+    "nodemon": "^1.12.1"
+  },
+  "engines": {
+    "node": "8.1.2"
+  }
+}
