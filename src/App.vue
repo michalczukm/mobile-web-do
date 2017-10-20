@@ -1,59 +1,63 @@
 <template>
-  <div id="app">
-    <header>
-      <span>Vue.js PWA</span>
-    </header>
-    <main>
-      <img src="./assets/logo.png" alt="Vue.js PWA">
-      <hello></hello>
-    </main>
-  </div>
+    <div id="app">
+        <header>
+            <span>POC</span>
+        </header>
+        <main>
+            <feature v-for="feature in features" v-bind:key="feature.id" v-bind:feature="feature">
+            </feature>
+        </main>
+    </div>
 </template>
 
 <script>
-import Hello from './components/Hello'
+import Feature from './components/Feature';
+import features from './features/features.service';
 
 export default {
-  name: 'app',
-  components: {
-    Hello
-  }
-}
+    name: 'app',
+    components: {
+        Feature
+    },
+    data: () => ({
+        features: features.get()
+    })
+};
 </script>
 
 <style>
 body {
-  margin: 0;
+    margin: 0;
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
 }
 
 main {
-  text-align: center;
-  margin-top: 40px;
+    text-align: center;
+    margin-top: 40px;
 }
 
 header {
-  margin: 0;
-  height: 56px;
-  padding: 0 16px 0 24px;
-  background-color: #35495E;
-  color: #ffffff;
+    margin: 0;
+    height: 56px;
+    padding: 0 16px 0 24px;
+    background-color: #35495E;
+    color: #ffffff;
 }
 
 header span {
-  display: block;
-  position: relative;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: .02em;
-  font-weight: 400;
-  box-sizing: border-box;
-  padding-top: 16px;
+    display: block;
+    position: relative;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: .02em;
+    font-weight: 400;
+    box-sizing: border-box;
+    padding-top: 16px;
 }
 </style>
