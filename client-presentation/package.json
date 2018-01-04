@@ -11,6 +11,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "socket.io-client": "^2.0.4",
     "vue": "^2.3.3"
   },
   "devDependencies": {

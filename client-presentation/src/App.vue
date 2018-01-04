@@ -11,8 +11,11 @@
 </template>
 
 <script>
+import io from 'socket.io-client';
 import Feature from './components/Feature';
 import features from './features/features.service';
+
+const socket = io('http://localhost:5051');
 
 export default {
     name: 'app',
@@ -21,7 +24,18 @@ export default {
     },
     data: () => ({
         features: features.get()
-    })
+    }),
+    created: function () {
+        socket.on('connect', () => {
+            // todo  check actual state -> send empty message
+            console.log('=== connected!');
+        });
+        socket.on('switch-slide', (message) => console.log('=== slide', message));
+        socket.on('finish', (_) => console.log('=== finish'));
+    },
+    destroyed: function () {
+
+    }
 };
 </script>
 

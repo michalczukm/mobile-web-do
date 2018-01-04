@@ -5,6 +5,8 @@ const inert = require('inert');
 const vision = require('vision');
 const hapiSwagger = require('hapi-swagger');
 const Pack = require('./package.json');
+const io = require('socket.io');
+const Rx = require('@reactivex/rxjs');
 
 const swaggerOptions = {
   basePath: '/api/',
@@ -16,22 +18,41 @@ const swaggerOptions = {
   }
 };
 
+const messageSubject = new Rx.Subject();
+
 const server = new Hapi.Server();
 
-server.connection({
+const apiConnection = server.connection({
+  labels: ['api'],
   port: process.env.PORT || 5050,
   routes: {
     cors: true
   }
 });
 
-server.realm.modifiers.route.prefix = '/api';
+const websocketsConnection = server.connection({
+  labels: ['websockets'],
+  port: process.env.PORT + 1 || 5051,
+  routes: {
+    cors: true
+  }
+})
+
+const websocket = io(websocketsConnection.listener);
+
+websocket.on('connection', function (socket) {
+  messageSubject.subscribe(message => socket.emit('switch-slide', message));
+});
+websocket.on('disconnect', () => console.log(`${client} disconnected`));
 
 const addRoutes = () => {
-  server.route({
+  apiConnection.route({
     method: ['GET', 'POST', 'PUT', 'DELETE'],
     path: '/',
     handler: (request, reply) => {
+      messageSubject.next({
+        content: `The ${new Date()} is here.`
+      });
       return reply(`Test message`);
     }
   });
@@ -39,7 +60,10 @@ const addRoutes = () => {
 
 server.register([
   inert, vision,
-  { register: hapiSwagger, options: swaggerOptions }
+  {
+    register: hapiSwagger,
+    options: swaggerOptions
+  }
 ]).then(() => {
 
   addRoutes();
@@ -48,7 +72,8 @@ server.register([
     if (err) {
       throw err;
     }
-    console.log('Server running at:', server.info.uri);
+
+    server.connections.forEach(connection => console.log('Server running at:', connection.info.uri));
   });
 }).catch(error => {
   console.error('Server plugins registration failed!');

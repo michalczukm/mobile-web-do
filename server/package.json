@@ -13,14 +13,16 @@
   "author": "Michal Michalczuk <michalczukm@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@reactivex/rxjs": "^5.5.6",
     "hapi": "^16.6.2",
     "hapi-swagger": "^8.0.0",
     "inert": "^4.2.1",
+    "socket.io": "^2.0.4",
     "vision": "^4.1.1"
   },
   "devDependencies": {
-    "eslint": "^4.9.0",
-    "nodemon": "^1.12.1"
+    "eslint": "^4.14.0",
+    "nodemon": "^1.14.7"
   },
   "engines": {
     "node": "8.1.2"
