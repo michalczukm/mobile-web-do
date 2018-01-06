@@ -14,6 +14,7 @@
 import io from 'socket.io-client';
 import Feature from './components/Feature';
 import features from './features/features.service';
+import browserInfoService from './browser-info/browser-info.service';
 
 const socket = io('http://localhost:5051');
 
@@ -32,6 +33,8 @@ export default {
         });
         socket.on('switch-slide', (message) => console.log('=== slide', message));
         socket.on('finish', (_) => console.log('=== finish'));
+
+        browserInfoService.sendInfo();
     },
     destroyed: function () {
 
