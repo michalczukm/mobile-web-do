@@ -1,6 +1,6 @@
 import prune from 'json-prune';
-import logger from '../logging/logger';
-import sessionService from '../sessions/sessions.service';
+import { logger } from '../logging';
+import sessions from '../sessions';
 
 const getInfo = () => {
     // some browsers doesn't allow iteration over 'plugins' and 'mimeTypes'
@@ -21,9 +21,7 @@ const getInfo = () => {
 };
 
 const sendInfo = () => {
-    console.log('xyz');
-
-    const sessionId = sessionService.getCurrentSessionId();
+    const sessionId = sessions.getCurrentSessionId();
 
     let payloadString = {};
     try {
@@ -36,9 +34,9 @@ const sendInfo = () => {
         throw error;
     }
 
-    console.log('=== browser info:', payloadString);
+    logger.debug('browser info:', payloadString);
 };
 
 export default {
-    sendInfo: sendInfo
+    sendInfo
 };

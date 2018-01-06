@@ -13,7 +13,7 @@
 <script>
 import io from 'socket.io-client';
 import Feature from './components/Feature';
-import features from './features/features.service';
+import features from './features';
 import browserInfoService from './browser-info/browser-info.service';
 
 const socket = io('http://localhost:5051');
