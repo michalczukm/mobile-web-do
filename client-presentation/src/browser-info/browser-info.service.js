@@ -5,7 +5,7 @@ import {
 import config from '../configuration';
 import sessions from '../sessions';
 
-function getInfo () {
+function getInfo() {
     // some browsers doesn't allow iteration over 'plugins' and 'mimeTypes'
     const navigatorInfo = {};
     for (let i in navigator) navigatorInfo[i] = navigator[i];
@@ -26,14 +26,17 @@ function getInfo () {
 function sendInfo() {
     const sessionId = sessions.getCurrentSessionId();
 
+    var pruneOptions = {
+        replacer: (value, defaultValue) => typeof value === 'function' ? JSON.stringify(value.toString()) : defaultValue,
+        inheritedProperties: true
+    };
+
     let payloadString = {};
     try {
         payloadString = prune({
             browserInfo: getInfo(),
             sessionId: sessionId
-        }, {
-            inheritedProperties: true
-        });
+        }, pruneOptions);
     } catch (error) {
         logger.error('Cannot serialize browser info to JSON', error);
         throw error;
@@ -41,6 +44,8 @@ function sendInfo() {
 
     fetch(`${config.apiUrl}/browser-info`, {
         method: 'post',
+        mode: 'cors',
+        redirect: 'follow',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
