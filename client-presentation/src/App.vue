@@ -4,6 +4,7 @@
             <span>POC</span>
         </header>
         <main>
+            <button v-on:click="testBrowserInfo">test sending browser info</button>
             <feature v-for="feature in features" v-bind:key="feature.id" v-bind:feature="feature">
             </feature>
         </main>
@@ -26,6 +27,9 @@ export default {
     data: () => ({
         features: features.get()
     }),
+    methods: {
+        testBrowserInfo: () => browserInfoService.sendInfo()
+    },
     created: function () {
         socket.on('connect', () => {
             // todo  check actual state -> send empty message

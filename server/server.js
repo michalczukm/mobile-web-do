@@ -46,6 +46,8 @@ websocket.on('connection', function (socket) {
 websocket.on('disconnect', () => console.log(`${client} disconnected`));
 
 const addRoutes = () => {
+  require('./modules/presentation/presentation.routes')(apiConnection);
+
   apiConnection.route({
     method: ['GET', 'POST', 'PUT', 'DELETE'],
     path: '/',

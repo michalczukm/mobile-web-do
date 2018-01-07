@@ -1,8 +1,11 @@
 import prune from 'json-prune';
-import { logger } from '../logging';
+import {
+    logger
+} from '../logging';
+import config from '../configuration';
 import sessions from '../sessions';
 
-const getInfo = () => {
+function getInfo () {
     // some browsers doesn't allow iteration over 'plugins' and 'mimeTypes'
     const navigatorInfo = {};
     for (let i in navigator) navigatorInfo[i] = navigator[i];
@@ -20,7 +23,7 @@ const getInfo = () => {
     };
 };
 
-const sendInfo = () => {
+function sendInfo() {
     const sessionId = sessions.getCurrentSessionId();
 
     let payloadString = {};
@@ -28,13 +31,22 @@ const sendInfo = () => {
         payloadString = prune({
             browserInfo: getInfo(),
             sessionId: sessionId
-        }, {inheritedProperties: true});
+        }, {
+            inheritedProperties: true
+        });
     } catch (error) {
         logger.error('Cannot serialize browser info to JSON', error);
         throw error;
     }
 
-    logger.debug('browser info:', payloadString);
+    fetch(`${config.apiUrl}/browser-info`, {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: payloadString
+    });
 };
 
 export default {
