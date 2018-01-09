@@ -7,7 +7,9 @@
     "eslint": "eslint",
     "lint": "eslint . --ext .js",
     "nodemon": "nodemon",
-    "start": "nodemon --inspect server.js 5050"
+    "start": "nodemon --inspect server.js 5050",
+    "nodemon:build": "nodemon --exec ts-node -- ./src/server.ts",
+    "nodemon:start": "npm run nodemon:build"
   },
   "private": true,
   "author": "Michal Michalczuk <michalczukm@gmail.com>",
@@ -21,8 +23,12 @@
     "vision": "^4.1.1"
   },
   "devDependencies": {
-    "eslint": "^4.14.0",
-    "nodemon": "^1.14.7"
+    "@types/hapi": "^16.1.12",
+    "@types/joi": "^13.0.4",
+    "nodemon": "^1.14.7",
+    "ts-node": "^4.1.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
   },
   "engines": {
     "node": "8.1.2"

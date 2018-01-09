@@ -4,7 +4,7 @@ const Hapi = require('hapi');
 const inert = require('inert');
 const vision = require('vision');
 const hapiSwagger = require('hapi-swagger');
-const Pack = require('./package.json');
+const Pack = require('../package.json');
 const io = require('socket.io');
 const Rx = require('@reactivex/rxjs');
 
@@ -43,7 +43,7 @@ const websocket = io(websocketsConnection.listener);
 websocket.on('connection', function (socket) {
   messageSubject.subscribe(message => socket.emit('switch-slide', message));
 });
-websocket.on('disconnect', () => console.log(`${client} disconnected`));
+websocket.on('disconnect', (client) => console.log(`${client} disconnected`));
 
 const addRoutes = () => {
   require('./modules/presentation/presentation.routes')(apiConnection);

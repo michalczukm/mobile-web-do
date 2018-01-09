@@ -64,3 +64,6 @@ fabric.properties
 *.iml
 
 .vscode
+
+###### Project specific ######
+dist
