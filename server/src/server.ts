@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Hapi from 'hapi';
 import * as inert from 'inert';
 import * as vision from 'vision';
@@ -45,7 +43,7 @@ const websocket = io(websocketsConnection.listener);
 websocket.on('connection', function (socket) {
   messageSubject.subscribe(message => socket.emit('switch-slide', message));
 });
-websocket.on('disconnect', (client) => console.log(`${client} disconnected`));
+websocket.on('disconnect', () => console.log(`client disconnected`));
 
 const addRoutes = () => {
   apiConnection.route({
@@ -65,11 +63,11 @@ const loadModules = (serverInstance: Hapi.Server) => {
 }
 
 server.register([
-  inert, vision,
+  inert, vision as any as Hapi.PluginFunction<any>,
   {
     register: hapiSwagger,
     options: swaggerOptions
-  }
+  } as Hapi.PluginRegistrationObject<any>
 ]).then(() => {
 
   addRoutes();
@@ -82,7 +80,7 @@ server.register([
 
     server.connections.forEach(connection => console.log('Server running at:', connection.info.uri));
   });
-}).catch(error => {
+}).catch((error: Error) => {
   console.error('Server plugins registration failed!');
   throw error;
 });

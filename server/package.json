@@ -24,7 +24,10 @@
   },
   "devDependencies": {
     "@types/hapi": "^16.1.12",
+    "@types/inert": "^4.2.5",
     "@types/joi": "^13.0.4",
+    "@types/socket.io": "^1.4.31",
+    "@types/vision": "^4.1.4",
     "nodemon": "^1.14.7",
     "ts-node": "^4.1.0",
     "tslint": "^5.8.0",
