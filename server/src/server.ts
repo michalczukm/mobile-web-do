@@ -1,12 +1,14 @@
 'use strict';
 
-const Hapi = require('hapi');
-const inert = require('inert');
-const vision = require('vision');
-const hapiSwagger = require('hapi-swagger');
+import * as Hapi from 'hapi';
+import * as inert from 'inert';
+import * as vision from 'vision';
+import * as hapiSwagger from 'hapi-swagger';
+import * as io from 'socket.io';
+import { Subject } from '@reactivex/rxjs';
+import presentationModule from './modules/presentation';
+
 const Pack = require('../package.json');
-const io = require('socket.io');
-const Rx = require('@reactivex/rxjs');
 
 const swaggerOptions = {
   basePath: '/api/',
@@ -18,7 +20,7 @@ const swaggerOptions = {
   }
 };
 
-const messageSubject = new Rx.Subject();
+const messageSubject = new Subject();
 
 const server = new Hapi.Server();
 
@@ -46,8 +48,6 @@ websocket.on('connection', function (socket) {
 websocket.on('disconnect', (client) => console.log(`${client} disconnected`));
 
 const addRoutes = () => {
-  require('./modules/presentation/presentation.routes')(apiConnection);
-
   apiConnection.route({
     method: ['GET', 'POST', 'PUT', 'DELETE'],
     path: '/',
@@ -60,6 +60,10 @@ const addRoutes = () => {
   });
 };
 
+const loadModules = (serverInstance: Hapi.Server) => {
+  presentationModule.register(serverInstance);
+}
+
 server.register([
   inert, vision,
   {
@@ -69,6 +73,7 @@ server.register([
 ]).then(() => {
 
   addRoutes();
+  loadModules(apiConnection);
 
   server.start((err) => {
     if (err) {

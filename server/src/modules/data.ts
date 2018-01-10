@@ -1,7 +1,6 @@
 /**
  * only in-memory storage for POC
  */
-module.exports = {
+export const DATA = {
     'browserInfo': []
-}
- 
+};

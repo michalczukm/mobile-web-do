@@ -1,7 +1,9 @@
-const Joi = require('joi');
-const browserInfoController = require('./controllers/browser-info.controller');
+import * as Hapi from 'hapi';
+import * as Joi from 'joi';
 
-module.exports = (server) => {
+import browserInfoController from './controllers/browser-info.controller';
+
+export default (server: Hapi.Server) => {
     server.route({
         method: 'POST',
         path: '/api/browser-info',

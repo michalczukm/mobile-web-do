@@ -1,15 +1,14 @@
-module.exports = class Result {
-    constructor(isSuccess, errors) {
-        this.isSuccess = isSuccess;
-        this.isFail = !isSuccess;
-        this.errors = errors || [];
-    }
+export class Result {
+    public get isFail(): boolean { return !this.isSuccess };
 
-    static success() {
+    static success(): Result {
         return new Result(true);
     }
 
-    static fail(errors) {
+    static fail(errors: string[]): Result {
         return new Result(false, errors);
+    }
+
+    private constructor(public isSuccess, public errors = [] as string[]) {
     }
 }

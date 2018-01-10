@@ -1,1 +1,2 @@
-module.exports = require('./result');
+export * from './result';
+export * from './module-bootstrapper';

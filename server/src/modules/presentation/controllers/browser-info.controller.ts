@@ -1,6 +1,6 @@
-const browserInfoRepository = require('../browser-info.repository');
+import browserInfoRepository from '../browser-info.repository';
 
-module.exports = {
+export default {
     create: (request, reply) => {
         const newInfo = {
             info: request.payload

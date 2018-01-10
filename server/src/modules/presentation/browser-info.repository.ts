@@ -1,14 +1,14 @@
-const data = require('../data');
-const Result = require('../../common/result');
+import { DATA } from '../data';
+import { Result } from '../../common';
 
 /**
  * For now - only in-memory storage
  */
 function create(browserInfo) {
-    data.browserInfo.push(browserInfo);
+    DATA.browserInfo.push(browserInfo);
     return Promise.resolve(Result.success());
 }
 
-module.exports = {
+export default {
     create
 }
