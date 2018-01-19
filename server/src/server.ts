@@ -26,8 +26,21 @@ const apiConnection = server.connection({
   labels: ['api'],
   port: process.env.PORT || 5050,
   routes: {
-    cors: true
+    cors: {
+      origin: ['*'],
+      credentials: true
+    }
   }
+});
+
+apiConnection.state('client-id', {
+  ttl: null,
+  isSecure: false,
+  isHttpOnly: true,
+  encoding: 'base64json',
+  clearInvalid: false,
+  strictHeader: true,
+  isSameSite: false
 });
 
 const websocketsConnection = server.connection({

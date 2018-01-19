@@ -16,10 +16,16 @@
   "license": "ISC",
   "dependencies": {
     "@reactivex/rxjs": "^5.5.6",
+    "@types/luxon": "^0.2.3",
+    "@types/useragent": "^2.1.1",
+    "@types/uuid": "^3.4.3",
     "hapi": "^16.6.2",
     "hapi-swagger": "^8.0.0",
     "inert": "^4.2.1",
+    "luxon": "^0.3.1",
     "socket.io": "^2.0.4",
+    "useragent": "^2.2.1",
+    "uuid": "^3.2.1",
     "vision": "^4.1.1"
   },
   "devDependencies": {

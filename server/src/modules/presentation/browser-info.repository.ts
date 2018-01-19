@@ -5,11 +5,11 @@ import { BrowserInfo } from './models';
 /**
  * For now - only in-memory storage
  */
-function create(browserInfo: BrowserInfo) {
+function add(browserInfo: BrowserInfo): Promise<void> {
     DATA.browserInfo.push(browserInfo);
-    return Promise.resolve(Result.success());
+    return Promise.resolve();
 }
 
 export default {
-    create
+    add
 }

@@ -46,6 +46,7 @@ function sendInfo() {
         method: 'post',
         mode: 'cors',
         redirect: 'follow',
+        credentials: 'include',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
