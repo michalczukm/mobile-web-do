@@ -1,20 +1,32 @@
+import { supportStatus } from './support-status';
+import { logger } from '../logging';
+
+const statusFor = (testsResult) => {
+    if (testsResult.isFailure) {
+        return supportStatus.NO_SUPPORT;
+    } else if (testsResult.isSuccess && testsResult.passed.some(test => !test.isVendorSpecific)) {
+        return supportStatus.STANDARD;
+    } else if (testsResult.isSuccess && testsResult.passed.some(test => test.isVendorSpecific)) {
+        return supportStatus.VENDOR_SPECIFIC;
+    } else {
+        logger.error(`Unhandled test result state for results: ${JSON.stringify(testsResult)}`);
+        throw new Error('Unhandled test result state');
+    }
+};
+
 export class Feature {
     constructor(id, ...tests) {
         this.id = id;
-        this.tests = tests;
-    }
 
-    examine() {
-        return TestResult.from(this.tests);
+        this.tests = tests;
+        this.testsResult = TestResult.from(this.tests);
+        this.status = statusFor(this.testsResult);
     }
 }
 
 export class TestResult {
-    failed = { tests: [] };
-    passed = { tests: [] };
-
     get isSuccess() {
-        return this.passed.tests.length > 0;
+        return this.passed.length > 0;
     }
 
     get isFailure() {

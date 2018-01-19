@@ -1,0 +1,20 @@
+{
+    "vetur.format.defaultFormatter": {
+        "html": "none",
+        "css": "prettier",
+        "postcss": "prettier",
+        "scss": "prettier",
+        "less": "prettier",
+        "js": "vscode-typescript",
+        "ts": "prettier",
+        "stylus": "stylus-supremacy"
+    },
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        {
+            "language": "vue",
+            "autoFix": true
+        }
+    ]
+}

@@ -53,7 +53,8 @@ const websocketsConnection = server.connection({
 
 const websocket = io(websocketsConnection.listener);
 
-websocket.on('connection', function (socket) {
+websocket.on('connection', (socket: SocketIO.Socket) => {
+  socket.on('switch-slide', message => messageSubject.next(message))
   messageSubject.subscribe(message => socket.emit('switch-slide', message));
 });
 websocket.on('disconnect', () => console.log(`client disconnected`));

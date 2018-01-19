@@ -3,4 +3,3 @@ export const messageType = {
     FEATURE: 'FEATURE',
     FINISH: 'FINISH'
 };
-

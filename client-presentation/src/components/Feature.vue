@@ -16,6 +16,7 @@
 
 <script>
 export default {
+    name: 'feature',
     props: {
         feature: {
             type: Object,
@@ -23,7 +24,7 @@ export default {
         }
     },
     computed: {
-        testsResult: function() { return this.feature.examine(); }
+        testsResult: function() { return this.feature.testsResult; }
     }
 };
 </script>

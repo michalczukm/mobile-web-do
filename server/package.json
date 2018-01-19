@@ -2,12 +2,12 @@
   "name": "mobile-web-do_server",
   "version": "1.0.0",
   "description": "Presentation of mobile web capabilities",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
     "eslint": "eslint",
     "lint": "eslint . --ext .js",
     "nodemon": "nodemon",
-    "start": "nodemon --inspect server.js 5050",
+    "start": "npm run nodemon:start",
     "nodemon:build": "nodemon --exec ts-node -- ./src/server.ts",
     "nodemon:start": "npm run nodemon:build"
   },
