@@ -3,8 +3,8 @@ class ConsoleLogger {
         console.error('=== ERROR ===', message, error);
     }
 
-    info (message) {
-        console.log('===', message);
+    info (message, payload) {
+        console.log('===', message, payload);
     }
 
     debug(message, payload) {

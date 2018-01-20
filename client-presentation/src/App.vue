@@ -5,36 +5,38 @@
         </header>
         <main>
             <button v-on:click="testBrowserInfo">test sending browser info</button>
-            <feature v-bind:feature="currentFeature"></feature>
-            <features-summary v-bind:features="features"></features-summary>
+            <welcome v-if="state == constants.applicationState.WELCOME" v-bind:session="session"></welcome>
+            <presentation v-if="state == constants.applicationState.FEATURE"></presentation>
+            <session-summary v-if="state == constants.applicationState.SUMMARY" v-bind:session="session" v-bind:features="features"></session-summary>
         </main>
-        <footer>
-            <control-panel v-bind:current-feature="currentFeature" v-on:next-feature="toNextFeature" v-on:previous-feature="toPreviousFeature"></control-panel>
-        </footer>
     </div>
 </template>
 
 <script>
 import io from 'socket.io-client';
-import Feature from './components/Feature';
 import ControlPanel from './components/ControlPanel';
-import FeaturesSummary from './components/FeaturesSummary';
+import Summary from './components/SessionSummary';
+import Welcome from './components/Welcome';
+import { applicationState } from './presentation/presentation.message';
 import features from './features';
 import browserInfoService from './browser-info/browser-info.service';
+import { logger } from './logging/logger';
 
 const socket = io('http://localhost:5051');
 
 export default {
     name: 'app',
     components: {
-        Feature,
         ControlPanel,
-        FeaturesSummary
+        Summary,
+        Welcome
     },
     data: function () {
         return {
+            state: applicationState.WELCOME,
+            session: {},
+            slideFeatureId: '',
             features: features.get(),
-            currentFeature: features.get()[0],
             feauresFixList: features.get().map(feature => feature.id) || [],
             currentFeatureFixIndex: 0
         };
@@ -57,15 +59,32 @@ export default {
         }
     },
     created: function () {
+        this.constants = {
+            applicationState: applicationState
+        };
+
         socket.on('connect', () => {
             // todo  check actual state -> send empty message
-            console.log('=== connected!');
+            logger.info('WS connected');
         });
         socket.on(
             'switch-slide',
             message => {
-                this.currentFeature = this.features.find(feature => feature.id === message);
-                console.log('=== slide', message);
+                switch (message.state) {
+                    case applicationState.WELCOME:
+                        break;
+                    case applicationState.SUMMARY:
+                        break;
+                    case applicationState.FEATURE:
+                        this.slideFeatureId = message.slideFeatureId;
+                        break;
+                    default:
+                        break;
+                }
+                this.session = message.session;
+                this.state = message.state;
+
+                logger.info('WS message:', message);
             }
         );
         socket.on('finish', _ => console.log('=== finish'));

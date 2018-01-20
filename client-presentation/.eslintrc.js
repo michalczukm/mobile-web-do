@@ -26,7 +26,7 @@ module.exports = {
         'semi': [2, 'always'],
         'space-before-function-paren': 0,
         'indent': [2, 4, {
-            "SwitchCase": 2
+            "SwitchCase": 1
         }],
     },
     "eslint.validate": [

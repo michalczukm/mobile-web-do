@@ -1,5 +1,5 @@
-export const messageType = {
+export const applicationState = {
     WELCOME: 'WELCOME',
     FEATURE: 'FEATURE',
-    FINISH: 'FINISH'
+    SUMMARY: 'SUMMARY'
 };
