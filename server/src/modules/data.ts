@@ -6,5 +6,13 @@ import { BrowserInfo, ClientIdentifier, Session } from './presentation/models';
 export const DATA = {
     browserInfo: [] as BrowserInfo[],
     clientIdentifiers: [] as ClientIdentifier[],
-    sessions: [] as Session[]
+    sessions: [
+        {
+            id: '8d4d98a8-eb90-4942-87f2-5fb57e7abc0f',
+            name: 'test session',
+            clientIdentifiers: [],
+            browserInfo: [],
+            state: 'WELCOME'
+        }
+    ] as Session[]
 };
