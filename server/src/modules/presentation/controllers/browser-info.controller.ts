@@ -6,7 +6,7 @@ import requestIdentifiersRepository from '../client-identifiers.repository';
 import sessionRepository from '../session.repository';
 import { Result } from '../../../common';
 import { RequestHandler } from '../../../hapi-utils';
-import { BrowserInfo, VersionInfo } from 'modules/presentation/models';
+import { BrowserInfo, VersionInfo } from '../models';
 
 export default {
     create: ((request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> => {
