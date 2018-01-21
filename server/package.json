@@ -19,6 +19,7 @@
     "@types/luxon": "^0.2.3",
     "@types/useragent": "^2.1.1",
     "@types/uuid": "^3.4.3",
+    "boom": "^7.1.1",
     "hapi": "^16.6.2",
     "hapi-swagger": "^8.0.0",
     "inert": "^4.2.1",

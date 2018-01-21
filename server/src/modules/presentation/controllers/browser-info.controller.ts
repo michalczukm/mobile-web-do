@@ -1,4 +1,5 @@
 import * as Hapi from 'hapi';
+import * as Boom from 'boom';
 import * as useragent from 'useragent';
 import * as uuid from 'uuid/v4';
 import browserInfoRepository from '../browser-info.repository';
@@ -19,15 +20,15 @@ export default {
                 clientIdentifiersRepository.add(clientId),
                 browserInfoRepository.add(sessionId, clientId, browserInfo)
             ])
-                .then(() => reply().code(200).state('client-id', clientId));
+                .then(() => reply().state('client-id', clientId));
         }
 
         return sessionRepository.exists(sessionId)
             .then(exists => !exists
-                ? reply(`Session ${sessionId} not found`).code(404)
+                ? reply(Boom.notFound(`Session ${sessionId} not found`))
                 : clientIdentifiersRepository.existInSession(clientId, sessionId)
                     .then(contains => contains
-                        ? reply().code(200)
+                        ? reply()
                         : addBrowserInfo())
             )
     }) as RequestHandler

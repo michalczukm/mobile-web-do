@@ -1,4 +1,5 @@
 import * as Hapi from 'hapi';
+import * as Boom from 'boom';
 import * as uuid from 'uuid/v4';
 import { RequestHandler } from '../../../hapi-utils';
 import { Session, SessionState } from '../models';
@@ -18,8 +19,7 @@ export default {
         } as Session;
 
         return sessionRepository.create(session)
-            .then(contains => reply().code(200))
-            .catch(reason => reply(reason).code(500));
+            .then(contains => reply().code(200));
 
     }) as RequestHandler,
 
@@ -30,8 +30,7 @@ export default {
         } as SessionWebModel);
 
         return sessionRepository.get()
-            .then(sessions => reply(sessions.map(item => mapSession(item))))
-            .catch(reason => reply(reason).code(500));
+            .then(sessions => reply(sessions.map(item => mapSession(item))));
     }) as RequestHandler,
 
     setSlideFeature: ((request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> => {
@@ -40,7 +39,7 @@ export default {
         return sessionRepository.getById(sessionId)
             .then(session => {
                 if (session.state !== SessionState.Feature) {
-                    return reply(`Session ${session.name} should be in presentation state!`).code(400);
+                    return reply(Boom.badRequest(`Session ${session.name} should be in presentation state!`));
                 }
 
                 session.currentSlideFeatureId = slideFeatureId;
@@ -51,7 +50,6 @@ export default {
                         return reply().code(200);
                     });
             })
-            .catch(reason => reply(reason).code(500));
 
     }) as RequestHandler
 };
