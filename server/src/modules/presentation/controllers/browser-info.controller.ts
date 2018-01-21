@@ -3,6 +3,7 @@ import * as useragent from 'useragent';
 import * as uuid from 'uuid/v4';
 import browserInfoRepository from '../browser-info.repository';
 import requestIdentifiersRepository from '../client-identifiers.repository';
+import sessionRepository from '../session.repository';
 import { Result } from '../../../common';
 import { RequestHandler } from '../../../hapi-utils';
 import { BrowserInfo, VersionInfo } from 'modules/presentation/models';
@@ -21,11 +22,22 @@ export default {
                 .then(() => reply().code(200).state('client-id', clientId));
         }
 
-        return requestIdentifiersRepository.existInSession(clientId, sessionId)
+        return sessionRepository.exists(sessionId)
+            .then(exists => {
+                if (exists) {
+                    return Promise.resolve();
+                } else {
+                    const reason = `Session ${sessionId} not found`;
+                    reply(reason).code(404);
+                    return Promise.reject(reason);
+                }
+            })
+            .then(() => requestIdentifiersRepository.existInSession(clientId, sessionId)
             .then(contains => contains
                 ? reply().code(200)
                 : addBrowserInfo())
-            .catch(reason => reply(reason).code(500));
+            .catch(reason => reply(reason).code(500))
+        );
     }) as RequestHandler
 };
 
