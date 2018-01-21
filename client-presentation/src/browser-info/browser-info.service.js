@@ -3,7 +3,7 @@ import {
     logger
 } from '../logging';
 import config from '../configuration';
-import sessions from '../sessions';
+import sessionService from '../sessions';
 
 function getInfo() {
     // some browsers doesn't allow iteration over 'plugins' and 'mimeTypes'
@@ -24,7 +24,7 @@ function getInfo() {
 };
 
 function sendInfo() {
-    const sessionId = sessions.getCurrentSessionId();
+    const sessionId = sessionService.getCurrentSessionId();
 
     var pruneOptions = {
         replacer: (value, defaultValue) => typeof value === 'function' ? JSON.stringify(value.toString()) : defaultValue,

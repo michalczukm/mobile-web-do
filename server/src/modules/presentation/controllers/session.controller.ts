@@ -39,13 +39,18 @@ export default {
 
         return sessionRepository.getById(sessionId)
             .then(session => {
-                session.currentSlideFeatureId = slideFeatureId;
-                const operation = sessionRepository.update(session);
-                presentationNotifier.setSlide(slideFeatureId, session);
+                if (session.state !== SessionState.Feature) {
+                    return reply(`Session ${session.name} should be in presentation state!`).code(400);
+                }
 
-                return operation;
+                session.currentSlideFeatureId = slideFeatureId;
+
+                return sessionRepository.update(session)
+                    .then(() => {
+                        presentationNotifier.setSlide(slideFeatureId, session);
+                        return reply().code(200);
+                    });
             })
-            .then(() => reply().code(200))
             .catch(reason => reply(reason).code(500));
 
     }) as RequestHandler

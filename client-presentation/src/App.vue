@@ -6,7 +6,7 @@
         <main>
             <button v-on:click="testBrowserInfo">test sending browser info</button>
             <welcome v-if="state == constants.applicationState.WELCOME" v-bind:session="session"></welcome>
-            <presentation v-if="state == constants.applicationState.FEATURE"></presentation>
+            <presentation v-if="state == constants.applicationState.FEATURE" v-bind:features="features" v-bind:slideFeatureId="slideFeatureId"></presentation>
             <session-summary v-if="state == constants.applicationState.SUMMARY" v-bind:session="session" v-bind:features="features"></session-summary>
         </main>
     </div>
@@ -17,19 +17,22 @@ import io from 'socket.io-client';
 import ControlPanel from './components/ControlPanel';
 import Summary from './components/SessionSummary';
 import Welcome from './components/Welcome';
+import Presentation from './components/Presentation';
 import { applicationState } from './presentation/presentation.message';
+import sessionService from './sessions';
 import features from './features';
 import browserInfoService from './browser-info/browser-info.service';
 import { logger } from './logging/logger';
 
-const socket = io('http://localhost:5051');
+const socket = io('http://localhost:5051', { query: `sessionId=${sessionService.getCurrentSessionId()}` });
 
 export default {
     name: 'app',
     components: {
         ControlPanel,
         Summary,
-        Welcome
+        Welcome,
+        Presentation
     },
     data: function () {
         return {

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Feature from './components/Feature';
+import Feature from './Feature';
 
 export default {
     name: 'presentation',

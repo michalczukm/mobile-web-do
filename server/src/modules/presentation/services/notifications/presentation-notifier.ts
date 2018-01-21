@@ -1,17 +1,40 @@
-import { Subject } from '@reactivex/rxjs';
+import { Subject, Observable } from '@reactivex/rxjs';
 import { Session } from '../../models';
-import { Observable } from '@reactivex/rxjs/dist/package/Observable';
 import { PresentationMessage } from '../../dtos/notifications';
 
-class PresentationNotifier {
-    private subject = new Subject<PresentationMessage>();
+interface NotificationPublisher<T> {
+    publish(message: T): void;
+}
+
+interface NotificationListener<T> {
+    observe(): Observable<T>;
+}
+
+class RxjsNotificationHandler<T> implements NotificationPublisher<T>, NotificationListener<T> {
+    private readonly subject = new Subject<T>();
+
+    observe(): Observable<T> {
+        return this.subject.asObservable();
+    }
+    publish(message: T): void {
+        this.subject.next(message);
+    }
+}
+
+class NotificationBus {
+    public readonly presentationStateChange = new RxjsNotificationHandler<PresentationMessage>();
 
     constructor() {
-        console.log('PresentationNotifier created!');
+        console.log('NotificationBus created!');
     }
+}
 
+export const notificationBus = new NotificationBus();
+
+
+class PresentationNotifier {
     public setSlide(slideFeatureId: string, session: Session): void {
-        this.subject.next(
+        notificationBus.presentationStateChange.publish(
             new PresentationMessage(
                 session.state,
                 {
@@ -19,10 +42,6 @@ class PresentationNotifier {
                     name: session.name
                 },
                 slideFeatureId));
-    }
-
-    public subscribe(): Observable<PresentationMessage> {
-        return this.subject.asObservable();
     }
 }
 

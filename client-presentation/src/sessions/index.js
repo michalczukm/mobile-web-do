@@ -1,2 +1,2 @@
-import sessionsService from './sessions.service';
-export default sessionsService;
+import sessionService from './session.service';
+export default sessionService;
