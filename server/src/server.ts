@@ -2,7 +2,6 @@ import * as Hapi from 'hapi';
 import * as inert from 'inert';
 import * as vision from 'vision';
 import * as hapiSwagger from 'hapi-swagger';
-import * as io from 'socket.io';
 import { Subject } from '@reactivex/rxjs';
 import presentationModule from './modules/presentation';
 
@@ -17,8 +16,6 @@ const swaggerOptions = {
     version: Pack.version
   }
 };
-
-const messageSubject = new Subject();
 
 const server = new Hapi.Server();
 
@@ -43,37 +40,17 @@ apiConnection.state('client-id', {
   isSameSite: false
 });
 
-const websocketsConnection = server.connection({
-  labels: ['websockets'],
+const webSocketsConnection = server.connection({
+  labels: ['web-sockets'],
   port: process.env.PORT + 1 || 5051,
   routes: {
     cors: true
   }
 })
 
-const websocket = io(websocketsConnection.listener);
-
-websocket.on('connection', (socket: SocketIO.Socket) => {
-  socket.on('switch-slide', message => messageSubject.next(message))
-  messageSubject.subscribe(message => socket.emit('switch-slide', message));
-});
-websocket.on('disconnect', () => console.log(`client disconnected`));
-
-const addRoutes = () => {
-  apiConnection.route({
-    method: ['GET', 'POST', 'PUT', 'DELETE'],
-    path: '/',
-    handler: (request, reply) => {
-      messageSubject.next({
-        content: `The ${new Date()} is here.`
-      });
-      return reply(`Test message`);
-    }
-  });
-};
 
 const loadModules = (serverInstance: Hapi.Server) => {
-  presentationModule.register(serverInstance);
+  presentationModule.register(serverInstance, webSocketsConnection);
 }
 
 server.register([
@@ -84,7 +61,6 @@ server.register([
   } as Hapi.PluginRegistrationObject<any>
 ]).then(() => {
 
-  addRoutes();
   loadModules(apiConnection);
 
   server.start((err) => {
