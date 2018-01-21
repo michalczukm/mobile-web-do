@@ -38,6 +38,9 @@ export default {
 
         return sessionRepository.getById(sessionId)
             .then(session => {
+                if (!session) {
+                    return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
+                }
                 if (session.state !== SessionState.Feature) {
                     return reply(Boom.badRequest(`Session ${session.name} should be in presentation state!`));
                 }
