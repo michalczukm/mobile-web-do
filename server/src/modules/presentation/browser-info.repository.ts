@@ -5,7 +5,8 @@ import { BrowserInfo } from './models';
 /**
  * For now - only in-memory storage
  */
-function add(browserInfo: BrowserInfo): Promise<void> {
+function add(sessionId: string, clientId: string, browserInfo: BrowserInfo): Promise<void> {
+    DATA.sessions.find(session => session.id === sessionId).browserInfo.push(browserInfo);
     DATA.browserInfo.push(browserInfo);
     return Promise.resolve();
 }

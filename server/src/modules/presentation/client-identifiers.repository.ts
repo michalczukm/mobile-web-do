@@ -15,12 +15,15 @@ function add(clientIdentifier: string): Promise<void> {
     return Promise.resolve();
 }
 
-function contains(clientIdentifier: string): Promise<boolean> {
-    const xyt = DATA.clientIdentifiers;
-    return Promise.resolve(!!DATA.clientIdentifiers.find(id => id.identifier === clientIdentifier));
+function existInSession(clientIdentifier: string, sessionId: string): Promise<boolean> {
+    return Promise.resolve(
+        !!DATA.sessions
+            .find(session => session.id === sessionId)
+            .clientIdentifiers
+            .find(id => id.identifier === clientIdentifier));
 }
 
 export default {
     add,
-    contains
+    existInSession
 }

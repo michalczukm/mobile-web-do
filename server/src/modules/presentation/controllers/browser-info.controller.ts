@@ -9,19 +9,19 @@ import { BrowserInfo, VersionInfo } from 'modules/presentation/models';
 
 export default {
     create: ((request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> => {
+        const sessionId = request.payload.sessionId;
+        const clientId: string = request.state['client-id'] || uuid();
+
         const addBrowserInfo = () => {
-            const newInfo: BrowserInfo = ({ ...request.payload, ...mapUserAgent(request.headers['user-agent']) });
-            const newClientId = uuid();
+            const browserInfo: BrowserInfo = ({ ...request.payload, ...mapUserAgent(request.headers['user-agent']) });
             return Promise.all([
-                requestIdentifiersRepository.add(newClientId),
-                browserInfoRepository.add(newInfo)
+                requestIdentifiersRepository.add(clientId),
+                browserInfoRepository.add(sessionId, clientId, browserInfo)
             ])
-                .then(() => reply().code(200).state('client-id', newClientId));
+                .then(() => reply().code(200).state('client-id', clientId));
         }
 
-        const currentClientId: string = request.state['client-id'] || '';
-
-        return requestIdentifiersRepository.contains(currentClientId)
+        return requestIdentifiersRepository.existInSession(clientId, sessionId)
             .then(contains => contains
                 ? reply().code(200)
                 : addBrowserInfo())
