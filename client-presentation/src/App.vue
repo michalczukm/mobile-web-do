@@ -5,9 +5,11 @@
         </header>
         <main>
             <button v-on:click="testBrowserInfo">test sending browser info</button>
-            <welcome v-if="state == constants.applicationState.WELCOME" v-bind:session="session"></welcome>
-            <presentation v-if="state == constants.applicationState.FEATURE" v-bind:features="features" v-bind:slideFeatureId="slideFeatureId"></presentation>
-            <session-summary v-if="state == constants.applicationState.SUMMARY" v-bind:session="session" v-bind:features="features"></session-summary>
+            <transition name="slide">
+                <welcome v-if="state == constants.applicationState.WELCOME" v-bind:session="session"></welcome>
+                <presentation v-if="state == constants.applicationState.FEATURE" v-bind:features="features" v-bind:slideFeatureId="slideFeatureId"></presentation>
+                <session-summary v-if="state == constants.applicationState.SUMMARY" v-bind:session="session" v-bind:features="features"></session-summary>
+            </transition>
         </main>
         <footer>
             <a href="https://github.com/michalczukm" ref="noreferrer" target="_blank">
@@ -148,5 +150,17 @@ header span {
   font-weight: 400;
   box-sizing: border-box;
   padding-top: 16px;
+}
+
+.slide-leave-active,
+.slide-enter-active {
+  transition: 1s;
+  position: absolute;
+}
+.slide-enter {
+  transform: translate(100%, 0);
+}
+.slide-leave-to {
+  transform: translate(-100%, 0);
 }
 </style>
