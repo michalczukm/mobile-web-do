@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NotificationsService } from '../../core';
-import { SessionService, Session, SessionState } from '../shared';
+import { SessionService, Session, SessionState, Feature } from '../shared';
 import { SessionDetailsPayload } from './session-details.resolver';
 
 @Component({
@@ -11,6 +11,7 @@ import { SessionDetailsPayload } from './session-details.resolver';
     styleUrls: ['./session-details.component.scss']
 })
 export class SessionDetailsComponent implements OnInit {
+    features: Feature[];
     session: Session;
     availableStates = Object.values(SessionState);
 
@@ -22,12 +23,29 @@ export class SessionDetailsComponent implements OnInit {
     ngOnInit(): void {
         const payload = this.route.snapshot.data['payload'] as SessionDetailsPayload;
         this.session = payload.session;
+        this.features = payload.features;
     }
 
     setState(state: SessionState): void {
         this.sessionService.setState(this.session.id, state)
             .subscribe(
-            () => this.notificationsService.showSuccess(),
+            () => {
+                this.notificationsService.showSuccess('Session updated');
+                this.refreshSession();
+            },
             error => this.notificationsService.showError(error));
     }
+
+    setFeature(feature: Feature): void {
+        this.sessionService.setFeature(this.session.id, feature)
+        .subscribe(
+            () => {
+                this.notificationsService.showSuccess('Session updated');
+                this.refreshSession();
+            },
+            error => this.notificationsService.showError(error));
+    }
+
+    private refreshSession = () => this.sessionService.getById(this.session.id)
+        .subscribe(session => this.session = session)
 }

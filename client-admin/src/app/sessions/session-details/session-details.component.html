@@ -4,5 +4,12 @@
 <hr>
 
 <h3>State: {{session.state}} </h3>
-    <button *ngFor="let state of availableStates" (click)="setState(state)">{{ state }}</button>
+<button *ngFor="let state of availableStates" (click)="setState(state)">{{ state }}</button>
+
 <hr>
+
+<div *ngIf="session.state == 'FEATURE'">
+    <h3>Feature</h3>
+    <button [ngStyle]="{'color': session.currentSlideFeatureId == feature.id ? 'green' : 'gray' }" *ngFor="let feature of features" (click)="setFeature(feature)">{{ feature.id }}</button>
+</div>
+

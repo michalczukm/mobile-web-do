@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Session } from './models';
+import { Session, Feature } from './models';
 import { EnvironmentProvider } from '../../core';
 import { SessionState } from './models';
 
@@ -28,6 +28,9 @@ export class SessionService {
         });
     }
 
-    // get available slides list
-    // set slide
+    setFeature(sessionId: string, feature: Feature): Observable<Object | void> {
+        return this.http.put(`${this.baseUrl}/sessions/${sessionId}/feature/current`, {
+            slideFeatureId: feature.id
+        });
+    }
 }

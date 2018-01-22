@@ -6,7 +6,7 @@ function getPresentationSet(): FeatureDto[] {
         { id: 'home-screen', name: 'Home Screen' },
         { id: 'push-notifications', name: 'Push Notifications' },
         { id: 'device-orientation', name: 'Device Orientation' }
-    ]
+    ];
 };
 
 export default {

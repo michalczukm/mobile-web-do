@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { CoreModule } from '../core';
 import { routedComponents, SessionsRoutingModule, componentsResolvers } from './sessions-routing.routing';
-import { SessionService } from './shared';
+import { SessionService, FeatureService } from './shared';
 
 @NgModule({
     imports: [
@@ -14,7 +14,8 @@ import { SessionService } from './shared';
     ],
     providers: [
         componentsResolvers,
-        SessionService
+        SessionService,
+        FeatureService
     ]
 })
 export class SessionsModule { }

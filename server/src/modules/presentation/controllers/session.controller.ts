@@ -1,6 +1,7 @@
 import * as Hapi from 'hapi';
 import * as Boom from 'boom';
 import * as uuid from 'uuid/v4';
+
 import { RequestHandler } from '../../../hapi-utils';
 import { Session, SessionState } from '../models';
 import sessionRepository from '../session.repository';
@@ -70,7 +71,8 @@ export default {
     }) as RequestHandler,
 
     setSlideFeature: ((request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> => {
-        const { sessionId, slideFeatureId } = request.payload;
+        const { slideFeatureId } = request.payload;
+        const sessionId = request.params.id;
 
         return sessionRepository.getById(sessionId)
             .then(session => {
@@ -86,7 +88,7 @@ export default {
                 return sessionRepository.update(session)
                     .then(() => {
                         presentationNotifier.setSlideFeature(slideFeatureId, session);
-                        return reply().code(200);
+                        return reply();
                     });
             })
 

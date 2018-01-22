@@ -3,6 +3,7 @@ import * as Joi from 'joi';
 
 import browserInfoController from './controllers/browser-info.controller';
 import sessionController from './controllers/session.controller';
+import featureController from './controllers/feature.controller';
 
 export default (server: Hapi.Server) => {
     server.route({
@@ -42,17 +43,36 @@ export default (server: Hapi.Server) => {
     });
 
     server.route({
-        method: 'POST',
-        path: '/api/sessions/set-feature-slide',
+        method: 'PUT',
+        path: '/api/sessions/{id}/feature/current',
         handler: (request, reply) => sessionController.setSlideFeature(request, reply),
         config: {
             tags: ['api', 'admin'],
             validate: {
                 payload: Joi.object({
-                    sessionId: Joi.string().allow('').required(),
-                    slideFeatureId: Joi.string().allow('').required()
-                }).required()
+                    slideFeatureId: Joi.string().allow('').required(),
+                }).required(),
+                params: {
+                    id: Joi.string().allow('').required()
+                }
             }
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/api/sessions/{id}/features',
+        handler: (request, reply) => featureController.get(request, reply),
+        config: {
+            tags: ['api', 'admin'],
+            // validate: {
+            //     payload: Joi.object({
+            //         sessionId: Joi.string().allow('').required()
+            //     }).required(),
+            //     params: {
+            //         id: Joi.string().allow(null).required()
+            //     }
+            // }
         }
     });
 
