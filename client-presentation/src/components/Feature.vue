@@ -1,22 +1,29 @@
 <template>
     <div>
-        <strong>Feature: </strong> {{feature.id}}
-        <ul>
-            <li v-for="(test, index) in testsResult.passed" v-bind:key="index" class="passed">
-                <code>{{ test }}</code>
-            </li>
-        </ul>
-        <ul>
-            <li v-for="(test, index) in testsResult.failed" v-bind:key="index" class="failed">
-                <code>{{ test }}</code>
-            </li>
-        </ul>
+        <div class="header">
+            <h1>{{feature.id}}</h1>
+        </div>
+
+        <div class="content">
+            <i v-bind:class="{
+                'fa-thumbs-up success': feature.testsResult.isSuccess,
+                'fa-thumbs-down failed': feature.testsResult.isFailure }"
+                class="fa fa-4x" aria-hidden="true"></i>
+        </div>
+        <div class="support">
+            <h3><support-status v-bind:status="feature.status"></support-status></h3>
+        </div>
     </div>
 </template>
 
 <script>
+import SupportStatus from './SupportStatus';
+
 export default {
     name: 'feature',
+    components: {
+        SupportStatus
+    },
     props: {
         feature: {
             type: Object,
@@ -30,10 +37,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.passed {
-    border: 1px solid green;
-}
-.failed {
-    border: 1px solid red;
+.support {
+    margin-top: 2em;
+    padding-top: 2em;
 }
 </style>

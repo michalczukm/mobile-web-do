@@ -1,6 +1,8 @@
 <template>
     <div>
-        <h1>Welcome to {{session.name}} session</h1>
+        <h2>Welcome at</h2>
+        <h1>{{session.name}}</h1>
+        <h2>session!</h2>
     </div>
 </template>
 

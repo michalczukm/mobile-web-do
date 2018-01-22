@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <header>
-            <span>POC</span>
+            <span>What <i class="fa fa-mobile"></i> web can do?</span>
         </header>
         <main>
             <button v-on:click="testBrowserInfo">test sending browser info</button>
@@ -9,6 +9,11 @@
             <presentation v-if="state == constants.applicationState.FEATURE" v-bind:features="features" v-bind:slideFeatureId="slideFeatureId"></presentation>
             <session-summary v-if="state == constants.applicationState.SUMMARY" v-bind:session="session" v-bind:features="features"></session-summary>
         </main>
+        <footer>
+            <a href="https://github.com/michalczukm" ref="noreferrer" target="_blank">
+                <i class="fa fa-github" aria-hidden="true"></i>&nbsp;michalczukm
+            </a>
+        </footer>
     </div>
 </template>
 
@@ -98,7 +103,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+$primary: #7300e8;
+
 body {
   margin: 0;
 }
@@ -117,10 +124,19 @@ main {
 
 header {
   margin: 0;
-  height: 56px;
-  padding: 0 16px 0 24px;
-  background-color: #35495e;
+  height: 3em;
+  text-align: center;
+  background-color: $primary;
   color: #ffffff;
+}
+
+footer {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  border-top: $primary solid 1px;
+  padding: 0 16px 0 24px;
+  text-decoration: none;
 }
 
 header span {

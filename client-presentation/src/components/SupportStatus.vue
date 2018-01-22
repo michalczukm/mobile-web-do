@@ -1,8 +1,17 @@
 <template>
   <div>
-      <p v-if="status === constants.supportStatus.STANDARD">standard support</p>
-      <p v-if="status === constants.supportStatus.VENDOR_SPECIFIC">vendor specific support</p>
-      <p v-if="status === constants.supportStatus.NO_SUPPORT">no support</p>
+      <p v-if="status === constants.supportStatus.STANDARD">
+          <i class="fa fa-check success"></i>
+          standard support
+      </p>
+      <p v-if="status === constants.supportStatus.VENDOR_SPECIFIC">
+          <i class="fa fa-exclamation-triangle warning"></i>
+          vendor specific support
+        </p>
+      <p v-if="status === constants.supportStatus.NO_SUPPORT">
+          <i class="fa fa-close failed"></i>
+          no support
+      </p>
   </div>
 </template>
 
