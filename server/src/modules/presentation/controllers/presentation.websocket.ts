@@ -1,5 +1,8 @@
 import { notificationBus } from '../services/notifications';
 import { Subscription } from '@reactivex/rxjs';
+import sessionRepository from '../session.repository';
+import { PresentationMessage } from '../dtos/notifications';
+import { logger } from '../../../common';
 
 type ClientInfo = { clientConnectionId: string, handlersToUnsubscribe: Subscription[] };
 
@@ -32,6 +35,12 @@ export default (server: SocketIO.Server) => {
 
     server.on('connection', (socket: SocketIO.Socket) => {
         registerClient(socket);
+
+        sessionRepository.getById(getSessionId(socket))
+            .then(session => socket.emit('switch-slide',
+                new PresentationMessage(session.state, { id: session.id, name: session.name }, session.currentSlideFeatureId)
+            ))
+            .catch(reason => logger.error('Cannot get presentation session at WS connection open.', reason));
 
         socket.on('disconnect', () => {
             const sessionId = getSessionId(socket);

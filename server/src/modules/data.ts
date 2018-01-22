@@ -13,7 +13,8 @@ export const DATA = {
             createdAt: new Date(),
             clientIdentifiers: [],
             browserInfo: [],
-            state: 'FEATURE'
+            state: 'FEATURE',
+            currentSlideFeatureId: 'home-screen'
         },
         {
             id: '7c527737-6728-49ce-b770-3c47eb86ed90',
