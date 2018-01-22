@@ -16,6 +16,7 @@ export default (server: SocketIO.Server) => {
     const registerClient = (socket: SocketIO.Socket) => {
         const subscription = notificationBus.presentationStateChange
             .observe()
+            .filter(message => message.session.id === getSessionId(socket))
             .subscribe(message => socket.emit('switch-slide', message));
 
         const clientInfo = {

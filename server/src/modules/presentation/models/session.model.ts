@@ -5,6 +5,7 @@ import * as uuid from 'uuid/v4';
 export type Session = {
     id: string,
     name: string,
+    createdAt: Date,
     state: SessionState,
     currentSlideFeatureId: string,
     browserInfo: BrowserInfo[],

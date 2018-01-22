@@ -1,0 +1,8 @@
+<h1>{{ session.name }}</h1>
+<h3>{{ session.createdAt | date}}</h3>
+
+<hr>
+
+<h3>State: {{session.state}} </h3>
+    <button *ngFor="let state of availableStates" (click)="setState(state)">{{ state }}</button>
+<hr>

@@ -1,0 +1,7 @@
+<ul>
+    <li *ngFor="let session of sessions$ | async" [routerLink]="[session.id]">
+        <p>{{ session.name }}</p>
+        <p>state: {{ session.state }}</p>
+        <p>created: {{ session.createdAt | date }}</p>
+    </li>
+</ul>

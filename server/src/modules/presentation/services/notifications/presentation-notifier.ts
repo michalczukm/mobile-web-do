@@ -1,5 +1,5 @@
 import { Subject, Observable } from '@reactivex/rxjs';
-import { Session } from '../../models';
+import { Session, SessionState } from '../../models';
 import { PresentationMessage } from '../../dtos/notifications';
 
 interface NotificationPublisher<T> {
@@ -33,7 +33,7 @@ export const notificationBus = new NotificationBus();
 
 
 class PresentationNotifier {
-    public setSlide(slideFeatureId: string, session: Session): void {
+    public setSlideFeature(slideFeatureId: string, session: Session): void {
         notificationBus.presentationStateChange.publish(
             new PresentationMessage(
                 session.state,
@@ -42,6 +42,17 @@ class PresentationNotifier {
                     name: session.name
                 },
                 slideFeatureId));
+    }
+
+    public setState(state: SessionState, session: Session): void {
+        notificationBus.presentationStateChange.publish(
+            new PresentationMessage(
+                state,
+                {
+                    id: session.id,
+                    name: session.name
+                },
+                session.currentSlideFeatureId));
     }
 }
 

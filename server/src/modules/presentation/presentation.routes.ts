@@ -58,10 +58,31 @@ export default (server: Hapi.Server) => {
 
     server.route({
         method: 'GET',
-        path: '/api/sessions',
-        handler: (request, reply) => sessionController.get(request, reply),
+        path: '/api/sessions/{id?}',
+        handler: (request, reply) => request.params.id
+            ? sessionController.getById(request, reply)
+            : sessionController.get(request, reply),
         config: {
-            tags: ['api', 'admin']
+            tags: ['api', 'admin'],
+            validate: {
+                params: {
+                    id: Joi.string().allow(null).optional()
+                }
+            }
         }
-    })
+    });
+
+    server.route({
+        method: 'PUT',
+        path: '/api/sessions/{id}/state',
+        handler: (request, reply) => sessionController.setState(request, reply),
+        config: {
+            tags: ['api', 'admin'],
+            validate: {
+                params: {
+                    id: Joi.string().required()
+                }
+            }
+        }
+    });
 };
