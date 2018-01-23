@@ -5,7 +5,7 @@ import {
 } from '../logging/logger';
 import {handleResponse} from '../utils/http-utils';
 
-const getCurrentSessionId = () => window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+const getCurrentSessionId = () => (new URL(document.location)).searchParams.get('sessionId');
 
 function sendClientSessionResults() {
     const sessionId = getCurrentSessionId();

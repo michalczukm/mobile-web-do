@@ -2,8 +2,9 @@ import * as Hapi from 'hapi';
 import * as inert from 'inert';
 import * as vision from 'vision';
 import * as hapiSwagger from 'hapi-swagger';
-import { Subject } from '@reactivex/rxjs';
 import presentationModule from './modules/presentation';
+import staticModule from './modules/static';
+import * as Path from 'path';
 
 const Pack = require('../package.json');
 
@@ -26,7 +27,10 @@ const apiConnection = server.connection({
     cors: {
       origin: ['*'],
       credentials: true
-    }
+    },
+      files: {
+          relativeTo: Path.join(__dirname, 'client-dist')
+      }
   }
 });
 
@@ -46,12 +50,13 @@ const webSocketsConnection = server.connection({
   routes: {
     cors: true
   }
-})
+});
 
 
 const loadModules = (serverInstance: Hapi.Server) => {
   presentationModule.register(serverInstance, webSocketsConnection);
-}
+  staticModule.register(serverInstance);
+};
 
 server.register([
   inert, vision as any as Hapi.PluginFunction<any>,
