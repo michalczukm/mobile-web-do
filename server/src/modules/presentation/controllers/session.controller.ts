@@ -3,11 +3,13 @@ import * as Boom from 'boom';
 import * as uuid from 'uuid/v4';
 
 import { RequestHandler } from '../../../hapi-utils';
-import { Session, SessionState } from '../models';
+import { Session, SessionState, ClientSessionResults } from '../models';
 import sessionRepository from '../session.repository';
 import { SessionWebModel } from './web-models/session';
 import { presentationNotifier } from '../services/notifications';
 import featureService from '../services/features';
+import { userAgentService } from '../services/browser-info';
+import clientIdentifiersRepository from '../client-identifiers.repository';
 
 const mapSession = (session: Session) => ({
     id: session.id,
@@ -17,80 +19,115 @@ const mapSession = (session: Session) => ({
     currentSlideFeatureId: session.currentSlideFeatureId
 } as SessionWebModel);
 
-export default {
-    create: ((request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> => {
-        const name = request.payload.name;
-        const session = {
-            id: uuid(),
-            name: name,
-            state: SessionState.Welcome,
-            createdAt: new Date(),
-            currentSlideFeatureId: '',
-            browserInfo: [],
-            clientIdentifiers: []
-        } as Session;
+function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+    const name = request.payload.name;
+    const session = {
+        id: uuid(),
+        name: name,
+        state: SessionState.Welcome,
+        createdAt: new Date(),
+        currentSlideFeatureId: '',
+        browserInfo: [],
+        clientIdentifiers: []
+    } as Session;
 
-        return sessionRepository.create(session)
-            .then(contains => reply().code(200));
+    return sessionRepository.create(session)
+        .then(contains => reply().code(200));
+}
 
-    }) as RequestHandler,
+function get(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+    return sessionRepository.get()
+        .then(sessions => reply(sessions.map(item => mapSession(item))));
+}
 
-    get: ((request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> => {
-        return sessionRepository.get()
-            .then(sessions => reply(sessions.map(item => mapSession(item))));
-    }) as RequestHandler,
+function getById(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+    const sessionId = request.params.id;
+    return sessionRepository.getById(sessionId)
+        .then(session => reply(mapSession(session)));
+}
 
-    getById: ((request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> => {
-        const sessionId = request.params.id;
-        return sessionRepository.getById(sessionId)
-            .then(session => reply(mapSession(session)));
-    }) as RequestHandler,
+function setState(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+    const sessionId = request.params.id;
+    const newState = request.payload.state as SessionState;
 
-    setState: ((request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> => {
-        const sessionId = request.params.id;
-        const newState: SessionState = request.payload.state;
+    return sessionRepository.getById(sessionId)
+        .then(session => {
+            if (!session) {
+                return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
+            }
 
-        return sessionRepository.getById(sessionId)
-            .then(session => {
-                if (!session) {
-                    return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
-                }
+            session.state = newState;
 
-                session.state = newState;
+            if (newState === SessionState.Feature) {
+                session.currentSlideFeatureId = featureService.getPresentationSet()[0].id;
+            }
 
-                if (newState === SessionState.Feature) {
-                    session.currentSlideFeatureId = featureService.getPresentationSet()[0].id;
-                }
+            return sessionRepository.update(session)
+                .then(() => {
+                    presentationNotifier.setState(newState, session);
+                    return reply().code(200);
+                });
+        });
+}
 
-                return sessionRepository.update(session)
-                    .then(() => {
-                        presentationNotifier.setState(newState, session);
-                        return reply().code(200);
-                    });
-            });
-    }) as RequestHandler,
+function setSlideFeature(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+    const { slideFeatureId } = request.payload;
+    const sessionId = request.params.id;
 
-    setSlideFeature: ((request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> => {
-        const { slideFeatureId } = request.payload;
-        const sessionId = request.params.id;
+    return sessionRepository.getById(sessionId)
+        .then(session => {
+            if (!session) {
+                return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
+            }
+            if (session.state !== SessionState.Feature) {
+                return reply(Boom.badRequest(`Session ${session.name} should be in presentation state!`));
+            }
 
-        return sessionRepository.getById(sessionId)
-            .then(session => {
-                if (!session) {
-                    return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
-                }
-                if (session.state !== SessionState.Feature) {
-                    return reply(Boom.badRequest(`Session ${session.name} should be in presentation state!`));
-                }
+            session.currentSlideFeatureId = slideFeatureId;
 
-                session.currentSlideFeatureId = slideFeatureId;
+            return sessionRepository.update(session)
+                .then(() => {
+                    presentationNotifier.setSlideFeature(slideFeatureId, session);
+                    return reply();
+                });
+        });
+}
 
-                return sessionRepository.update(session)
-                    .then(() => {
-                        presentationNotifier.setSlideFeature(slideFeatureId, session);
+function addResults(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+    const clientSessionResults = request.payload as ClientSessionResults[];
+    const sessionId = request.params.id;
+    const clientId = request.state['client-id'];
+    const clientSystemInfo = userAgentService.mapUserAgent(request.headers['user-agent']);
+
+    return sessionRepository.getById(sessionId)
+        .then(session => {
+            if (!session) {
+                return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
+            }
+
+            clientIdentifiersRepository.existInSessionResults(clientId, sessionId)
+                .then(exists => {
+                    if (exists) {
                         return reply();
-                    });
-            })
+                    }
 
-    }) as RequestHandler
+                    session.clientResults.push(({
+                        ...clientSystemInfo,
+                        clientIdentifier: clientId,
+                        clientResults: clientSessionResults
+                    }));
+
+                    return sessionRepository.update(session)
+                        .then(() => reply());
+                });
+        });
+}
+
+export default {
+    create: <RequestHandler>create,
+    get: <RequestHandler>get,
+    getById: <RequestHandler>getById,
+    setState: <RequestHandler>setState,
+    setSlideFeature: <RequestHandler>setSlideFeature,
+    addResults: <RequestHandler>addResults
 };

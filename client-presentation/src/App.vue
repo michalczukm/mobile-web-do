@@ -99,7 +99,9 @@ export default {
         );
         socket.on('finish', _ => console.log('=== finish'));
 
-        browserInfoService.sendInfo();
+        browserInfoService.sendInfo()
+            .then(() => sessionService.sendClientSessionResults())
+            .catch(reason => logger.error('Sending client data for session failed', reason));
     },
     destroyed: function () { }
 };

@@ -2,7 +2,7 @@ import prune from 'json-prune';
 import {
     logger
 } from '../logging';
-import config from '../configuration';
+import configuration from '../configuration';
 import sessionService from '../sessions';
 
 function getInfo() {
@@ -42,7 +42,7 @@ function sendInfo() {
         throw error;
     }
 
-    fetch(`${config.apiUrl}/browser-info`, {
+    return fetch(`${configuration.apiUrl}/browser-info`, {
         method: 'post',
         mode: 'cors',
         redirect: 'follow',
@@ -52,7 +52,8 @@ function sendInfo() {
             'Content-Type': 'application/json'
         },
         body: payloadString
-    });
+    })
+    .catch(reason => logger.error('Sending browser info failed', reason));
 };
 
 export default {

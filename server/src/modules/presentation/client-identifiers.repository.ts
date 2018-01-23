@@ -23,7 +23,16 @@ function existInSession(clientIdentifier: string, sessionId: string): Promise<bo
             .find(id => id.identifier === clientIdentifier));
 }
 
+function existInSessionResults(clientIdentifier: string, sessionId: string): Promise<boolean> {
+    return Promise.resolve(
+        !!DATA.sessions
+            .find(session => session.id === sessionId)
+            .clientResults
+            .find(result => result.clientIdentifier === clientIdentifier));
+}
+
 export default {
     add,
-    existInSession
+    existInSession,
+    existInSessionResults
 }

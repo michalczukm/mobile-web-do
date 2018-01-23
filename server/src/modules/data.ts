@@ -14,7 +14,8 @@ export const DATA = {
             clientIdentifiers: [],
             browserInfo: [],
             state: 'FEATURE',
-            currentSlideFeatureId: 'home-screen'
+            currentSlideFeatureId: 'home-screen',
+            clientResults: []
         },
         {
             id: '7c527737-6728-49ce-b770-3c47eb86ed90',
@@ -22,7 +23,8 @@ export const DATA = {
             clientIdentifiers: [],
             createdAt: new Date(),
             browserInfo: [],
-            state: 'WELCOME'
+            state: 'WELCOME',
+            clientResults: []
         }
     ] as Session[]
 };

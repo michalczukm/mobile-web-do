@@ -19,11 +19,32 @@ export default (server: Hapi.Server) => {
                         window: Joi.object().required(),
                         'Navigator.prototype': Joi.object(),
                         'Window.prototype': Joi.object(),
-                        'ServiceWorker.prototype': Joi.object(),
-                        'ServiceWorkerRegistration.prototype': Joi.object()
+                        'ServiceWorker.prototype': Joi.object().allow(null).optional(),
+                        'ServiceWorkerRegistration.prototype': Joi.object().allow(null).optional()
                     }),
-                    sessionId: Joi.string().allow('').optional()
+                    sessionId: Joi.string().allow('').required()
                 }).required()
+            }
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/api/sessions/{id}/results',
+        handler: (request, reply) => sessionController.addResults(request, reply),
+        config: {
+            tags: ['api', 'presentation'],
+            validate: {
+                payload: Joi.array().items(
+                    Joi.object({
+                            id: Joi.string().required(),
+                            status: Joi.string().required(),
+                            isSuccess: Joi.boolean().required()
+                        }).min(1).required()
+                ),
+                params: {
+                    id: Joi.string().required()
+                }
             }
         }
     });
@@ -36,7 +57,7 @@ export default (server: Hapi.Server) => {
             tags: ['api', 'admin'],
             validate: {
                 payload: Joi.object({
-                    name: Joi.string().allow('').required()
+                    name: Joi.string().required()
                 }).required()
             }
         }
@@ -50,10 +71,10 @@ export default (server: Hapi.Server) => {
             tags: ['api', 'admin'],
             validate: {
                 payload: Joi.object({
-                    slideFeatureId: Joi.string().allow('').required(),
+                    slideFeatureId: Joi.string().required(),
                 }).required(),
                 params: {
-                    id: Joi.string().allow('').required()
+                    id: Joi.string().required()
                 }
             }
         }
@@ -65,14 +86,11 @@ export default (server: Hapi.Server) => {
         handler: (request, reply) => featureController.get(request, reply),
         config: {
             tags: ['api', 'admin'],
-            // validate: {
-            //     payload: Joi.object({
-            //         sessionId: Joi.string().allow('').required()
-            //     }).required(),
-            //     params: {
-            //         id: Joi.string().allow(null).required()
-            //     }
-            // }
+            validate: {
+                params: {
+                    id: Joi.string().required()
+                }
+            }
         }
     });
 

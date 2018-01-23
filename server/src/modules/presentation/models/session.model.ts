@@ -1,6 +1,8 @@
+import * as uuid from 'uuid/v4';
+
 import { BrowserInfo } from './browser-info.model';
 import { ClientIdentifier } from './client-identifier.model';
-import * as uuid from 'uuid/v4';
+import { ClientInfo } from './client-info.model';
 
 export type Session = {
     id: string,
@@ -9,7 +11,8 @@ export type Session = {
     state: SessionState,
     currentSlideFeatureId: string,
     browserInfo: BrowserInfo[],
-    clientIdentifiers: ClientIdentifier[]
+    clientIdentifiers: ClientIdentifier[],
+    clientResults: ClientInfo[];
 };
 
 export enum SessionState {
