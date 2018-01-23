@@ -12,6 +12,17 @@ export default new ModuleBootstrapper({
                     index: true
                 }
             }
-        })
+        });
+        server.route({
+            method: 'GET',
+            path: '/dasadmin/{param*}',
+            handler: {
+                directory: {
+                    path: './admin/dist',
+                    redirectToSlash: true,
+                    index: true
+                }
+            }
+        });
     })
 });
