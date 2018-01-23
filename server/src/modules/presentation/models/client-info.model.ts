@@ -7,9 +7,8 @@ export enum SupportStatus {
 }
 
 export type ClientSessionResults = {
-    id: string,
-    status: SupportStatus,
-    isSuccess: boolean
+    featureId: string,
+    status: SupportStatus
 };
 
 export type ClientInfo = {

@@ -1,12 +1,19 @@
 <template>
   <div>
-      <ul>
-          <li v-for="(feature, index) in features" v-bind:key="index">
-                <support-status v-bind:status="feature.status">
-                </support-status>
-                {{ feature.id }}
-          </li>
-      </ul>
+      <table>
+          <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr v-for="(feature, index) in features" v-bind:key="index">
+                  <td>{{feature.id}}</td>
+                  <td><support-status v-bind:status="feature.status"></support-status></td>
+              </tr>
+          </tbody>
+      </table>
   </div>
 </template>
 
@@ -26,3 +33,10 @@ export default {
     }
 };
 </script>
+
+<style lang="scss" scoped>
+table {
+    padding: 5%;
+}
+</style>
+

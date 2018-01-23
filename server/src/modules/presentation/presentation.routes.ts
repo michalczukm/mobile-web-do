@@ -4,6 +4,7 @@ import * as Joi from 'joi';
 import browserInfoController from './controllers/browser-info.controller';
 import sessionController from './controllers/session.controller';
 import featureController from './controllers/feature.controller';
+import resultController from './controllers/result.controller';
 
 export default (server: Hapi.Server) => {
     server.route({
@@ -29,6 +30,20 @@ export default (server: Hapi.Server) => {
     });
 
     server.route({
+        method: 'GET',
+        path: '/api/sessions/{id}/results',
+        handler: (request, reply) => resultController.getForSession(request, reply),
+        config: {
+            tags: ['api', 'presentation'],
+            validate: {
+                params: {
+                    id: Joi.string().required()
+                }
+            }
+        }
+    });
+
+    server.route({
         method: 'POST',
         path: '/api/sessions/{id}/results',
         handler: (request, reply) => sessionController.addResults(request, reply),
@@ -37,9 +52,8 @@ export default (server: Hapi.Server) => {
             validate: {
                 payload: Joi.array().items(
                     Joi.object({
-                            id: Joi.string().required(),
-                            status: Joi.string().required(),
-                            isSuccess: Joi.boolean().required()
+                            featureId: Joi.string().required(),
+                            status: Joi.string().required()
                         }).min(1).required()
                 ),
                 params: {

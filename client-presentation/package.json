@@ -11,10 +11,12 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "chart.js": "^2.7.1",
     "json-prune": "^1.1.0",
     "milligram": "^1.3.0",
     "socket.io-client": "^2.0.4",
-    "vue": "^2.3.3"
+    "vue": "^2.3.3",
+    "vue-chartjs": "^3.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

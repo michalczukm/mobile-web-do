@@ -9,6 +9,7 @@
                 <welcome v-if="state == constants.applicationState.WELCOME" v-bind:session="session"></welcome>
                 <presentation v-if="state == constants.applicationState.FEATURE" v-bind:features="features" v-bind:slideFeatureId="slideFeatureId"></presentation>
                 <session-summary v-if="state == constants.applicationState.SUMMARY" v-bind:session="session" v-bind:features="features"></session-summary>
+                <session-report v-if="state == constants.applicationState.CLOSED" v-bind:session="session"></session-report>
             </transition>
         </main>
         <footer>
@@ -22,9 +23,10 @@
 <script>
 import io from 'socket.io-client';
 import ControlPanel from './components/ControlPanel';
-import Summary from './components/SessionSummary';
+import SessionSummary from './components/SessionSummary';
 import Welcome from './components/Welcome';
 import Presentation from './components/Presentation';
+import SessionReport from './components/SessionReport';
 import { applicationState } from './presentation/presentation.message';
 import sessionService from './sessions';
 import features from './features';
@@ -37,9 +39,10 @@ export default {
     name: 'app',
     components: {
         ControlPanel,
-        Summary,
+        SessionSummary,
         Welcome,
-        Presentation
+        Presentation,
+        SessionReport
     },
     data: function () {
         return {
@@ -82,8 +85,8 @@ export default {
             message => {
                 switch (message.state) {
                     case applicationState.WELCOME:
-                        break;
                     case applicationState.SUMMARY:
+                    case applicationState.CLOSED:
                         break;
                     case applicationState.FEATURE:
                         this.slideFeatureId = message.slideFeatureId;
@@ -107,8 +110,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $primary: #7300e8;
+$secondary: #0073D1;
 
 body {
   margin: 0;
@@ -119,6 +123,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+.primary-color {
+    color: $primary
+}
+
+.secondary-color {
+    color: $secondary;
 }
 
 main {
