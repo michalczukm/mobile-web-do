@@ -8,11 +8,11 @@
 </template>
 
 <script>
-export default {
-    name: 'welcome',
-    props: {
-        session: Object,
-        required: true
-    }
-};
+    export default {
+        name: 'welcome',
+        props: {
+            session: Object,
+            required: true
+        }
+    };
 </script>

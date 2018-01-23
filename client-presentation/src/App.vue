@@ -5,10 +5,13 @@
         </header>
         <main>
             <transition name="slide">
-                <welcome v-if="state == constants.applicationState.WELCOME" v-bind:session="session"></welcome>
-                <presentation v-if="state == constants.applicationState.FEATURE" v-bind:features="features" v-bind:slideFeatureId="slideFeatureId"></presentation>
-                <session-summary v-if="state == constants.applicationState.SUMMARY" v-bind:session="session" v-bind:features="features"></session-summary>
-                <session-report v-if="state == constants.applicationState.CLOSED" v-bind:session="session"></session-report>
+                <welcome v-if="state === constants.applicationState.WELCOME" v-bind:session="session"/>
+                <presentation v-if="state === constants.applicationState.FEATURE" v-bind:features="features"
+                              v-bind:slideFeatureId="slideFeatureId"/>
+                <session-summary v-if="state === constants.applicationState.SUMMARY" v-bind:session="session"
+                                 v-bind:features="features"/>
+                <session-report v-if="state === constants.applicationState.CLOSED"
+                                v-bind:session="session"/>
             </transition>
         </main>
         <footer>
@@ -20,164 +23,170 @@
 </template>
 
 <script>
-import io from 'socket.io-client';
-import ControlPanel from './components/ControlPanel';
-import SessionSummary from './components/SessionSummary';
-import Welcome from './components/Welcome';
-import Presentation from './components/Presentation';
-import SessionReport from './components/SessionReport';
-import { applicationState } from './presentation/presentation.message';
-import sessionService from './sessions';
-import features from './features';
-import browserInfoService from './browser-info/browser-info.service';
-import { logger } from './logging/logger';
+    import io from 'socket.io-client';
+    import ControlPanel from './components/ControlPanel';
+    import SessionSummary from './components/SessionSummary';
+    import Welcome from './components/Welcome';
+    import Presentation from './components/Presentation';
+    import SessionReport from './components/SessionReport';
+    import {applicationState} from './presentation/presentation.message';
+    import sessionService from './sessions';
+    import features from './features';
+    import browserInfoService from './browser-info/browser-info.service';
+    import {logger} from './logging/logger';
 
-const socket = io('http://localhost:5051', { query: `sessionId=${sessionService.getCurrentSessionId()}` });
+    const socket = io('http://localhost:5051', {query: `sessionId=${sessionService.getCurrentSessionId()}`});
 
-export default {
-    name: 'app',
-    components: {
-        ControlPanel,
-        SessionSummary,
-        Welcome,
-        Presentation,
-        SessionReport
-    },
-    data: function () {
-        return {
-            state: applicationState.WELCOME,
-            session: {},
-            slideFeatureId: '',
-            features: features.get(),
-            feauresFixList: features.get().map(feature => feature.id) || [],
-            currentFeatureFixIndex: 0
-        };
-    },
-    created: function () {
-        this.constants = {
-            applicationState: applicationState
-        };
+    export default {
+        name: 'app',
+        components: {
+            ControlPanel,
+            SessionSummary,
+            Welcome,
+            Presentation,
+            SessionReport
+        },
+        data: function () {
+            return {
+                state: applicationState.WELCOME,
+                session: {},
+                slideFeatureId: '',
+                features: features.get(),
+                feauresFixList: features.get().map(feature => feature.id) || [],
+                currentFeatureFixIndex: 0
+            };
+        },
+        created: function () {
+            this.constants = {
+                applicationState: applicationState
+            };
 
-        socket.on('connect', () => {
-            // todo  check actual state -> send empty message
-            logger.info('WS connected');
-        });
-        socket.on(
-            'switch-slide',
-            message => {
-                switch (message.state) {
-                    case applicationState.WELCOME:
-                    case applicationState.SUMMARY:
-                    case applicationState.CLOSED:
-                        break;
-                    case applicationState.FEATURE:
-                        this.slideFeatureId = message.slideFeatureId;
-                        break;
-                    default:
-                        break;
+            socket.on('connect', () => {
+                // todo  check actual state -> send empty message
+                logger.info('WS connected');
+            });
+            socket.on(
+                'switch-slide',
+                message => {
+                    switch (message.state) {
+                        case applicationState.WELCOME:
+                        case applicationState.SUMMARY:
+                        case applicationState.CLOSED:
+                            break;
+                        case applicationState.FEATURE:
+                            this.slideFeatureId = message.slideFeatureId;
+                            break;
+                        default:
+                            break;
+                    }
+                    this.session = message.session;
+                    this.state = message.state;
+
+                    logger.info('WS message:', message);
                 }
-                this.session = message.session;
-                this.state = message.state;
+            );
+            socket.on('finish', _ => console.log('=== finish'));
 
-                logger.info('WS message:', message);
-            }
-        );
-        socket.on('finish', _ => console.log('=== finish'));
-
-        browserInfoService.sendInfo()
-            .then(() => sessionService.sendClientSessionResults())
-            .catch(reason => logger.error('Sending client data for session failed', reason));
-    },
-    destroyed: function () { }
-};
+            browserInfoService.sendInfo()
+                .then(() => sessionService.sendClientSessionResults())
+                .catch(reason => logger.error('Sending client data for session failed', reason));
+        },
+        destroyed: function () {
+        }
+    };
 </script>
 
 <style lang="scss">
-$primary: #7300e8;
-$secondary: #0073d1;
+    $primary: #7300e8;
+    $secondary: #0073d1;
 
-body {
-  color: #777;
-  margin: 0;
-}
+    body {
+        color: #777;
+        margin: 0;
+    }
 
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
+    #app {
+        font-family: "Avenir", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: #2c3e50;
+    }
 
-main {
-  text-align: center;
-  margin-top: 40px;
-}
+    main {
+        text-align: center;
+        margin-top: 40px;
+    }
 
-header {
-  margin: 0;
-  height: 3em;
-  text-align: center;
-  background-color: $primary;
-  color: #ffffff;
-}
+    header {
+        margin: 0;
+        height: 3em;
+        text-align: center;
+        background-color: $primary;
+        color: #ffffff;
+    }
 
-footer {
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  border-top: $primary solid 1px;
-  padding: 0 16px 0 24px;
-  text-decoration: none;
-  background-color: white;
-}
+    footer {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        border-top: $primary solid 1px;
+        padding: 0 16px 0 24px;
+        text-decoration: none;
+        background-color: white;
+    }
 
-header span {
-  display: block;
-  position: relative;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  font-weight: 400;
-  box-sizing: border-box;
-  padding-top: 16px;
-}
+    header span {
+        display: block;
+        position: relative;
+        font-size: 20px;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        font-weight: 400;
+        box-sizing: border-box;
+        padding-top: 16px;
+    }
 
-.success {
-  color: #97d100;
-}
+    .success {
+        color: #97d100;
+    }
 
-.failed {
-  color: #e85e39;
-}
+    .failed {
+        color: #e85e39;
+    }
 
-.warning {
-  color: #e8ab19;
-}
+    .warning {
+        color: #e8ab19;
+    }
 
-.primary-color {
-  color: $primary;
-}
+    .primary-color {
+        color: $primary;
+    }
 
-.secondary-color {
-  color: $secondary;
-}
+    .secondary-color {
+        color: $secondary;
+    }
 
-.slide-leave-active,
-.slide-enter-active {
-  transition: 1s;
-  position: relative;
-}
-.slide-enter {
-  transform: translate(100%, 0);
-}
-.slide-enter-to {
-  transform: translate(0%, 0);
-}
-.slide-leave {
-  transform: translate(0%, 0);
-}
-.slide-leave-to {
-  position: absolute;
-  transform: translate(-100%, 0);
-}
+    .slide-leave-active,
+    .slide-enter-active {
+        transition: 1s;
+        position: relative;
+    }
+
+    .slide-enter {
+        position: absolute;
+        transform: translate(100%, 0);
+    }
+
+    .slide-enter-to {
+        transform: translate(0%, 0);
+    }
+
+    .slide-leave {
+        transform: translate(0%, 0);
+    }
+
+    .slide-leave-to {
+        position: absolute;
+        transform: translate(-100%, 0);
+    }
 </style>

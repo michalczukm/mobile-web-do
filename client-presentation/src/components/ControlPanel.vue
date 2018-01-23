@@ -9,22 +9,26 @@
 </template>
 
 <script>
-export default {
-    name: 'control-panel',
-    props: {
-        currentFeature: {
-            type: Object,
-            required: true
+    export default {
+        name: 'control-panel',
+        props: {
+            currentFeature: {
+                type: Object,
+                required: true
+            },
+            presentationState: {
+                type: String,
+                required: false,
+                default: 'NEW'
+            }
         },
-        presentationState: {
-            type: String,
-            required: false,
-            default: 'NEW'
+        methods: {
+            toNextFeature: function () {
+                this.$emit('next-feature');
+            },
+            toPreviousFeature: function () {
+                this.$emit('previous-feature');
+            }
         }
-    },
-    methods: {
-        toNextFeature: function() { this.$emit('next-feature'); },
-        toPreviousFeature: function() { this.$emit('previous-feature'); }
-    }
-};
+    };
 </script>
