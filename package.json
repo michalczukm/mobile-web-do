@@ -1,0 +1,24 @@
+{
+  "name": "mobile-web-do",
+  "version": "1.0.0",
+  "description": "Presentation of mobile web capabilities",
+  "main": "server/src/server",
+  "scripts": {
+    "install": "(cd server && npm install)",
+    "start": "npm start --prefix server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michalczukm/mobile-web-do.git"
+  },
+  "private": true,
+  "author": "Michal Michalczuk <michalczukm@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michalczukm/mobile-web-do/issues"
+  },
+  "homepage": "https://github.com/michalczukm/mobile-web-do#readme",
+  "engines": {
+    "node": "8.9.4"
+  }
+}

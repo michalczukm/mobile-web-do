@@ -9,6 +9,6 @@ export class Result {
         return new Result(false, errors);
     }
 
-    private constructor(public isSuccess, public errors = [] as string[]) {
+    private constructor(public isSuccess: boolean, public errors = [] as string[]) {
     }
 }
