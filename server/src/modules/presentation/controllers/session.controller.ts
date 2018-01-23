@@ -43,7 +43,12 @@ function get(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.R
 function getById(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
     const sessionId = request.params.id;
     return sessionRepository.getById(sessionId)
-        .then(session => reply(mapSession(session)));
+        .then(session => {
+            if (!session) {
+                return reply(Boom.notFound(`Session at id: "${sessionId}", doesn't exist`));
+            }
+            return reply(mapSession(session));
+        });
 }
 
 function setState(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {

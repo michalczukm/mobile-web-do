@@ -4,10 +4,7 @@
         <h2>Take a look at the overall report</h2>
         <hr>
 
-        <template v-if="isLoading">
-            <i class="screen-center fa fa-5x fa-circle-o-notch fa-spin" aria-hidden="true"></i>
-            <span class="sr-only">Loading...</span>
-        </template>
+        <loading v-if="isLoading"/>
         <template v-else>
             <h2>
                 <b>{{sessionResult.clientsQuantity}}</b>&nbsp;<i class="fa primary-color fa-user-o"></i> attented!
@@ -28,7 +25,7 @@
             <h2>Features we tested</h2>
 
             <div v-for="(result, index) in sessionResult.results" v-bind:key="index"
-                 v-bind:class="{'chart-last': index == sessionResult.results.length - 1}" class="chart">
+                 v-bind:class="{'chart-last': index === sessionResult.results.length - 1}" class="chart">
                 <h3>{{result.featureId}}</h3>
                 <doughnut-chart v-bind:data="mapStatusesToChartData(result.statuses)"/>
             </div>
@@ -38,6 +35,7 @@
 
 <script>
     import DoughnutChart from './reports/DoughnutChart';
+    import Loading from './Loading';
     import {supportStatus} from '../features/support-status';
     import colorsSet from './reports/colors-set';
     import sessionService from '../sessions';
@@ -46,6 +44,7 @@
     export default {
         name: 'sesion-report',
         components: {
+            Loading,
             DoughnutChart
         },
         data: function () {
@@ -69,7 +68,7 @@
                 const data = refs.map(ref => statuses.filter(status => status === ref).length);
 
                 return {
-                    labels: refs,
+                    labels: ['Standard', 'Vendor specific', 'No support'],
                     datasets: [
                         {
                             backgroundColor: [
@@ -95,14 +94,6 @@
 </script>
 
 <style lang="scss" scoped>
-    .screen-center {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        margin-top: -0.5em;
-        margin-left: -0.5em;
-    }
-
     .chart {
         border-bottom: 1px solid #0073D1;
         padding-top: 30px;

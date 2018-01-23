@@ -4,6 +4,7 @@ import {
 } from '../logging';
 import configuration from '../configuration';
 import sessionService from '../sessions';
+import {handleResponse} from '../utils/http-utils';
 
 function getInfo() {
     // some browsers doesn't allow iteration over 'plugins' and 'mimeTypes'
@@ -21,12 +22,12 @@ function getInfo() {
         'ServiceWorker.prototype': typeof ServiceWorker !== 'undefined' ? ServiceWorker.prototype : null,
         'ServiceWorkerRegistration.prototype': typeof ServiceWorkerRegistration !== 'undefined' ? ServiceWorkerRegistration.prototype : null
     };
-};
+}
 
 function sendInfo() {
     const sessionId = sessionService.getCurrentSessionId();
 
-    var pruneOptions = {
+    const pruneOptions = {
         replacer: (value, defaultValue) => typeof value === 'function' ? JSON.stringify(value.toString()) : defaultValue,
         inheritedProperties: true
     };
@@ -53,8 +54,8 @@ function sendInfo() {
         },
         body: payloadString
     })
-    .catch(reason => logger.error('Sending browser info failed', reason));
-};
+        .then(handleResponse);
+}
 
 export default {
     sendInfo

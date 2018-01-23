@@ -3,6 +3,7 @@ import configuration from '../configuration';
 import {
     logger
 } from '../logging/logger';
+import {handleResponse} from '../utils/http-utils';
 
 const getCurrentSessionId = () => window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
 
@@ -24,7 +25,8 @@ function sendClientSessionResults() {
         },
         body: JSON.stringify(featureResults)
     })
-    .catch(reason => logger.error('Sending client results failed', reason));
+        .then(handleResponse)
+        .catch(reason => logger.error('Sending client results failed', reason));
 }
 
 function getSessionResults() {
@@ -34,12 +36,25 @@ function getSessionResults() {
         mode: 'cors',
         redirect: 'follow'
     })
-    .then(response => response.json())
-    .catch(reason => logger.error('Fetching session results failed', reason));
+        .then(handleResponse)
+        .then(response => response.json())
+        .catch(reason => logger.error('Fetching session results failed', reason));
+}
+
+function getCurrentSession() {
+    const sessionId = getCurrentSessionId();
+
+    return fetch(`${configuration.apiUrl}/sessions/${sessionId}`, {
+        mode: 'cors',
+        redirect: 'follow'
+    })
+        .then(handleResponse)
+        .then(response => response.json());
 }
 
 export default {
     getCurrentSessionId,
     sendClientSessionResults,
-    getSessionResults
+    getSessionResults,
+    getCurrentSession
 };

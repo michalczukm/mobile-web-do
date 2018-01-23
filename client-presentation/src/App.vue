@@ -4,7 +4,10 @@
             <span>What <i class="fa fa-mobile"></i> web can do?</span>
         </header>
         <main>
+            <loading v-if="state === constants.applicationState.LOADING" />
+
             <transition name="slide">
+                <not-found v-if="state === constants.applicationState.NO_SESSION"/>
                 <welcome v-if="state === constants.applicationState.WELCOME" v-bind:session="session"/>
                 <presentation v-if="state === constants.applicationState.FEATURE" v-bind:features="features"
                               v-bind:slideFeatureId="slideFeatureId"/>
@@ -30,6 +33,8 @@
     import ControlPanel from './components/ControlPanel';
     import SessionSummary from './components/SessionSummary';
     import Welcome from './components/Welcome';
+    import NotFound from './components/NotFound';
+    import Loading from './components/Loading';
     import Presentation from './components/Presentation';
     import SessionReport from './components/SessionReport';
     import {applicationState} from './presentation/presentation.message';
@@ -47,11 +52,13 @@
             SessionSummary,
             Welcome,
             Presentation,
-            SessionReport
+            SessionReport,
+            NotFound,
+            Loading
         },
         data: function () {
             return {
-                state: applicationState.WELCOME,
+                state: applicationState.LOADING,
                 session: {},
                 slideFeatureId: '',
                 features: features.get(),
@@ -64,35 +71,45 @@
                 applicationState: applicationState
             };
 
-            socket.on('connect', () => {
-                // todo  check actual state -> send empty message
-                logger.info('WS connected');
-            });
-            socket.on(
-                'switch-slide',
-                message => {
-                    switch (message.state) {
-                        case applicationState.WELCOME:
-                        case applicationState.SUMMARY:
-                        case applicationState.CLOSED:
-                            break;
-                        case applicationState.FEATURE:
-                            this.slideFeatureId = message.slideFeatureId;
-                            break;
-                        default:
-                            break;
+            const connect = () => {
+                socket.on('connect', () => {
+                    // todo  check actual state -> send empty message
+                    logger.info('WS connected');
+                });
+                socket.on(
+                    'switch-slide',
+                    message => {
+                        switch (message.state) {
+                            case applicationState.WELCOME:
+                            case applicationState.SUMMARY:
+                            case applicationState.CLOSED:
+                                break;
+                            case applicationState.FEATURE:
+                                this.slideFeatureId = message.slideFeatureId;
+                                break;
+                            default:
+                                break;
+                        }
+                        this.session = message.session;
+                        this.state = message.state;
+
+                        logger.info('WS message:', message);
                     }
-                    this.session = message.session;
-                    this.state = message.state;
+                );
+                socket.on('finish', _ => console.log('=== finish'));
 
-                    logger.info('WS message:', message);
-                }
-            );
-            socket.on('finish', _ => console.log('=== finish'));
+                browserInfoService.sendInfo()
+                    .then(() => sessionService.sendClientSessionResults())
+                    .catch(reason => logger.error('Sending client data for session failed', reason));
+            };
 
-            browserInfoService.sendInfo()
-                .then(() => sessionService.sendClientSessionResults())
-                .catch(reason => logger.error('Sending client data for session failed', reason));
+            // do not connect to WS if no no session
+            sessionService.getCurrentSession()
+                .then(() => connect())
+                .catch(reason => {
+                    logger.error('Fetching session results failed', reason);
+                    this.state = applicationState.NO_SESSION;
+                });
         },
         destroyed: function () {
         }
@@ -141,7 +158,7 @@
             float: right;
             color: $body;
             font-size: 0.7em;
-            display:inline-block
+            display: inline-block
         }
     }
 

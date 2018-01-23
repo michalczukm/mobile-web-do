@@ -64,6 +64,22 @@ export default (server: Hapi.Server) => {
     });
 
     server.route({
+        method: 'GET',
+        path: '/api/sessions/{id?}',
+        handler: (request, reply) => request.params.id
+            ? sessionController.getById(request, reply)
+            : sessionController.get(request, reply),
+        config: {
+            tags: ['api', 'presentation', 'admin'],
+            validate: {
+                params: {
+                    id: Joi.string().allow(null).optional()
+                }
+            }
+        }
+    });
+
+    server.route({
         method: 'POST',
         path: '/api/sessions',
         handler: (request, reply) => sessionController.create(request, reply),
@@ -103,22 +119,6 @@ export default (server: Hapi.Server) => {
             validate: {
                 params: {
                     id: Joi.string().required()
-                }
-            }
-        }
-    });
-
-    server.route({
-        method: 'GET',
-        path: '/api/sessions/{id?}',
-        handler: (request, reply) => request.params.id
-            ? sessionController.getById(request, reply)
-            : sessionController.get(request, reply),
-        config: {
-            tags: ['api', 'admin'],
-            validate: {
-                params: {
-                    id: Joi.string().allow(null).optional()
                 }
             }
         }
