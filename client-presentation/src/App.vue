@@ -18,6 +18,9 @@
             <a href="https://github.com/michalczukm" ref="noreferrer" target="_blank">
                 <i class="fa fa-github" aria-hidden="true"></i>&nbsp;michalczukm
             </a>
+            <span class="cookies">
+                This page use cookies
+            </span>
         </footer>
     </div>
 </template>
@@ -99,9 +102,9 @@
 <style lang="scss">
     $primary: #7300e8;
     $secondary: #0073d1;
+    $body: #777;
 
     body {
-        color: #777;
         margin: 0;
     }
 
@@ -133,6 +136,13 @@
         padding: 0 16px 0 24px;
         text-decoration: none;
         background-color: white;
+
+        .cookies {
+            float: right;
+            color: $body;
+            font-size: 0.7em;
+            display:inline-block
+        }
     }
 
     header span {
