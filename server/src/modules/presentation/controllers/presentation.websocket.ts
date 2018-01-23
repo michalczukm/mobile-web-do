@@ -25,13 +25,13 @@ export default (server: SocketIO.Server) => {
         const clientInfo = {
             clientConnectionId: socket.id,
             handlersToUnsubscribe: [subscription]
-        }
+        };
 
         const sessionId = getSessionId(socket);
         sessionId in sessions
             ? sessions[sessionId].push(clientInfo)
             : sessions[sessionId] = [clientInfo];
-    }
+    };
 
     server.on('connection', (socket: SocketIO.Socket) => {
         registerClient(socket);
