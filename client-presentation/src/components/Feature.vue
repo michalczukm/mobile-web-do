@@ -1,9 +1,6 @@
 <template>
     <div>
-        <div class="header">
-            <h1>{{feature.id}}</h1>
-        </div>
-
+        <h1>{{feature.id}}</h1>
         <div class="content">
             <i v-bind:class="{
                 'fa-thumbs-up success': feature.testsResult.isSuccess,

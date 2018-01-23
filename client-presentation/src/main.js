@@ -3,7 +3,6 @@
 import Vue from 'vue';
 import App from './App';
 require('milligram');
-require('./styles.css');
 
 Vue.config.productionTip = false;
 

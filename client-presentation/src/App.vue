@@ -4,7 +4,6 @@
             <span>What <i class="fa fa-mobile"></i> web can do?</span>
         </header>
         <main>
-            <button v-on:click="testBrowserInfo">test sending browser info</button>
             <transition name="slide">
                 <welcome v-if="state == constants.applicationState.WELCOME" v-bind:session="session"></welcome>
                 <presentation v-if="state == constants.applicationState.FEATURE" v-bind:features="features" v-bind:slideFeatureId="slideFeatureId"></presentation>
@@ -54,23 +53,6 @@ export default {
             currentFeatureFixIndex: 0
         };
     },
-    methods: {
-        testBrowserInfo: () => browserInfoService.sendInfo(),
-        toNextFeature: function () {
-            console.log(this.currentFeatureFixIndex);
-            this.feauresFixList.length + 1 >= this.currentFeatureFixIndex + 1
-                ? ++this.currentFeatureFixIndex &&
-                socket.emit('switch-slide', this.feauresFixList[this.currentFeatureFixIndex])
-                : console.log('No features left!');
-        },
-        toPreviousFeature: function () {
-            console.log(this.currentFeatureFixIndex);
-            this.currentFeatureFixIndex - 1 >= 0
-                ? --this.currentFeatureFixIndex &&
-                socket.emit('switch-slide', this.feauresFixList[this.currentFeatureFixIndex])
-                : console.log('No features left!');
-        }
-    },
     created: function () {
         this.constants = {
             applicationState: applicationState
@@ -112,9 +94,10 @@ export default {
 
 <style lang="scss">
 $primary: #7300e8;
-$secondary: #0073D1;
+$secondary: #0073d1;
 
 body {
+  color: #777;
   margin: 0;
 }
 
@@ -123,14 +106,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
-
-.primary-color {
-    color: $primary
-}
-
-.secondary-color {
-    color: $secondary;
 }
 
 main {
@@ -147,12 +122,13 @@ header {
 }
 
 footer {
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   width: 100%;
   border-top: $primary solid 1px;
   padding: 0 16px 0 24px;
   text-decoration: none;
+  background-color: white;
 }
 
 header span {
@@ -166,15 +142,42 @@ header span {
   padding-top: 16px;
 }
 
+.success {
+  color: #97d100;
+}
+
+.failed {
+  color: #e85e39;
+}
+
+.warning {
+  color: #e8ab19;
+}
+
+.primary-color {
+  color: $primary;
+}
+
+.secondary-color {
+  color: $secondary;
+}
+
 .slide-leave-active,
 .slide-enter-active {
   transition: 1s;
-  position: absolute;
+  position: relative;
 }
 .slide-enter {
   transform: translate(100%, 0);
 }
+.slide-enter-to {
+  transform: translate(0%, 0);
+}
+.slide-leave {
+  transform: translate(0%, 0);
+}
 .slide-leave-to {
+  position: absolute;
   transform: translate(-100%, 0);
 }
 </style>
