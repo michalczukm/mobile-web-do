@@ -42,8 +42,9 @@
     import features from './features';
     import browserInfoService from './browser-info/browser-info.service';
     import {logger} from './logging/logger';
+    import configuration from './configuration';
 
-    const socket = io('http://localhost:5051', {query: `sessionId=${sessionService.getCurrentSessionId()}`});
+    const socket = io(configuration.wsUrl, {query: `sessionId=${sessionService.getCurrentSessionId()}`});
 
     export default {
         name: 'app',

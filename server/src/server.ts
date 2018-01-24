@@ -7,6 +7,7 @@ import staticModule from './modules/static';
 import * as Path from 'path';
 
 const Pack = require('../package.json');
+const serverPort = process.env.PORT || 5050;
 
 const swaggerOptions = {
   basePath: '/api/',
@@ -21,8 +22,8 @@ const swaggerOptions = {
 const server = new Hapi.Server();
 
 const apiConnection = server.connection({
-  labels: ['api'],
-  port: process.env.PORT || 5050,
+  labels: ['api', 'web-sockets'],
+  port: serverPort,
   routes: {
     cors: {
       origin: ['*'],
@@ -44,17 +45,8 @@ apiConnection.state('client-id', {
   isSameSite: false
 });
 
-const webSocketsConnection = server.connection({
-  labels: ['web-sockets'],
-  port: process.env.PORT + 1 || 5051,
-  routes: {
-    cors: true
-  }
-});
-
-
 const loadModules = (serverInstance: Hapi.Server) => {
-  presentationModule.register(serverInstance, webSocketsConnection);
+  presentationModule.register(serverInstance, serverInstance);
   staticModule.register(serverInstance);
 };
 
