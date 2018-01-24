@@ -25,6 +25,15 @@ export const DATA = {
             browserInfo: [],
             state: 'WELCOME',
             clientResults: []
+        },
+        {
+            id: '19c4f674-f312-4f7f-94fa-a5e898bb9b46',
+            name: 'Goyello',
+            clientIdentifiers: [],
+            createdAt: new Date(),
+            browserInfo: [],
+            state: 'WELCOME',
+            clientResults: []
         }
     ] as Session[]
 };
