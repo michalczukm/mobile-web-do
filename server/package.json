@@ -19,18 +19,20 @@
     "@types/useragent": "^2.1.1",
     "@types/uuid": "^3.4.3",
     "boom": "^7.1.1",
+    "dotenv": "^4.0.0",
     "hapi": "^16.6.2",
     "hapi-swagger": "^8.0.0",
     "inert": "^4.2.1",
     "luxon": "^0.3.1",
     "socket.io": "^2.0.4",
+    "ts-node": "^4.1.0",
+    "typescript": "^2.6.2",
     "useragent": "^2.2.1",
     "uuid": "^3.2.1",
-    "vision": "^4.1.1",
-    "ts-node": "^4.1.0",
-    "typescript": "^2.6.2"
+    "vision": "^4.1.1"
   },
   "devDependencies": {
+    "@types/dotenv": "^4.0.2",
     "@types/hapi": "^16.1.12",
     "@types/inert": "^4.2.5",
     "@types/joi": "^13.0.4",

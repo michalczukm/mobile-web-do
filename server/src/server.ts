@@ -5,9 +5,11 @@ import * as hapiSwagger from 'hapi-swagger';
 import presentationModule from './modules/presentation';
 import staticModule from './modules/static';
 import * as Path from 'path';
+import * as dotenv from 'dotenv';
 
 const Pack = require('../package.json');
 const serverPort = process.env.PORT || 5050;
+dotenv.config();
 
 const swaggerOptions = {
   basePath: '/api/',
