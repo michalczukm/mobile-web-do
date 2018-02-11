@@ -1,11 +1,11 @@
 import * as Hapi from 'hapi';
 import * as inert from 'inert';
 import * as vision from 'vision';
-import * as hapiSwagger from 'hapi-swagger';
 import presentationModule from './modules/presentation';
 import staticModule from './modules/static';
 import * as Path from 'path';
 import * as dotenv from 'dotenv';
+import * as hapiSwagger from 'hapi-swagger';
 
 const Pack = require('../package.json');
 const serverPort = process.env.PORT || 5050;
@@ -21,38 +21,40 @@ const swaggerOptions = {
   }
 };
 
-const server = new Hapi.Server();
-
-const apiConnection = server.connection({
-  labels: ['api', 'web-sockets'],
-  port: serverPort,
-  routes: {
-    cors: {
-      origin: ['*'],
-      credentials: true
-    },
+const setupApiConnection = (serverInstance: Hapi.Server): Hapi.Server => {
+  const apiConnection = serverInstance.connection({
+    labels: ['api', 'web-sockets'],
+    port: serverPort,
+    routes: {
+      cors: {
+        origin: ['*'],
+        credentials: true
+      },
       files: {
-          relativeTo: Path.join(__dirname, 'client-dist')
+        relativeTo: Path.join(__dirname, 'client-dist')
       }
-  }
-});
+    }
+  });
 
-apiConnection.state('client-id', {
-  ttl: null,
-  isSecure: false,
-  isHttpOnly: true,
-  encoding: 'base64json',
-  clearInvalid: false,
-  strictHeader: true,
-  isSameSite: false
-});
+  apiConnection.state('client-id', {
+    ttl: null,
+    isSecure: false,
+    isHttpOnly: true,
+    encoding: 'base64json',
+    clearInvalid: false,
+    strictHeader: true,
+    isSameSite: false
+  });
+
+  return apiConnection;
+}
 
 const loadModules = (serverInstance: Hapi.Server) => {
   presentationModule.register(serverInstance, serverInstance);
   staticModule.register(serverInstance);
 };
 
-server.register([
+const startServer = (serverInstance: Hapi.Server) => serverInstance.register([
   inert, vision as any as Hapi.PluginFunction<any>,
   {
     register: hapiSwagger,
@@ -60,16 +62,19 @@ server.register([
   } as Hapi.PluginRegistrationObject<any>
 ]).then(() => {
 
-  loadModules(apiConnection);
+  loadModules(setupApiConnection(serverInstance));
 
-  server.start((err) => {
+  serverInstance.start((err) => {
     if (err) {
       throw err;
     }
 
-    server.connections.forEach(connection => console.log('Server running at:', connection.info.uri));
+    serverInstance.connections.forEach(connection => console.log('Server running at:', connection.info.uri));
   });
 }).catch((error: Error) => {
   console.error('Server plugins registration failed!');
   throw error;
 });
+
+
+export default startServer;
