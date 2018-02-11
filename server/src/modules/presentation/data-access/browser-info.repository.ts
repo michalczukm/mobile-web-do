@@ -1,6 +1,6 @@
-import { DATA } from '../data';
-import { Result } from '../../common';
-import { BrowserInfo } from './models';
+import { DATA } from '../../data';
+import { Result } from '../../../common';
+import { BrowserInfo } from '../models';
 
 /**
  * For now - only in-memory storage

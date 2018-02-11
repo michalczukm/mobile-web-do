@@ -1,5 +1,5 @@
-import { DATA } from '../data';
-import { Session } from './models';
+import { DATA } from '../../data';
+import { Session } from '../models';
 
 function exists(sessionId: string): Promise<boolean> {
     return Promise.resolve(DATA.sessions.some(session => session.id === sessionId));

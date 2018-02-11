@@ -4,12 +4,11 @@ import * as uuid from 'uuid/v4';
 
 import { RequestHandler } from '../../../hapi-utils';
 import { Session, SessionState, ClientSessionResults } from '../models';
-import sessionRepository from '../session.repository';
+import { sessionRepository, clientIdentifiersRepository } from '../data-access';
 import { SessionWebModel } from './web-models/session';
 import { presentationNotifier } from '../services/notifications';
 import featureService from '../services/features';
 import { userAgentService } from '../services/browser-info';
-import clientIdentifiersRepository from '../client-identifiers.repository';
 
 const mapSession = (session: Session) => ({
     id: session.id,

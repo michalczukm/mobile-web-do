@@ -1,8 +1,8 @@
-import { notificationBus } from '../services/notifications';
 import { Subscription } from '@reactivex/rxjs';
-import sessionRepository from '../session.repository';
-import { PresentationMessage } from '../dtos/notifications';
 import { logger } from '../../../common';
+import { sessionRepository } from '../data-access';
+import { notificationBus } from '../services/notifications';
+import { PresentationMessage } from '../dtos/notifications';
 
 type ClientInfo = { clientConnectionId: string, handlersToUnsubscribe: Subscription[] };
 

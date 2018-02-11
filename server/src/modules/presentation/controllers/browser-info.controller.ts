@@ -2,9 +2,11 @@ import * as Hapi from 'hapi';
 import * as Boom from 'boom';
 import * as uuid from 'uuid/v4';
 
-import browserInfoRepository from '../browser-info.repository';
-import clientIdentifiersRepository from '../client-identifiers.repository';
-import sessionRepository from '../session.repository';
+import {
+    sessionRepository, browserInfoRepository,
+    clientIdentifiersRepository
+} from '../data-access';
+
 import { Result } from '../../../common';
 import { RequestHandler } from '../../../hapi-utils';
 import { BrowserInfo, VersionInfo } from '../models';

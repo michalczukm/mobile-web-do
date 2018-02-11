@@ -1,7 +1,7 @@
 
-import { DATA } from '../data';
-import { Result } from '../../common';
-import { BrowserInfo, ClientIdentifier } from './models';
+import { DATA } from '../../data';
+import { Result } from '../../../common';
+import { BrowserInfo, ClientIdentifier } from '../models';
 
 /**
  * For now - only in-memory storage

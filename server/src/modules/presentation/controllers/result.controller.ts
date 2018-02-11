@@ -1,7 +1,7 @@
 import * as Hapi from 'hapi';
 import * as Boom from 'boom';
-import sessionRepository from '../session.repository';
-import { ClientInfo, ClientSessionResults, SupportStatus } from '../models/client-info.model';
+import { sessionRepository } from '../data-access';
+import { ClientInfo, ClientSessionResults, SupportStatus } from '../models';
 import { SessionResultsWebModel, SystemStatisticWebMode } from './web-models/results';
 import { RequestHandler } from '../../../hapi-utils';
 
