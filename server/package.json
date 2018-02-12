@@ -8,6 +8,7 @@
     "lint": "eslint . --ext .js",
     "start": "ts-node ./src/index.ts",
     "test": "mocha --require ts-node/register --watch-extensions ts,tsx ./test/**/*.spec.ts",
+    "test:watch": "npm test -- --watch",
     "nodemon:start": "npm run nodemon:build",
     "nodemon:build": "nodemon --exec ts-node --type-check -- ./src/server.ts"
   },

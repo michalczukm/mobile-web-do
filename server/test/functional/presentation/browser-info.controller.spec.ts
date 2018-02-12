@@ -13,25 +13,19 @@ describe('browser info', () => {
         return startServer(server);
     });
 
-    it('should add browser info for correct data', () => {
-        return server.inject({
+    it('should add browser info for correct data', async () => {
+        const response = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
-            payload: {
-                sessionId: testConstants.sessionId,
-                browserInfo: {
-                    navigator: {},
-                    window: {}
-                }
-            }
-        }).then(response => {
-            expect(response.statusCode).to.equal(200);
+            payload: buildCorrectPayload()
         });
+
+        expect(response.statusCode).to.equal(200);
     });
 
-    it('should return client 404 error for non existing session', () => {
+    it('should return client 404 error for non existing session', async () => {
         const nonExistingSessionId = '123123123';
-        return server.inject({
+        const response = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: {
@@ -41,13 +35,13 @@ describe('browser info', () => {
                     window: {}
                 }
             }
-        }).then(response => {
-            expect(response.statusCode).to.equal(404);
         });
+
+        expect(response.statusCode).to.equal(404);
     });
 
-    it('should return client 400 error for non browser info without sessionId', () => {
-        return server.inject({
+    it('should return client 400 error for non browser info without sessionId', async () => {
+        const response = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: {
@@ -56,13 +50,13 @@ describe('browser info', () => {
                     navigator: {}
                 }
             }
-        }).then(response => {
-            expect(response.statusCode).to.equal(400);
         });
+
+        expect(response.statusCode).to.equal(400);
     });
 
-    it('should return client 400 error for non browser info without navigator', () => {
-        return server.inject({
+    it('should return client 400 error for non browser info without navigator', async () => {
+        const response = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: {
@@ -71,13 +65,13 @@ describe('browser info', () => {
                     window: {}
                 }
             }
-        }).then(response => {
-            expect(response.statusCode).to.equal(400);
         });
+
+        expect(response.statusCode).to.equal(400);
     });
 
-    it('should return client 400 error for non browser info without window', () => {
-        return server.inject({
+    it('should return client 400 error for non browser info without window', async () => {
+        const response = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: {
@@ -86,10 +80,30 @@ describe('browser info', () => {
                     navigator: {}
                 }
             }
-        }).then(response => {
-            expect(response.statusCode).to.equal(400);
         });
+
+        expect(response.statusCode).to.equal(400);
+    });
+
+    it('should set client cookie `client-id` as unique value', async () => {
+        const response = await server.inject({
+            method: 'POST',
+            url: '/api/browser-info',
+            payload: buildCorrectPayload()
+        });
+
+        expect(response.headers['set-cookie'][0]).to.have.string('client-id=');
     });
 
     after(() => server.stop());
 });
+
+function buildCorrectPayload(): Object {
+    return {
+        sessionId: testConstants.sessionId,
+        browserInfo: {
+            navigator: {},
+            window: {}
+        }
+    };
+}
