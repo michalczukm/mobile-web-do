@@ -1,4 +1,4 @@
-import { SessionState } from '../../models';
+import { SessionState } from '../../../../common';
 
 export class PresentationMessage {
     constructor(

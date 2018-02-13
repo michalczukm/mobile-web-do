@@ -1,5 +1,6 @@
 import { Subject, Observable } from '@reactivex/rxjs';
-import { Session, SessionState } from '../../models';
+import { SessionState } from '../../../../common';
+import { Session } from '../../models';
 import { PresentationMessage } from '../../dtos/notifications';
 
 interface NotificationPublisher<T> {

@@ -1,8 +1,7 @@
-import * as uuid from 'uuid/v4';
-
 import { BrowserInfo } from './browser-info.model';
 import { ClientIdentifier } from './client-identifier.model';
 import { ClientInfo } from './client-info.model';
+import { SessionState } from '../../../common';
 
 export type Session = {
     id: string,
@@ -13,11 +12,4 @@ export type Session = {
     browserInfo: BrowserInfo[],
     clientIdentifiers: ClientIdentifier[],
     clientResults: ClientInfo[];
-};
-
-export enum SessionState {
-    Welcome = 'WELCOME',
-    Feature = 'FEATURE',
-    Summary = 'SUMMARY',
-    Closed = 'CLOSED'
 };

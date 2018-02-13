@@ -1,4 +1,4 @@
-import { SupportStatus } from '../../../models/client-info.model';
+import { SupportStatus } from '../../../../../common';
 
 export type SystemStatisticWebMode = {
     quantity: number,

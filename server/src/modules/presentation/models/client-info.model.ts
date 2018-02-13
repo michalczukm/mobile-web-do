@@ -1,10 +1,5 @@
 import { VersionInfo } from './version-info.model';
-
-export enum SupportStatus {
-    STANDARD = 'STANDARD',
-    VENDOR_SPECIFIC = 'VENDOR_SPECIFIC',
-    NO_SUPPORT = 'NO_SUPPORT'
-}
+import { SupportStatus } from '../../../common';
 
 export type ClientSessionResults = {
     featureId: string,

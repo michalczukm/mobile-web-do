@@ -1,9 +1,10 @@
 import * as Hapi from 'hapi';
 import * as Boom from 'boom';
 import { sessionRepository } from '../data-access';
-import { ClientInfo, ClientSessionResults, SupportStatus } from '../models';
+import { ClientInfo, ClientSessionResults } from '../models';
 import { SessionResultsWebModel, SystemStatisticWebMode } from './web-models/results';
 import { RequestHandler } from '../../../hapi-utils';
+import { SupportStatus } from '../../../common';
 
 const groupBy = (list: Object[], selector: (ref: Object) => any): Map<any, Object[]> => {
     const map = new Map();

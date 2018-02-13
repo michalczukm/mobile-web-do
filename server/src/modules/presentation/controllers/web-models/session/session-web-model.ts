@@ -1,4 +1,4 @@
-import { SessionState } from '../../../models/session.model';
+import { SessionState } from '../../../../../common';
 
 export type SessionWebModel = {
     id: string,

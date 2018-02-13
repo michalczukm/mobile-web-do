@@ -1,14 +1,14 @@
 import * as Hapi from 'hapi';
 import * as Boom from 'boom';
-import * as uuid from 'uuid/v4';
 
 import { RequestHandler } from '../../../hapi-utils';
-import { Session, SessionState, ClientSessionResults } from '../models';
+import { Session, ClientSessionResults } from '../models';
 import { sessionRepository, clientIdentifiersRepository } from '../data-access';
 import { SessionWebModel } from './web-models/session';
 import { presentationNotifier } from '../services/notifications';
 import featureService from '../services/features';
 import { userAgentService } from '../services/browser-info';
+import { SessionState } from '../../../common';
 
 const mapSession = (session: Session) => ({
     id: session.id,
@@ -21,7 +21,6 @@ const mapSession = (session: Session) => ({
 function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
     const name = request.payload.name;
     const session = {
-        id: uuid(),
         name: name,
         state: SessionState.Welcome,
         createdAt: new Date(),

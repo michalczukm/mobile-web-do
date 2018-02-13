@@ -7,9 +7,15 @@ import * as Path from 'path';
 import * as dotenv from 'dotenv';
 import * as hapiSwagger from 'hapi-swagger';
 
-const Pack = require('../package.json');
-const serverPort = process.env.PORT || 5050;
 dotenv.config();
+
+const env = {
+  serverPort: process.env.PORT,
+  dbHost: process.env.DB_HOST
+};
+
+const Pack = require('../package.json');
+const serverPort = env.serverPort || 5050;
 
 const swaggerOptions = {
   basePath: '/api/',

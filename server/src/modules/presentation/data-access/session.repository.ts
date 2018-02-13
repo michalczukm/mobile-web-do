@@ -1,3 +1,4 @@
+import * as uuid from 'uuid/v4';
 import { DATA } from '../../data';
 import { Session } from '../models';
 
@@ -6,6 +7,7 @@ function exists(sessionId: string): Promise<boolean> {
 }
 
 function create(session: Session): Promise<void> {
+    session.id = uuid();
     DATA.sessions.push(session);
     return Promise.resolve();
 }
