@@ -29,7 +29,7 @@ export class SessionService {
     }
 
     setFeature(sessionId: string, feature: Feature): Observable<Object | void> {
-        return this.http.put(`${this.baseUrl}/sessions/${sessionId}/feature/current`, {
+        return this.http.put(`${this.baseUrl}/sessions/${sessionId}/features/current`, {
             slideFeatureId: feature.id
         });
     }

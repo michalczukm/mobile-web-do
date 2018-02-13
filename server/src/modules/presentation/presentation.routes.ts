@@ -95,7 +95,7 @@ export default (server: Hapi.Server) => {
 
     server.route({
         method: 'PUT',
-        path: '/api/sessions/{id}/feature/current',
+        path: '/api/sessions/{id}/features/current',
         handler: (request, reply) => sessionController.setSlideFeature(request, reply),
         config: {
             tags: ['api', 'admin'],
@@ -131,6 +131,9 @@ export default (server: Hapi.Server) => {
         config: {
             tags: ['api', 'admin'],
             validate: {
+                payload: Joi.object({
+                    state: Joi.string().required()
+                }),
                 params: {
                     id: Joi.string().required()
                 }

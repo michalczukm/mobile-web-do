@@ -5,7 +5,7 @@ import * as Hapi from 'hapi';
 import startServer from '../../../src/server'
 import testConstants from '../tests.constants';
 
-describe('browser info', () => {
+describe('browser info: add new client', () => {
     let server: Hapi.Server;
 
     before(() => {
@@ -13,19 +13,22 @@ describe('browser info', () => {
         return startServer(server);
     });
 
+    after(() => server.stop());
+
     it('should add browser info for correct data', async () => {
-        const response = await server.inject({
+        const actual = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: buildCorrectPayload()
         });
 
-        expect(response.statusCode).to.equal(200);
+        expect(actual.statusCode).to.equal(200);
     });
 
     it('should return client 404 error for non existing session', async () => {
         const nonExistingSessionId = '123123123';
-        const response = await server.inject({
+
+        const actual = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: {
@@ -37,11 +40,11 @@ describe('browser info', () => {
             }
         });
 
-        expect(response.statusCode).to.equal(404);
+        expect(actual.statusCode).to.equal(404);
     });
 
     it('should return client 400 error for non browser info without sessionId', async () => {
-        const response = await server.inject({
+        const actual = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: {
@@ -52,58 +55,72 @@ describe('browser info', () => {
             }
         });
 
-        expect(response.statusCode).to.equal(400);
+        expect(actual.statusCode).to.equal(400);
     });
 
     it('should return client 400 error for non browser info without navigator', async () => {
-        const response = await server.inject({
+        const actual = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: {
-                sessionId: testConstants.sessionId,
+                sessionId: testConstants.sessionIdFeatureState,
                 browserInfo: {
                     window: {}
                 }
             }
         });
 
-        expect(response.statusCode).to.equal(400);
+        expect(actual.statusCode).to.equal(400);
     });
 
     it('should return client 400 error for non browser info without window', async () => {
-        const response = await server.inject({
+        const actual = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: {
-                sessionId: testConstants.sessionId,
+                sessionId: testConstants.sessionIdFeatureState,
                 browserInfo: {
                     navigator: {}
                 }
             }
         });
 
-        expect(response.statusCode).to.equal(400);
+        expect(actual.statusCode).to.equal(400);
     });
 
     it('should set client cookie `client-id` as unique value', async () => {
-        const response = await server.inject({
+        const actual = await server.inject({
             method: 'POST',
             url: '/api/browser-info',
             payload: buildCorrectPayload()
         });
 
-        expect(response.headers['set-cookie'][0]).to.have.string('client-id=');
+        expect(actual.headers['set-cookie'][0]).to.have.string('client-id=');
     });
 
-    after(() => server.stop());
+    it('should not set cookie `client-id` if it exists in request', async () => {
+        const fixedClientIdCookie = `client-id=ImExNDQ5ZGY3LTIyNDQtNGRmMy1hYzQxLThhZTFiYzhmYmNiMCI=`;
+
+        const actual = await server.inject({
+            method: 'POST',
+            url: '/api/browser-info',
+            payload: buildCorrectPayload(),
+            headers: {
+                Cookie: fixedClientIdCookie
+            }
+        });
+
+        expect(actual.statusCode).to.equal(200);
+        // tslint:disable-next-line:no-unused-expression
+        expect(actual.headers['set-cookie']).to.be.undefined;
+    });
 });
 
-function buildCorrectPayload(): Object {
-    return {
-        sessionId: testConstants.sessionId,
+const buildCorrectPayload = (): Object => (
+    {
+        sessionId: testConstants.sessionIdFeatureState,
         browserInfo: {
             navigator: {},
             window: {}
         }
-    };
-}
+    });

@@ -47,7 +47,7 @@ function getForSession(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Prom
                     results.push({ featureId: key, statuses: value.map(r => r.status) }))
 
             const webModel: SessionResultsWebModel = {
-                clientsQuantity: session.clientResults.length,
+                clientsQuantity: session.clientIdentifiers.length,
                 browsers: browsers,
                 systems: systems,
                 results: results
