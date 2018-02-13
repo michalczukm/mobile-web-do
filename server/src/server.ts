@@ -1,11 +1,12 @@
 import * as Hapi from 'hapi';
 import * as inert from 'inert';
 import * as vision from 'vision';
-import presentationModule from './modules/presentation';
-import staticModule from './modules/static';
 import * as Path from 'path';
 import * as dotenv from 'dotenv';
 import * as hapiSwagger from 'hapi-swagger';
+import staticModule from './modules/static';
+import presentationModule from './modules/presentation';
+import databaseSetup from './infrastructure/database.setup';
 
 dotenv.config();
 
@@ -67,6 +68,10 @@ const startServer = (serverInstance: Hapi.Server) => serverInstance.register([
     options: swaggerOptions
   } as Hapi.PluginRegistrationObject<any>
 ]).then(() => {
+
+  databaseSetup({
+    connectionString: env.dbHost
+  });
 
   loadModules(setupApiConnection(serverInstance));
 

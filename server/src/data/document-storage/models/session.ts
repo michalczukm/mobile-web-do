@@ -74,4 +74,4 @@ const SessionSchema = new Mongoose.Schema(
         timestamps: true
     });
 
-export const BrowserInfoModel = Mongoose.model('BrowserInfo', BrowserInfoSchema);
+export const SessionModel = Mongoose.model('Session', BrowserInfoSchema);
