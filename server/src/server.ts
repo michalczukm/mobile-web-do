@@ -6,7 +6,7 @@ import * as dotenv from 'dotenv';
 import * as hapiSwagger from 'hapi-swagger';
 import staticModule from './modules/static';
 import presentationModule from './modules/presentation';
-import databaseSetup from './infrastructure/database.setup';
+import * as databaseSetup from './infrastructure/database.setup';
 
 dotenv.config();
 
@@ -69,9 +69,11 @@ const startServer = (serverInstance: Hapi.Server) => serverInstance.register([
   } as Hapi.PluginRegistrationObject<any>
 ]).then(() => {
 
-  databaseSetup({
+  databaseSetup.init({
     connectionString: env.dbHost
   });
+
+  serverInstance.on('stop', () => databaseSetup.dispose());
 
   loadModules(setupApiConnection(serverInstance));
 
@@ -86,6 +88,5 @@ const startServer = (serverInstance: Hapi.Server) => serverInstance.register([
   console.error('Server plugins registration failed!');
   throw error;
 });
-
 
 export default startServer;
