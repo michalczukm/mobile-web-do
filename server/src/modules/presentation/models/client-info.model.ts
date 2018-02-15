@@ -6,7 +6,7 @@ export type ClientSessionResults = {
     status: SupportStatus
 };
 
-export type ClientInfo = {
+export type ClientInfoModel = {
     clientIdentifier: string,
     clientResults: ClientSessionResults[],
     system: VersionInfo,

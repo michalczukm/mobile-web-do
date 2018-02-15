@@ -1,4 +1,4 @@
-export type ClientIdentifier = {
+export type ClientIdentifierModel = {
     identifier: string,
     createdAt: Date
 };

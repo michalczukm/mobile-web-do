@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as Path from 'path';
 
 import { RequestHandler } from '../../../hapi-utils';
-import { Session, ClientSessionResults } from '../models';
+import { SessionModel, ClientSessionResults } from '../models';
 import { sessionRepository, clientIdentifiersRepository } from '../data-access';
 import { SessionWebModel } from './web-models/session';
 import { presentationNotifier } from '../services/notifications';
@@ -13,7 +13,7 @@ import { userAgentService } from '../services/browser-info';
 import { SessionState, logger } from '../../../common';
 import { DATA } from '../../data';
 
-const mapSession = (session: Session) => ({
+const mapSession = (session: SessionModel) => ({
     id: session.id,
     name: session.name,
     createdAt: session.createdAt,
@@ -30,10 +30,10 @@ function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hap
         currentSlideFeatureId: '',
         browserInfo: [],
         clientIdentifiers: []
-    } as Session;
+    } as SessionModel;
 
     return sessionRepository.create(session)
-        .then(contains => reply().code(200));
+        .then(() => reply().code(200));
 }
 
 function get(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
@@ -56,21 +56,23 @@ function setState(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<H
     const sessionId = request.params.id;
     const newState = request.payload.state as SessionState;
 
-    return sessionRepository.getById(sessionId)
-        .then(session => {
-            if (!session) {
+    return sessionRepository.exists(sessionId)
+        .then(sessionExists => {
+            if (!sessionExists) {
                 return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
             }
 
-            session.state = newState;
+            const sessionUpdates = {
+                state: newState
+            } as {[key in keyof SessionModel]: any };
 
             if (newState === SessionState.Feature) {
-                session.currentSlideFeatureId = featureService.getPresentationSet()[0].id;
+                sessionUpdates.currentSlideFeatureId = featureService.getFirstFeature().id;
             }
 
-            return sessionRepository.update(session)
+            return sessionRepository.updateFields(sessionId, sessionUpdates)
                 .then(() => {
-                    presentationNotifier.setState(newState, session);
+                    presentationNotifier.setState(newState, sessionUpdates);
                     return reply().code(200);
                 });
         });
@@ -89,9 +91,10 @@ function setSlideFeature(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Pr
                 return reply(Boom.badRequest(`Session ${session.name} should be in presentation state!`));
             }
 
-            session.currentSlideFeatureId = slideFeatureId;
 
-            return sessionRepository.update(session)
+            return sessionRepository.updateFields(sessionId, {
+                currentSlideFeatureId: slideFeatureId
+            } as { [key in keyof SessionModel]: any })
                 .then(() => {
                     presentationNotifier.setSlideFeature(slideFeatureId, session);
                     return reply();
@@ -105,9 +108,9 @@ function addResults(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise
     const clientId = request.state['client-id'];
     const clientSystemInfo = userAgentService.mapUserAgent(request.headers['user-agent']);
 
-    return sessionRepository.getById(sessionId)
-        .then(session => {
-            if (!session) {
+    return sessionRepository.exists(sessionId)
+        .then(sessionExists => {
+            if (!sessionExists) {
                 return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
             }
 
@@ -117,13 +120,13 @@ function addResults(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise
                         return reply();
                     }
 
-                    session.clientResults.push(({
-                        ...clientSystemInfo,
-                        clientIdentifier: clientId,
-                        clientResults: clientSessionResults
-                    }));
-
-                    return sessionRepository.update(session)
+                    return sessionRepository.addClientResult(
+                        sessionId,
+                        {
+                            ...clientSystemInfo,
+                            clientIdentifier: clientId,
+                            clientResults: clientSessionResults
+                        })
                         .then(() => reply());
                 });
         });

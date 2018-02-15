@@ -1,36 +1,54 @@
-import * as uuid from 'uuid/v4';
-import { DATA } from '../../data';
-import { Session } from '../models';
+import { SessionModel, ClientInfoModel } from '../models';
+import { documentDatabase, Session } from '../../../data';
+
+const sessionsDbCollection = documentDatabase.session;
 
 function exists(sessionId: string): Promise<boolean> {
-    return Promise.resolve(DATA.sessions.some(session => session.id === sessionId));
+    return sessionsDbCollection.count({ _id: sessionId })
+        .then(result => result > 0);
 }
 
-function create(session: Session): Promise<void> {
-    session.id = uuid();
-    DATA.sessions.push(session);
-    return Promise.resolve();
+function create(session: SessionModel): Promise<SessionModel> {
+    const { id, ...sessionDocument } = session;
+
+    return sessionsDbCollection.create(sessionDocument).then(mapSessionToSessionModel);
 }
 
-function get(): Promise<Session[]> {
-    return Promise.resolve(DATA.sessions);
+function get(): Promise<SessionModel[]> {
+    return sessionsDbCollection.find()
+        .then(sessions => sessions.map(session => mapSessionToSessionModel(session)));
 }
 
-function getById(id: string): Promise<Session> {
-    return Promise.resolve(DATA.sessions.find(session => session.id === id));
+function getById(id: string): Promise<SessionModel> {
+    return sessionsDbCollection.findById(id).then(mapSessionToSessionModel);
 }
 
-function update(session: Session): Promise<void> {
-    const indexToUpdate = DATA.sessions.findIndex(s => s.id === session.id);
-    DATA.sessions[indexToUpdate] = session;
-
-    return Promise.resolve();
+function updateFields(sessionId: string, modifyFields: { [key in keyof SessionModel]: any }): Promise<void> {
+    return new Promise((resolve, reject) => {
+        sessionsDbCollection.update({ _id: sessionId }, {
+            $set: modifyFields,
+        }, (error, _) => error ? reject(error) : resolve());
+    });
 }
+
+function addClientResult(sessionId: string, clientResult: ClientInfoModel): Promise<void> {
+    return new Promise((resolve, reject) => {
+        sessionsDbCollection.update({ _id: sessionId }, {
+            $push: { clientResults: clientResult }
+        }, (error, _) => error ? reject(error) : resolve());
+    });
+}
+
+const mapSessionToSessionModel = (session: Session): SessionModel => {
+    const { _id, ...sessionModel } = session;
+    return sessionModel;
+};
 
 export default {
     exists,
     create,
     get,
     getById,
-    update
+    updateFields,
+    addClientResult
 }

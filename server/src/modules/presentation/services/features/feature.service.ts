@@ -1,8 +1,7 @@
 import { FeatureDto } from './feature.dto';
 
 // fixed list of presentation features - not async.
-function getPresentationSet(): FeatureDto[] {
-    return [
+const FEATURES = [
         { id: 'home-screen', name: 'Home Screen' },
         { id: 'push-api', name: 'Push API' },
         { id: 'notifications-api', name: 'Notifications API' },
@@ -25,8 +24,16 @@ function getPresentationSet(): FeatureDto[] {
         { id: 'usb', name: 'Web USB' },
         { id: 'nfc', name: 'NFC' }
     ];
+
+function getPresentationSet(): FeatureDto[] {
+    return FEATURES;
+}
+
+function getFirstFeature(): FeatureDto {
+    return FEATURES[0];
 }
 
 export default {
-    getPresentationSet
+    getPresentationSet,
+    getFirstFeature
 };

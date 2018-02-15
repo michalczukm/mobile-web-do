@@ -1,6 +1,6 @@
 import { VersionInfo } from './version-info.model';
 
-export type BrowserInfo = {
+export type BrowserInfoModel = {
     system: VersionInfo,
     browser: VersionInfo
     navigator: Object,

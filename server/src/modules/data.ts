@@ -1,11 +1,11 @@
-import { BrowserInfo, ClientIdentifier, Session } from './presentation/models';
+import { BrowserInfoModel, ClientIdentifierModel, SessionModel } from './presentation/models';
 
 /**
  * only in-memory storage for POC
  */
 export const DATA = {
-    browserInfo: [] as BrowserInfo[],
-    clientIdentifiers: [] as ClientIdentifier[],
+    browserInfo: [] as BrowserInfoModel[],
+    clientIdentifiers: [] as ClientIdentifierModel[],
     sessions: [
         {
             id: '8d4d98a8-eb90-4942-87f2-5fb57e7abc0f',
@@ -35,5 +35,5 @@ export const DATA = {
             state: 'WELCOME',
             clientResults: []
         }
-    ] as Session[]
+    ] as SessionModel[]
 };

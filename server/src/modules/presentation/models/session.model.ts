@@ -1,15 +1,15 @@
-import { BrowserInfo } from './browser-info.model';
-import { ClientIdentifier } from './client-identifier.model';
-import { ClientInfo } from './client-info.model';
+import { BrowserInfoModel } from './browser-info.model';
+import { ClientIdentifierModel } from './client-identifier.model';
+import { ClientInfoModel } from './client-info.model';
 import { SessionState } from '../../../common';
 
-export type Session = {
+export type SessionModel = {
     id: string,
     name: string,
     createdAt: Date,
     state: SessionState,
     currentSlideFeatureId: string,
-    browserInfo: BrowserInfo[],
-    clientIdentifiers: ClientIdentifier[],
-    clientResults: ClientInfo[];
+    browserInfo: BrowserInfoModel[],
+    clientIdentifiers: ClientIdentifierModel[],
+    clientResults: ClientInfoModel[];
 };

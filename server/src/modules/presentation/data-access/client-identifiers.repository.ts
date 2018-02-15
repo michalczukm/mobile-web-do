@@ -1,7 +1,7 @@
 
 import { DATA } from '../../data';
 import { Result } from '../../../common';
-import { BrowserInfo, ClientIdentifier } from '../models';
+import { BrowserInfoModel, ClientIdentifierModel } from '../models';
 
 /**
  * For now - only in-memory storage
@@ -10,7 +10,7 @@ function add(clientIdentifier: string): Promise<void> {
     DATA.clientIdentifiers.push({
         identifier: clientIdentifier,
         createdAt: new Date()
-    } as ClientIdentifier);
+    } as ClientIdentifierModel);
 
     return Promise.resolve();
 }

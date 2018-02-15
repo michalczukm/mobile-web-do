@@ -9,7 +9,7 @@ import {
 
 import { Result } from '../../../common';
 import { RequestHandler } from '../../../hapi-utils';
-import { BrowserInfo, VersionInfo } from '../models';
+import { BrowserInfoModel, VersionInfo } from '../models';
 import { userAgentService } from '../services/browser-info'
 
 function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
@@ -17,7 +17,7 @@ function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hap
     const clientId: string = request.state['client-id'] || uuid();
 
     const addBrowserInfo = () => {
-        const browserInfo: BrowserInfo = ({
+        const browserInfo: BrowserInfoModel = ({
             ...request.payload, ...userAgentService.mapUserAgent(request.headers['user-agent'])
         });
 

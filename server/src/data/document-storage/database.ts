@@ -4,13 +4,13 @@ import {
     ClientIdentifierModel, SessionModel
 } from './models';
 
-export interface DatabaseContext {
+interface DatabaseContext {
     browserInfo: Mongoose.Model<BrowserInfo>;
     clientIdentifier: Mongoose.Model<ClientIdentifier>;
     session: Mongoose.Model<Session>;
 }
 
-export const dbContext = <DatabaseContext>{
+export default <DatabaseContext>{
     browserInfo: BrowserInfoModel,
     clientIdentifier: ClientIdentifierModel,
     session: SessionModel

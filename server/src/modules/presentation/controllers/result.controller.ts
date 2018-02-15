@@ -1,7 +1,7 @@
 import * as Hapi from 'hapi';
 import * as Boom from 'boom';
 import { sessionRepository } from '../data-access';
-import { ClientInfo, ClientSessionResults } from '../models';
+import { ClientInfoModel, ClientSessionResults } from '../models';
 import { SessionResultsWebModel, SystemStatisticWebMode } from './web-models/results';
 import { RequestHandler } from '../../../hapi-utils';
 import { SupportStatus } from '../../../common';
@@ -30,12 +30,12 @@ function getForSession(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Prom
             }
 
             const browsers = [] as SystemStatisticWebMode[];
-            groupBy(session.clientResults, (result: ClientInfo) => result.browser.family)
-                .forEach((value: ClientInfo[], key: string) => browsers.push({ family: key, quantity: value.length }));
+            groupBy(session.clientResults, (result: ClientInfoModel) => result.browser.family)
+                .forEach((value: ClientInfoModel[], key: string) => browsers.push({ family: key, quantity: value.length }));
 
             const systems = [] as SystemStatisticWebMode[];
-            groupBy(session.clientResults, (result: ClientInfo) => result.system.family)
-                .forEach((value: ClientInfo[], key: string) => systems.push({ family: key, quantity: value.length }));
+            groupBy(session.clientResults, (result: ClientInfoModel) => result.system.family)
+                .forEach((value: ClientInfoModel[], key: string) => systems.push({ family: key, quantity: value.length }));
 
             const results = [] as {
                 featureId: string,

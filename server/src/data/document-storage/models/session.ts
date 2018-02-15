@@ -18,6 +18,9 @@ interface ClientInfo extends Mongoose.Document {
 }
 
 export interface Session extends BaseDocument {
+    // shadows Mongose.Document id - which is optional
+    // by default it is getter which returns _id to string (hex)
+    readonly id: string,
     _id: Mongoose.Types.ObjectId,
     name: string,
     createdAt: Date,
