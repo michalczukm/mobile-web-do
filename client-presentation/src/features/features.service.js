@@ -265,7 +265,36 @@ const FEATURES = [
         () => ({}),
         {test: () => window.Accelerometer, specification: specificationType.STANDARD}),
     new Feature('device-motion',
-        () => ({}),
+        () => ({
+            component: Vue.component(makeExampleId('device-motion'), {
+                template:
+                    `<div>
+                        <p>acceleration: {{motion.acceleration || 'loading' | axisMotion}}</p>
+                        <p>accelerationIncludingGravity: {{motion.accelerationIncludingGravity || 'loading' | axisMotion}}</p>
+                        <p>rotationRate: {{motion.rotationRate || 'loading' | rotation}}</p>
+                        <p>interval: {{motion.interval || 'loading'}}</p>
+                    </div>`,
+                data: () => ({
+                    motion: { }
+                }),
+                created: function() {
+                    window.addEventListener('devicemotion', (motion) => (this.motion = motion), false);
+                },
+                filters: {
+                    axisMotion: function(value) {
+                        const isInObject = (object, ...keys) => keys.every(key => key in object);
+
+                        return value instanceof Object && isInObject(value, 'x', 'y', 'z')
+                            ? `x: ${value.x || 0}, y: ${value.y || 0}, z: ${value.z || 0}`
+                            : value;
+                    },
+                    rotation: function(value) {
+
+                    }
+                }
+            }),
+            infoArray: [`It might take some time`]
+        }),
         {test: () => window.DeviceMotionEvent, specification: specificationType.STANDARD}),
     new Feature('speech-recognition',
         () => ({}),
