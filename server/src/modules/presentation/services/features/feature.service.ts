@@ -22,6 +22,7 @@ function getPresentationSet(): FeatureDto[] {
         { id: 'accelerometer', name: 'Accelerometer' },
         { id: 'device-motion', name: 'Device Motion' },
         { id: 'speech-recognition', name: 'Speech Recognition' },
+        { id: 'share', name: 'Share media' },
         { id: 'usb', name: 'Web USB' }
     ];
 }

@@ -227,6 +227,37 @@ const FEATURES = [
         }),
         {test: () => navigator.storage && navigator.storage.estimate, specification: specificationType.STANDARD},
         {test: () => navigator.webkitPersistentStorage, specification: specificationType.VENDOR}),
+    new Feature('share',
+        () => ({
+            component: Vue.component(makeExampleId('share'), {
+                template:
+                    `<div>
+                        <button v-on:click="share">Share me</button>
+                    </div>`,
+                methods: {
+                    share: function() {
+                        const urlToShare = 'https://twitter.com/michalczukm';
+
+                        const shareByIntent = () =>
+                            // eslint-disable-next-line no-undef
+                            navigator.startActivity(new Intent('http://webintents.org/share', 'text/uri-list', urlToShare));
+
+                        const shareByShare = () => {
+                            navigator.share({
+                                title: 'I am on @michalczukm presentation about mobile browsers.',
+                                text: 'This was send via `navigator.share feature. Quite experimental feature.',
+                                url: urlToShare
+                            });
+                        };
+
+                        'Intent' in window ? shareByIntent() : shareByShare();
+                    }
+                }
+            }),
+            infoArray: [`The API required to be launched by tapping frame.`]
+        }),
+        {test: () => navigator.share, specification: specificationType.STANDARD},
+        {test: () => window.Intent, specification: specificationType.VENDOR}),
     new Feature('gyroscope',
         () => ({}),
         {test: () => window.Gyroscope, specification: specificationType.STANDARD}),
