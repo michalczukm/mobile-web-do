@@ -1,5 +1,9 @@
-import {supportStatus} from './support-status';
-import {logger} from '../logging';
+import {
+    supportStatus
+} from './support-status';
+import {
+    logger
+} from '../logging';
 
 const statusFor = (testsResult) => {
     if (testsResult.isFailure) {
@@ -15,6 +19,7 @@ const statusFor = (testsResult) => {
 };
 
 export const specificationType = {
+    OLD: 'OLD',
     STANDARD: 'STANDARD',
     VENDOR: 'VENDOR'
 };
@@ -24,9 +29,16 @@ export class Feature {
         this.id = id;
 
         this.tests = tests;
-        this.runInClientFn = runInClientFn;
         this.testsResult = TestResult.from(this.tests);
         this.status = statusFor(this.testsResult);
+        this.runInClientFn = () => {
+            try {
+                return runInClientFn();
+            } catch (ex) {
+                logger.error(`Failed with running 'runInClientFn' for '${this.id}' feature. Error: ${ex}`);
+                return {};
+            }
+        };
     }
 }
 

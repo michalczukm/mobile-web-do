@@ -7,7 +7,7 @@ const makeExampleId = (identifier) => `${identifier}-example-in-browser`;
 
 const FEATURES = [
     new Feature('home-screen',
-        () => {},
+        () => ({}),
         {test: () => window.BeforeInstallPromptEvent, specification: specificationType.STANDARD}),
     new Feature('notifications-api',
         () => {
@@ -130,42 +130,114 @@ const FEATURES = [
         }),
         {test: () => navigator.onLine, specification: specificationType.STANDARD}),
     new Feature('device-RAM-memory',
-        () => {},
+        () => ({ infoArray: [`Your device has ~${navigator.deviceMemory} GB`] }),
         {test: () => navigator.deviceMemory, specification: specificationType.STANDARD}),
     new Feature('ambient-light',
-        () => {},
+        () => ({
+            component: Vue.component(makeExampleId('ambient-light'), {
+                template:
+                    `<div>Illuminance on your sensor: <b>{{illuminance}}</b></div>`,
+                data: () => ({illuminance: 0}),
+                created: function() {
+                    if (window.AmbientLightSensor) {
+                        // eslint-disable-next-line no-undef
+                        const sensor = new AmbientLightSensor();
+                        sensor.addEventListener('reading', (_) => (this.illuminance = sensor.illuminance));
+                        sensor.start();
+                    } else {
+                        this.illuminance = 'Not supported';
+                    }
+                }
+            }),
+            infoArray: [`Example is using AmbientLightSensor`]
+        }),
         {test: () => window.ondevicelight, specification: specificationType.STANDARD},
         {test: () => window.AmbientLightSensor, specification: specificationType.STANDARD}),
     new Feature('battery-status',
-        () => {},
-        {test: () => navigator.batter, specification: specificationType.STANDARD},
+        () => ({
+            component: Vue.component(makeExampleId('battery-status'), {
+                template:
+                    `<div>Your device has {{level}}% battery</div>`,
+                data: () => ({level: 0}),
+                created: function() {
+                    (navigator.getBattery() || Promise.resolve(navigator.battery)).then(battery => (this.level = Math.round(battery.level * 100)));
+                }
+            }),
+            infoArray: []
+        }),
+        {test: () => navigator.battery, specification: specificationType.OLD},
         {test: () => navigator.getBattery, specification: specificationType.STANDARD}),
     new Feature('vibration',
-        () => {},
+        () => ({
+            component: Vue.component(makeExampleId('vibration'), {
+                template:
+                    `<div>
+                        <button v-on:click="vibrate">Press me</button>
+                    </div>`,
+                methods: {
+                    vibrate: function() {
+                        navigator.vibrate([500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500]);
+                    }
+                }
+            }),
+            infoArray: [`The API required to be launched by tapping frame.`]
+        }),
         {test: () => navigator.vibrate, specification: specificationType.STANDARD}),
     new Feature('geolocation',
-        () => {},
+        () => ({
+            component: Vue.component(makeExampleId('geolocation'), {
+                template:
+                    `<div>
+                        <p>latitude: {{position.latitude || 'loading'}}</p>
+                        <p>longitude: {{position.longitude || 'loading'}}</p>
+                    </div>`,
+                data: () => ({
+                    position: { }
+                }),
+                created: function() {
+                    navigator.geolocation.getCurrentPosition(position => (this.position = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    }));
+                }
+            }),
+            infoArray: [`It might take some time`]
+        }),
         {test: () => navigator.geolocation, specification: specificationType.STANDARD}),
-    new Feature('device-position',
-        () => {},
-        {test: () => window.DeviceOrientationEvent, specification: specificationType.STANDARD},
-        {test: () => window.AbsoluteOrientationSensor, specification: specificationType.STANDARD},
-        {test: () => window.RelativeOrientationSensor, specification: specificationType.STANDARD}),
     new Feature('storage-quota',
-        () => {},
+        () => ({
+            component: Vue.component(makeExampleId('storage-quota'), {
+                template:
+                    `<div>
+                        <p>Used storage for page: ~{{storage.usage | mb}} MB</p>
+                        <p>Quota storage for page: ~{{storage.quota | mb}} MB</p>
+                    </div>`,
+                data: () => ({storage: {}}),
+                created: function() {
+                    (navigator.storage || navigator.webkitPersistentStorage).estimate()
+                        .then(storage => (this.storage = storage));
+                },
+                filters: {
+                    mb: function(value) {
+                        const round = (value) => Math.round(value * Math.pow(10, 2)) / Math.pow(10, 2);
+                        return value > 0 ? round(value / 1024 / 1024) : 0;
+                    }
+                }
+            })
+        }),
         {test: () => navigator.storage && navigator.storage.estimate, specification: specificationType.STANDARD},
         {test: () => navigator.webkitPersistentStorage, specification: specificationType.VENDOR}),
     new Feature('gyroscope',
-        () => {},
+        () => ({}),
         {test: () => window.Gyroscope, specification: specificationType.STANDARD}),
     new Feature('accelerometer',
-        () => {},
+        () => ({}),
         {test: () => window.Accelerometer, specification: specificationType.STANDARD}),
     new Feature('device-motion',
-        () => {},
+        () => ({}),
         {test: () => window.DeviceMotionEvent, specification: specificationType.STANDARD}),
     new Feature('speech-recognition',
-        () => {},
+        () => ({}),
         {test: () => window.SpeechRecognition, specification: specificationType.STANDARD},
         {test: () => window.webkitSpeechRecognition, specification: specificationType.STANDARD})
 ];
