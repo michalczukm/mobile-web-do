@@ -38,13 +38,12 @@ const FEATURES = [
         {test: () => window.safari.pushNotification, specification: specificationType.VENDOR}),
     new Feature('screen-orientation',
         () => {
-            const id = makeExampleId('screen-orientation');
             const orientationApi = window.screen.orientation || window.screen.mozOrientation || window.screen.msOrientation || window.screen.lockOrientation || {};
             const getOrientation = () => orientationApi.type || '';
             const onOrientationChange = (callback) => orientationApi.addEventListener('change', callback);
 
             return {
-                component: Vue.component(id, {
+                component: Vue.component(makeExampleId('screen-orientation'), {
                     template: `<div>{{orientation}}</div>`,
                     data: () => ({orientation: ''}),
                     created: function() {
@@ -62,8 +61,33 @@ const FEATURES = [
         {test: () => window.screen.msOrientation, specification: specificationType.VENDOR},
         {test: () => window.screen.lockOrientation, specification: specificationType.VENDOR}),
     new Feature('device-orientation',
-        () => {},
-        {test: () => window.DeviceOrientationEvent, specification: specificationType.STANDARD}),
+        () => ({
+            component: Vue.component(makeExampleId('device-orientation'), {
+                template: `
+                    <div>
+                        <ul>
+                            <li>alpha: {{orientation.alpha | round}}</li>
+                            <li>beta: {{orientation.beta | round}}</li>
+                            <li>gamma: {{orientation.gamma | round}}</li>
+                        </ul>
+                    </div>`,
+                data: () => ({orientation: {
+                    alpha: 0,
+                    beta: 0,
+                    gamma: 0
+                }}),
+                created: function() {
+                    window.addEventListener('deviceorientation', (orientation) => (this.orientation = orientation), false);
+                },
+                filters: {
+                    round: (value) => Math.round(value)
+                }
+            }),
+            infoArray: ['Example is using `window.DeviceOrientationEvent`']
+        }),
+        {test: () => window.DeviceOrientationEvent, specification: specificationType.STANDARD},
+        {test: () => window.AbsoluteOrientationSensor, specification: specificationType.STANDARD},
+        {test: () => window.RelativeOrientationSensor, specification: specificationType.STANDARD}),
     new Feature('network-type-speed',
         () => {
             const connection = navigator.connection || navigator.mozConnection ||
@@ -83,13 +107,27 @@ const FEATURES = [
         {test: () => navigator.webkitConnection, specification: specificationType.VENDOR},
         {test: () => navigator.msConnection, specification: specificationType.VENDOR}),
     new Feature('bluetooth',
-        () => {},
+        () => ({}),
         {test: () => navigator.bluetooth, specification: specificationType.STANDARD}),
     new Feature('usb',
-        () => {},
+        () => ({}),
         {test: () => navigator.usb, specification: specificationType.STANDARD}),
     new Feature('online-state',
-        () => {},
+        () => ({
+            component: Vue.component(makeExampleId('online-state'), {
+                template:
+                    `<div v-bind:style="{color: onlineState ? 'green' : 'red'}">
+                        {{ onlineState ? 'online' : 'offline' }}
+                    </div>`,
+                data: () => ({onlineState: false}),
+                created: function() {
+                    window.addEventListener('online', () => (this.onlineState = true));
+                    window.addEventListener('offline', () => (this.onlineState = false));
+                    this.onlineState = navigator.onLine;
+                }
+            }),
+            infoArray: []
+        }),
         {test: () => navigator.onLine, specification: specificationType.STANDARD}),
     new Feature('device-RAM-memory',
         () => {},

@@ -13,15 +13,15 @@
             </h3>
         </div>
         <table>
-            <template v-if="feature.testsResult.isSuccess">
-                <h4>Your results:</h4>
-                <component v-bind:is="feature.runInClientFn().component"></component>
-                <ul class="in-browser-results">
-                    <li v-for="(info, index) in feature.runInClientFn().infoArray" v-bind:key="index">
+            <template v-if="feature.testsResult.isSuccess" v-for="(runInClient, runInClientIndex) in [feature.runInClientFn()]">
+                <h4 v-if="Object.keys(runInClient).length" v-bind:key="runInClientIndex">Your results:</h4>
+                <component v-bind:key="runInClientIndex" v-bind:is="runInClient.component"></component>
+                <ul v-bind:key="runInClientIndex" class="in-browser-results">
+                    <li v-for="(info, index) in runInClient.infoArray" v-bind:key="index">
                         <code>{{ info }}</code>
                     </li>
                 </ul>
-                <tr v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="index" class="success">
+                <tr v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="runInClientIndex + index" class="success">
                     <td>
                         <pre><code>{{testResult.test.toString().trim()}}</code></pre>
                     </td>
