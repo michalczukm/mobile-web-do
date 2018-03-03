@@ -14,7 +14,7 @@ export const DATA = {
             clientIdentifiers: [],
             browserInfo: [],
             state: 'FEATURE',
-            currentSlideFeatureId: 'home-screen',
+            currentSlideFeatureId: 'push-notifications',
             clientResults: []
         },
         {

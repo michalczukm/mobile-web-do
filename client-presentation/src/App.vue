@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <header>
-            <span>What <i class="fa fa-mobile"></i> web can do?</span>
+            <span>What <i class="fa fa-mobile"></i> browsers can do?</span>
         </header>
         <main>
             <loading v-if="state === constants.applicationState.LOADING" />

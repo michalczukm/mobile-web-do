@@ -4,8 +4,10 @@ import { FeatureDto } from './feature.dto';
 function getPresentationSet(): FeatureDto[] {
     return [
         { id: 'home-screen', name: 'Home Screen' },
-        { id: 'push-notifications', name: 'Push Notifications' },
+        { id: 'push-api', name: 'Push API' },
+        { id: 'notifications-api', name: 'Notifications API' },
         { id: 'device-orientation', name: 'Device Orientation' },
+        { id: 'screen-orientation', name: 'Screen Orientation' },
         { id: 'network-type-speed', name: 'Network type & speed' },
         { id: 'bluetooth', name: 'Bluetooth' },
         { id: 'online-state', name: 'Online State' },
