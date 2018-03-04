@@ -18,8 +18,8 @@
             </transition>
         </main>
         <footer>
-            <a href="https://github.com/michalczukm" ref="noreferrer" target="_blank">
-                <i class="fa fa-github" aria-hidden="true"></i>&nbsp;michalczukm
+            <a href="https://twitter.com/michalczukm" ref="noreferrer" target="_blank">
+                <i class="fa fa-twitter" aria-hidden="true"></i>&nbsp;michalczukm
             </a>
             <span class="cookies">
                 This page use cookies
