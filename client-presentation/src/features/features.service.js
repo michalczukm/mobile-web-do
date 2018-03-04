@@ -16,17 +16,14 @@ const FEATURES = [
         {test: () => window.BeforeInstallPromptEvent, specification: specificationType.STANDARD}),
     new Feature('notifications-api',
         () => {
+            const notification = { body: 'Mobile browsers can do notifications :)' };
+            const showNotificationViaNotificationApi = () => new Notification('Notifications API', notification);
+
             Notification
-            ? Notification.requestPermission().then(() => {
-                // eslint-disable-next-line no-new
-                new Notification('Notifications API', {
-                    body: 'Mobile browsers can do notifications :)'
-                });
-            })
-            : navigator.serviceWorker.ready.then(registration =>
-                registration.showNotification('Push API', {
-                    body: 'Mobile browsers can do push notifications :)'
-                }));
+            // workaround due to bug in Safari where `Notification.requestPermission()` returns undefined
+            ? ((permissionPromise) => permissionPromise || Promise.resolve())(Notification.requestPermission())
+                .then(() => showNotificationViaNotificationApi())
+            : navigator.serviceWorker.ready.then(registration => registration.showNotification('Push API', notification));
 
             return {
                 infoArray: [`Please allow permission to see result`]
