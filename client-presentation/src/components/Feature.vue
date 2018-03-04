@@ -24,7 +24,7 @@
             </template>
         </div>
         <table class='code-samples'>
-            <tr v-if="feature.testsResult.isSuccess" v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="runInClientIndex + index" class="success">
+            <tr v-if="feature.testsResult.isSuccess" v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="index" class="success">
                 <td>
                     <pre><code>{{testResult.test.toString().trim()}}</code></pre>
                 </td>

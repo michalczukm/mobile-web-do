@@ -38,6 +38,7 @@
                 this.transition = !this.transition;
                 setTimeout(() => {
                     this.transition = !this.transition;
+                    window.scrollTo(0, 0);
                 }, 500);
             }
         }

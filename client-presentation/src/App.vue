@@ -6,7 +6,7 @@
         <main>
             <loading v-if="state === constants.applicationState.LOADING" />
 
-            <transition name="slide">
+            <transition name="slide" v-on:before-leave="scrollToTop">
                 <not-found v-if="state === constants.applicationState.NO_SESSION"/>
                 <welcome v-if="state === constants.applicationState.WELCOME" v-bind:session="session"/>
                 <presentation v-if="state === constants.applicationState.FEATURE" v-bind:features="features"
@@ -111,6 +111,9 @@
                     logger.error('Fetching session results failed', reason);
                     this.state = applicationState.NO_SESSION;
                 });
+        },
+        methods: {
+            scrollToTop: () => window.scrollTo(0, 0)
         },
         destroyed: function () {
         }
