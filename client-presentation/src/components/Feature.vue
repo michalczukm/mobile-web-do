@@ -12,7 +12,7 @@
                 <support-status v-bind:status="feature.status"/>
             </h3>
         </div>
-        <table>
+        <div>
             <template v-if="feature.testsResult.isSuccess" v-for="(runInClient, runInClientIndex) in [feature.runInClientFn()]">
                 <h4 v-if="Object.keys(runInClient).length" v-bind:key="runInClientIndex">Your results:</h4>
                 <component v-bind:key="runInClientIndex" v-bind:is="runInClient.component"></component>
@@ -21,12 +21,14 @@
                         <code>{{ info }}</code>
                     </li>
                 </ul>
-                <tr v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="runInClientIndex + index" class="success">
-                    <td>
-                        <pre><code>{{testResult.test.toString().trim()}}</code></pre>
-                    </td>
-                </tr>
             </template>
+        </div>
+        <table class='code-samples'>
+            <tr v-if="feature.testsResult.isSuccess" v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="runInClientIndex + index" class="success">
+                <td>
+                    <pre><code>{{testResult.test.toString().trim()}}</code></pre>
+                </td>
+            </tr>
 
             <tr v-if="feature.testsResult.isFailure" v-for="(testResult, index) in feature.testsResult.failed" v-bind:key="index" class="failed">
                 <td>
@@ -61,6 +63,10 @@
 </script>
 
 <style lang="scss" scoped>
+    table.code-samples {
+        table-layout: fixed;
+        width: 100%;
+    }
     ul.in-browser-results {
         list-style-type: none;
 
