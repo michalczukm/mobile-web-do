@@ -4,6 +4,11 @@ import {
 import Vue from 'vue';
 
 const makeExampleId = (identifier) => `${identifier}-example-in-browser`;
+const isInObject = (object, ...keys) => keys.every(key => key in object);
+
+const humanReadableByKeys = (value, ...keys) => value instanceof Object && isInObject(value, ...keys)
+    ? keys.map(key => `${key}: ${value[key].toFixed(5) || 0}`, '').join(',')
+    : value;
 
 const FEATURES = [
     new Feature('home-screen',
@@ -196,8 +201,8 @@ const FEATURES = [
                 }),
                 created: function() {
                     navigator.geolocation.getCurrentPosition(position => (this.position = {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
+                        latitude: position.coords.latitude.toFixed(5),
+                        longitude: position.coords.longitude.toFixed(5)
                     }));
                 }
             }),
@@ -259,20 +264,60 @@ const FEATURES = [
         {test: () => navigator.share, specification: specificationType.STANDARD},
         {test: () => window.Intent, specification: specificationType.VENDOR}),
     new Feature('gyroscope',
-        () => ({}),
+        () => ({
+            component: Vue.component(makeExampleId('gyroscope'), {
+                template:
+                    `<div>
+                        <p>gyroscope: <b>{{result || 'loading' | axisMotion}}</b></p>
+                    </div>`,
+                data: () => ({
+                    result: {}
+                }),
+                created: function() {
+                    // eslint-disable-next-line no-undef
+                    const accelerometer = new Gyroscope();
+                    accelerometer.addEventListener('reading', result => (this.result = humanReadableByKeys(result, 'x', 'y', 'z')));
+                    accelerometer.start();
+                },
+                filters: {
+                    axisMotion: (value) => humanReadableByKeys(value, 'x', 'y', 'z')
+                }
+            }),
+            infoArray: [`This example uses Accelerometer`]
+        }),
         {test: () => window.Gyroscope, specification: specificationType.STANDARD}),
     new Feature('accelerometer',
-        () => ({}),
+        () => ({
+            component: Vue.component(makeExampleId('accelerometer'), {
+                template:
+                    `<div>
+                        <p>acceleration: <b>{{acceleration || 'loading' | axisMotion}}</b></p>
+                    </div>`,
+                data: () => ({
+                    acceleration: ''
+                }),
+                created: function() {
+                    // eslint-disable-next-line no-undef
+                    const accelerometer = new Accelerometer();
+                    accelerometer.addEventListener('reading', result => (this.acceleration = humanReadableByKeys(result, 'x', 'y', 'z')));
+                    accelerometer.start();
+                },
+                filters: {
+                    axisMotion: (value) => humanReadableByKeys(value, 'x', 'y', 'z')
+                }
+            }),
+            infoArray: [`This example uses Accelerometer`]
+        }),
         {test: () => window.Accelerometer, specification: specificationType.STANDARD}),
     new Feature('device-motion',
         () => ({
             component: Vue.component(makeExampleId('device-motion'), {
                 template:
                     `<div>
-                        <p>acceleration: {{motion.acceleration || 'loading' | axisMotion}}</p>
-                        <p>accelerationIncludingGravity: {{motion.accelerationIncludingGravity || 'loading' | axisMotion}}</p>
-                        <p>rotationRate: {{motion.rotationRate || 'loading' | rotation}}</p>
-                        <p>interval: {{motion.interval || 'loading'}}</p>
+                        <p>acceleration: <b>{{motion.acceleration || 'loading' | axisMotion}}</b></p>
+                        <p>accelerationIncludingGravity: <b>{{motion.accelerationIncludingGravity || 'loading' | axisMotion}}</b></p>
+                        <p>rotationRate: <b>{{motion.rotationRate || 'loading' | rotation}}</b></p>
+                        <p>interval: <b>{{motion.interval || 'loading'}}</b></p>
                     </div>`,
                 data: () => ({
                     motion: { }
@@ -281,23 +326,60 @@ const FEATURES = [
                     window.addEventListener('devicemotion', (motion) => (this.motion = motion), false);
                 },
                 filters: {
-                    axisMotion: function(value) {
-                        const isInObject = (object, ...keys) => keys.every(key => key in object);
-
-                        return value instanceof Object && isInObject(value, 'x', 'y', 'z')
-                            ? `x: ${value.x || 0}, y: ${value.y || 0}, z: ${value.z || 0}`
-                            : value;
-                    },
-                    rotation: function(value) {
-
-                    }
+                    axisMotion: (value) => humanReadableByKeys(value, 'x', 'y', 'z'),
+                    rotation: (value) => humanReadableByKeys(value, 'alpha', 'beta', 'gamma')
                 }
             }),
-            infoArray: [`It might take some time`]
+            infoArray: [`This example uses DeviceMotionEvent`]
         }),
         {test: () => window.DeviceMotionEvent, specification: specificationType.STANDARD}),
     new Feature('speech-recognition',
-        () => ({}),
+        () => ({
+            component: Vue.component(makeExampleId('device-motion'), {
+                template:
+                    `<div>
+                        <button v-on:mousedown="listen" v-on:mouseup="stopListening" v-on:mouseleave="stopListening"
+                            v-bind:class="{'button-outline': listening}" class="button">
+                            Hold to speak
+                        </button>
+                        <button v-on:click="clear" class="button button-clear">Clear the text</button>
+                        <p>You said:<p>
+                        <blockquote>
+                            <p v-for="(recognition, index) in recognitions" v-bind:key="index">
+                                <em>{{recognition.text}}</i> | confidence: {{recognition.confidencePercentage}} %</em>
+                            </p>
+                        </blockquote>
+                    </div>`,
+                data: () => ({
+                    listening: false,
+                    recognitions: [],
+                    recognizer: {}
+                }),
+                created: function() {
+                    this.recognizer = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                    this.recognizer.continuous = true;
+
+                    this.recognizer.addEventListener('result', event => {
+                        this.recognitions = Array.from(event.results)
+                            .filter(res => res.isFinal)
+                            .map(res => ({ text: res[0].transcript, confidencePercentage: (res[0].confidence * 100).toFixed(2) }));
+                    });
+                },
+                methods: {
+                    listen: function() {
+                        this.listening = true;
+                        this.recognizer.start();
+                    },
+                    stopListening: function() {
+                        this.listening = false;
+                        this.recognizer.stop();
+                    },
+                    clear: function() {
+                        this.recognitions = [];
+                    }
+                }
+            })
+        }),
         {test: () => window.SpeechRecognition, specification: specificationType.STANDARD},
         {test: () => window.webkitSpeechRecognition, specification: specificationType.STANDARD})
 ];
