@@ -1,7 +1,7 @@
 {
   "name": "mobile-web-do",
   "version": "1.0.0",
-  "description": "Presentation of mobile web capabilities",
+  "description": "Presentation of mobile browsers capabilities",
   "main": "server/src/server",
   "scripts": {
     "install": "(cd server && npm install)",
