@@ -8,6 +8,5 @@ RUN (cd client-admin && npm i && npm run build -- --base-href /dasadmin/ && cp -
 WORKDIR server
 RUN npm install
 
-ENV PORT 3000
 EXPOSE 3000
 CMD [ "npm", "start" ]

@@ -1,10 +1,28 @@
-version: '2.1'
+version: '3'
 
 services:
   mobile-web-do:
-    image: mobile-web-do
+    container_name: mobile-web-do
+    restart: always
     build: .
     environment:
       NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mongodb://localhost:27017/mobile-web-do
+    links:
+      - mongo
     ports:
       - 3000:3000
+    networks:
+      - mwdnet
+  mongo:
+    container_name: mobile-web-do_storage
+    image: mongo
+    volumes:
+      - ../data:/data/mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - mwdnet
+networks:
+  mwdnet:
