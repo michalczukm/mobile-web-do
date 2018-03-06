@@ -1,24 +1,24 @@
 <template>
     <div>
-        <h1>{{feature.id}}</h1>
+        <h2>{{feature.id}}</h2>
         <div class="content">
             <i v-bind:class="{
                 'fa-thumbs-up success': feature.testsResult.isSuccess,
                 'fa-thumbs-down failed': feature.testsResult.isFailure }"
-               class="fa fa-4x" aria-hidden="true"></i>
+               class="fa fa-3x" aria-hidden="true"></i>
         </div>
         <div class="support">
             <h3>
                 <support-status v-bind:status="feature.status"/>
             </h3>
         </div>
+        <hr/>
         <div>
             <template v-if="feature.testsResult.isSuccess" v-for="(runInClient, runInClientIndex) in [feature.runInClientFn()]">
-                <h4 v-if="Object.keys(runInClient).length" v-bind:key="runInClientIndex">Your results:</h4>
                 <component v-bind:key="runInClientIndex" v-bind:is="runInClient.component"></component>
                 <ul v-bind:key="runInClientIndex" class="in-browser-results">
                     <li v-for="(info, index) in runInClient.infoArray" v-bind:key="index">
-                        <code>{{ info }}</code>
+                        <code class="code-example-result">{{ info }}</code>
                     </li>
                 </ul>
             </template>
@@ -26,7 +26,7 @@
         <table class='code-samples'>
             <tr v-if="feature.testsResult.isSuccess" v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="index" class="success">
                 <td>
-                    <pre><code>{{testResult.test.toString().trim()}}</code></pre>
+                    <pre><code class="code-result">{{testResult.test.toString().trim()}}</code></pre>
                 </td>
             </tr>
 
@@ -66,6 +66,7 @@
     table.code-samples {
         table-layout: fixed;
         width: 100%;
+        margin-bottom: 10%;
     }
     ul.in-browser-results {
         list-style-type: none;
@@ -75,9 +76,18 @@
 
         }
     }
+    code {
+        white-space: pre-wrap;
+    }
+    .code-result {
+        font-size: 0.9em;
+    }
+    .code-example-result {
+        font-size: 1.3em;
+    }
     .support {
         margin-top: 0.5em;
-        padding-top: 2em;
+        padding-top: 1em;
     }
     ul {
         align-content: left;
@@ -92,5 +102,8 @@
     }
     td {
         padding: 0;
+    }
+    hr {
+        margin: 10px;
     }
 </style>

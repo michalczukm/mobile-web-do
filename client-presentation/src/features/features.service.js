@@ -7,7 +7,7 @@ const makeExampleId = (identifier) => `${identifier}-example-in-browser`;
 const isInObject = (object, ...keys) => keys.every(key => key in object);
 
 const humanReadableByKeys = (value, ...keys) => value instanceof Object && isInObject(value, ...keys)
-    ? keys.map(key => `${key}: ${value[key].toFixed(5) || 0}`, '').join(',')
+    ? keys.map(key => `${key}: ${(value[key] || 0).toFixed(2)}`, '').join(',')
     : value;
 
 const FEATURES = [
@@ -19,11 +19,12 @@ const FEATURES = [
             const notification = { body: 'Mobile browsers can do notifications :)' };
             const showNotificationViaNotificationApi = () => new Notification('Notifications API', notification);
 
-            Notification
-            // workaround due to bug in Safari where `Notification.requestPermission()` returns undefined
-            ? ((permissionPromise) => permissionPromise || Promise.resolve())(Notification.requestPermission())
-                .then(() => showNotificationViaNotificationApi())
-            : navigator.serviceWorker.ready.then(registration => registration.showNotification('Push API', notification));
+            if (Notification) {
+                // workaround due to bug in Safari where `Notification.requestPermission()` returns undefined
+                ((permissionPromise) => permissionPromise || Promise.resolve())(Notification.requestPermission())
+                    .then(() => showNotificationViaNotificationApi());
+            }
+            navigator.serviceWorker.ready.then(registration => registration.showNotification('Push API', notification));
 
             return {
                 infoArray: [`Please allow permission to see result`]
@@ -46,7 +47,7 @@ const FEATURES = [
 
             return {
                 component: Vue.component(makeExampleId('screen-orientation'), {
-                    template: `<div>{{orientation}}</div>`,
+                    template: `<div><h4>{{orientation}}</h4></div>`,
                     data: () => ({orientation: ''}),
                     created: function() {
                         const setOrientation = () => (this.orientation = getOrientation());
@@ -119,7 +120,7 @@ const FEATURES = [
             component: Vue.component(makeExampleId('online-state'), {
                 template:
                     `<div v-bind:style="{color: onlineState ? 'green' : 'red'}">
-                        {{ onlineState ? 'online' : 'offline' }}
+                        <h4>{{ onlineState ? 'online' : 'offline' }}</h4>
                     </div>`,
                 data: () => ({onlineState: false}),
                 created: function() {
@@ -247,7 +248,7 @@ const FEATURES = [
                         const shareByShare = () => {
                             navigator.share({
                                 title: 'I am on @michalczukm presentation about mobile browsers.',
-                                text: 'This was send via `navigator.share feature. Quite experimental feature.',
+                                text: 'I am on @michalczukm presentation about mobile browsers. This was send via `navigator.share` feature. #web-dev',
                                 url: urlToShare
                             });
                         };
@@ -311,9 +312,12 @@ const FEATURES = [
             component: Vue.component(makeExampleId('device-motion'), {
                 template:
                     `<div>
-                        <p>acceleration: <b>{{motion.acceleration || 'loading' | axisMotion}}</b></p>
-                        <p>accelerationIncludingGravity: <b>{{motion.accelerationIncludingGravity || 'loading' | axisMotion}}</b></p>
-                        <p>rotationRate: <b>{{motion.rotationRate || 'loading' | rotation}}</b></p>
+                        <p>acceleration:</p>
+                        <p><b>{{motion.acceleration || 'loading' | axisMotion}}</b></p>
+                        <p>accelerationIncludingGravity:</p>
+                        <p><b>{{motion.accelerationIncludingGravity || 'loading' | axisMotion}}</b></p>
+                        <p>rotationRate:</p>
+                        <p><b>{{motion.rotationRate || 'loading' | rotation}}</b></p>
                         <p>interval: <b>{{motion.interval || 'loading'}}</b></p>
                     </div>`,
                 data: () => ({
@@ -332,12 +336,12 @@ const FEATURES = [
         {test: () => window.DeviceMotionEvent, specification: specificationType.STANDARD}),
     new Feature('speech-recognition',
         () => ({
-            component: Vue.component(makeExampleId('device-motion'), {
+            component: Vue.component(makeExampleId('speech-recognition'), {
                 template:
                     `<div>
-                        <button v-on:mousedown="listen" v-on:mouseup="stopListening" v-on:mouseleave="stopListening"
+                        <button v-on:click="listen"
                             v-bind:class="{'button-outline': listening}" class="button">
-                            Hold to speak
+                            {{ listening ? 'Stop listening' : 'Start listening' }}
                         </button>
                         <button v-on:click="clear" class="button button-clear">Clear the text</button>
                         <p>You said:<p>
@@ -364,12 +368,13 @@ const FEATURES = [
                 },
                 methods: {
                     listen: function() {
-                        this.listening = true;
-                        this.recognizer.start();
-                    },
-                    stopListening: function() {
-                        this.listening = false;
-                        this.recognizer.stop();
+                        this.listening = !this.listening;
+
+                        if (this.listening) {
+                            this.recognizer.start();
+                        } else {
+                            this.recognizer.stop();
+                        }
                     },
                     clear: function() {
                         this.recognitions = [];
@@ -378,7 +383,7 @@ const FEATURES = [
             })
         }),
         {test: () => window.SpeechRecognition, specification: specificationType.STANDARD},
-        {test: () => window.webkitSpeechRecognition, specification: specificationType.STANDARD})
+        {test: () => window.webkitSpeechRecognition, specification: specificationType.VENDOR})
 ];
 
 export default {

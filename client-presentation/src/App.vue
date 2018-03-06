@@ -116,6 +116,7 @@
             scrollToTop: () => window.scrollTo(0, 0)
         },
         destroyed: function () {
+            socket.disconnect();
         }
     };
 </script>
@@ -138,7 +139,7 @@
 
     main {
         text-align: center;
-        margin-top: 40px;
+        margin-top: 1.5em;
     }
 
     header {
