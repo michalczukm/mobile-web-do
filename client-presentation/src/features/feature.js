@@ -25,9 +25,10 @@ export const specificationType = {
 };
 
 export class Feature {
-    constructor(id, runInClientFn, ...tests) {
+    constructor(id, exampleUsage, runInClientFn, ...tests) {
         this.id = id;
 
+        this.exampleUsage = exampleUsage;
         this.tests = tests;
         this.testsResult = TestResult.from(this.tests);
         this.status = statusFor(this.testsResult);

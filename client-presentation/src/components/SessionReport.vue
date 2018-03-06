@@ -10,24 +10,28 @@
                 <b>{{sessionResult.clientsQuantity}}</b>&nbsp;<i class="fa primary-color fa-user-o"></i> attented!
             </h2>
             <hr>
-            <div class="chart">
-                <h3>Operating systems</h3>
-                <doughnut-chart v-bind:data="mapStatisticsToChartData(sessionResult.systems)"/>
-            </div>
+            <div class="charts-container">
+                <div class="chart">
+                    <h3>Operating systems</h3>
+                    <doughnut-chart v-bind:data="mapStatisticsToChartData(sessionResult.systems)"/>
+                </div>
 
-            <div class="chart chart-last">
-                <h3>Browsers</h3>
-                <doughnut-chart v-bind:data="mapStatisticsToChartData(sessionResult.browsers)"/>
+                <div class="chart">
+                    <h3>Browsers</h3>
+                    <doughnut-chart v-bind:data="mapStatisticsToChartData(sessionResult.browsers)"/>
+                </div>
             </div>
 
             <hr>
 
             <h2>Features we tested</h2>
 
-            <div v-for="(result, index) in sessionResult.results" v-bind:key="index"
-                 v-bind:class="{'chart-last': index === sessionResult.results.length - 1}" class="chart">
-                <h3>{{result.featureId}}</h3>
-                <doughnut-chart v-bind:data="mapStatusesToChartData(result.statuses)"/>
+            <div class="charts-container">
+                <div v-for="(result, index) in sessionResult.results" v-bind:key="index"
+                    v-bind:class="{'chart-last': index === sessionResult.results.length - 1}" class="chart">
+                    <h3>{{result.featureId}}</h3>
+                    <doughnut-chart v-bind:data="mapStatusesToChartData(result.statuses)"/>
+                </div>
             </div>
         </template>
     </div>
@@ -94,13 +98,30 @@
 </script>
 
 <style lang="scss" scoped>
-    .chart {
-        border-bottom: 1px solid #0073D1;
-        padding-top: 30px;
-        padding-bottom: 30px;
+    $bordercolor: #0073D1;
+
+    .charts-container {
+        .chart {
+            border-bottom: 1px solid $bordercolor;
+            padding-top: 30px;
+            padding-bottom: 30px;
+        }
+
+        .chart-last {
+            border-bottom: 0px;
+        }
     }
 
-    .chart-last {
-        border-bottom: 0px;
+    @media (min-width: 60rem) {
+        .charts-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .chart {
+            border: 1px solid $bordercolor;
+            margin: 0.5em;
+        }
     }
 </style>

@@ -140,4 +140,18 @@ export default (server: Hapi.Server) => {
             }
         }
     });
+
+    server.route({
+        method: 'PUT',
+        path: '/api/sessions/{id}/persist',
+        handler: (request, reply) => sessionController.persist(request, reply),
+        config: {
+            tags: ['api', 'admin'],
+            validate: {
+                params: {
+                    id: Joi.string().required()
+                }
+            }
+        }
+    });
 };

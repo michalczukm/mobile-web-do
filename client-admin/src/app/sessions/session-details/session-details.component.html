@@ -10,6 +10,13 @@
 
 <div *ngIf="session.state == 'FEATURE'">
     <h3>Feature</h3>
-    <button [ngStyle]="{'color': session.currentSlideFeatureId == feature.id ? 'green' : 'gray' }" *ngFor="let feature of features" (click)="setFeature(feature)">{{ feature.id }}</button>
+    <ol>
+        <li *ngFor="let feature of features">
+            <button [ngStyle]="{'color': session.currentSlideFeatureId == feature.id ? 'green' : 'gray' }" (click)="setFeature(feature)">
+                {{ feature.id }}
+            </button>
+        </li>
+    </ol>
+
 </div>
 

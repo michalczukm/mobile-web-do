@@ -27,8 +27,8 @@ export const DATA = {
             clientResults: []
         },
         {
-            id: '19c4f674-f312-4f7f-94fa-a5e898bb9b46',
-            name: 'Goyello',
+            id: 'dd631b92-d931-447d-9678-452bdc85022f',
+            name: 'meet.js 07.03.2018',
             clientIdentifiers: [],
             createdAt: new Date(),
             browserInfo: [],

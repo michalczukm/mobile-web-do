@@ -1,19 +1,23 @@
 <template>
-    <div>
+    <!-- <div class="container"> -->
         <transition name="slide-fade">
-            <feature class="x" v-bind:feature="currentFeature"
-                     v-bind:class="{'slide-out': !transition, 'slide-in': transition }"/>
+            <div v-bind:class="{'slide-out': !transition, 'slide-in': transition }">
+                <feature class="feature " v-bind:feature="currentFeature"/>
+                <feature-description class="description" v-bind:feature="currentFeature"/>
+            </div>
         </transition>
-    </div>
+    <!-- </div> -->
 </template>
 
 <script>
     import Feature from './Feature';
+    import FeatureDescription from './FeatureDescription';
 
     export default {
         name: 'presentation',
         components: {
-            Feature
+            Feature,
+            FeatureDescription
         },
         props: {
             features: {
@@ -49,11 +53,24 @@
         transition: 0.5s;
         transform: translate(0%, 0);
     }
-
     .slide-in {
         transition: 0.5s;
         opacity: 0;
         transform: translate(100%, 0);
+    }
+    .description {
+        display: none;
+    }
+    @media (min-width: 60rem) {
+        .container {
+            max-width: 100%
+        }
+        .feature {
+            display: none;
+        }
+        .description {
+            display: block;
+        }
     }
 </style>
 
