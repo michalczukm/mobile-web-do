@@ -291,6 +291,14 @@ navigator.usb.requestDevice({ filters: [{ vendorId: 0x2341 }] })
         () => ({}),
         {test: () => navigator.usb, specification: specificationType.STANDARD}),
     new Feature('online-state',
+`//add listeners for online state change
+window.addEventListener('online', () => {
+    // you are online
+});
+window.addEventListener('offline', () => {
+    // you are offline
+});
+`,
         () => ({
             component: Vue.component(makeExampleId('online-state'), {
                 template:
