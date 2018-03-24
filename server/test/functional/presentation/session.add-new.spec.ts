@@ -2,18 +2,24 @@ import 'mocha';
 import { expect } from 'chai';
 import * as Hapi from 'hapi';
 
+import { databaseSetup } from '../functional-tests-utils';
 import startServer from '../../../src/server'
-import testConstants from '../tests.constants';
 
 describe('session: add new', () => {
     let server: Hapi.Server;
 
-    before(() => {
+    before(async () => {
         server = new Hapi.Server();
-        return startServer(server);
+        return startServer(server).then(databaseSetup.setup);
     });
 
-    after(() => server.stop());
+    after(async () => {
+        try {
+            await databaseSetup.tearDown();
+        } finally {
+            server.stop();
+        }
+    });
 
     it('should add new session', async () => {
         // arrange
@@ -29,8 +35,11 @@ describe('session: add new', () => {
             }
         });
 
+
+
         // assert
         const actualSessionAmount = getSessionsAmount(await callForSessions(server));
+
         expect(actualSessionAmount).to.equal(expected);
     });
 
@@ -44,7 +53,7 @@ describe('session: add new', () => {
             method: 'POST',
             url: `/api/sessions`,
             payload: {
-                name: 'test session'
+                name: 'another test session'
             }
         });
 
@@ -52,7 +61,7 @@ describe('session: add new', () => {
             method: 'POST',
             url: `/api/sessions`,
             payload: {
-                name: 'another test session with different name'
+                name: 'another test session'
             }
         });
 
@@ -67,4 +76,4 @@ const callForSessions = (server: Hapi.Server) => server.inject({
     url: '/api/sessions'
 });
 
-const getSessionsAmount = (response: Hapi.InjectedResponseObject) => (response.result as any[]).length
+const getSessionsAmount = (response: Hapi.InjectedResponseObject) => (response.result as any[]).length;

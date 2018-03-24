@@ -66,3 +66,4 @@ fabric.properties
 
 ###### Project specific ######
 dist
+.env

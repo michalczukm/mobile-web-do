@@ -1,5 +1,6 @@
 import { SessionModel, ClientInfoModel } from '../models';
 import { documentDatabase, Session } from '../../../data';
+import {logger} from '../../../common';
 
 const sessionsDbCollection = documentDatabase.session;
 
@@ -11,7 +12,11 @@ function exists(sessionId: string): Promise<boolean> {
 function create(session: SessionModel): Promise<SessionModel> {
     const { id, ...sessionDocument } = session;
 
-    return sessionsDbCollection.create(sessionDocument).then(mapSessionToSessionModel);
+    return sessionsDbCollection.create(sessionDocument).then(mapSessionToSessionModel)
+        .catch(reason => {
+            logger.error('Cannot create session', reason);
+            throw reason;
+        });
 }
 
 function get(): Promise<SessionModel[]> {

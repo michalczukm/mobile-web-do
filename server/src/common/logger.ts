@@ -3,7 +3,7 @@ class ConsoleLogger {
         console.error('=== ERROR ===', message, error);
     }
 
-    info(message: string, payload: string | Object): void {
+    info(message: string, payload?: string | Object): void {
         console.log('===', message, payload);
     }
 

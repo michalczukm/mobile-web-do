@@ -1,5 +1,5 @@
 import { Subject, Observable } from '@reactivex/rxjs';
-import { SessionState } from '../../../../common';
+import {logger, SessionState} from '../../../../common';
 import { SessionModel } from '../../models';
 import { PresentationMessage } from '../../dtos/notifications';
 
@@ -26,7 +26,7 @@ class NotificationBus {
     public readonly presentationStateChange = new RxjsNotificationHandler<PresentationMessage>();
 
     constructor() {
-        console.log('NotificationBus created!');
+        logger.info('NotificationBus created!');
     }
 }
 

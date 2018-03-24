@@ -8,7 +8,6 @@ export interface ClientIdentifier extends BaseDocument {
 
 export const ClientIdentifierSchema = new Mongoose.Schema(
     {
-        _id: Mongoose.Schema.Types.ObjectId,
         identifier: {
             type: String,
             required: true,

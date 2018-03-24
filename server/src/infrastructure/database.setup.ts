@@ -1,6 +1,5 @@
 import * as Mongoose from 'mongoose';
 
-
 export const init = (config: { connectionString: string }, options?: {}) => {
     Mongoose.connect(config.connectionString, options);
 

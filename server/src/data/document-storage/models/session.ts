@@ -8,7 +8,7 @@ import { VersionInfo, VersionInfoSchema } from './complex-types';
 interface ClientSessionResults extends Mongoose.Document {
     featureId: string,
     status: SupportStatus
-};
+}
 
 interface ClientInfo extends Mongoose.Document {
     clientIdentifier: string,
@@ -54,10 +54,8 @@ const ClientInfoSchema = new Mongoose.Schema({
     browser: VersionInfoSchema
 });
 
-// todo add required fields (not in first iteration)
 const SessionSchema = new Mongoose.Schema(
     {
-        _id: Mongoose.Schema.Types.ObjectId,
         name: {
             type: String,
             required: true
@@ -71,10 +69,10 @@ const SessionSchema = new Mongoose.Schema(
         },
         browserInfo: BrowserInfoSchema,
         clientIdentifiers: [ClientIdentifierSchema],
-        clientResults: [ClientSessionResultsSchema]
+        clientResults: [ClientInfoSchema]
     },
     {
         timestamps: true
     });
 
-export const SessionModel = Mongoose.model('Session', BrowserInfoSchema);
+export const SessionModel = Mongoose.model('Session', SessionSchema);

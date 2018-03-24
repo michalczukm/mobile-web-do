@@ -18,7 +18,7 @@ const groupBy = (list: Object[], selector: (ref: Object) => any): Map<any, Objec
         }
     });
     return map;
-}
+};
 
 function getForSession(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
     const sessionId = request.params.id;
@@ -45,14 +45,14 @@ function getForSession(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Prom
                 (result: ClientSessionResults) => result.featureId
             )
                 .forEach((value: ClientSessionResults[], key: string) =>
-                    results.push({ featureId: key, statuses: value.map(r => r.status) }))
+                    results.push({ featureId: key, statuses: value.map(r => r.status) }));
 
             const webModel: SessionResultsWebModel = {
                 clientsQuantity: session.clientIdentifiers.length,
                 browsers: browsers,
                 systems: systems,
                 results: results
-            }
+            };
 
             return reply(webModel).code(200);
         });

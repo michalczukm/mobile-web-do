@@ -54,7 +54,7 @@ const setupApiConnection = (serverInstance: Hapi.Server): Hapi.Server => {
   });
 
   return apiConnection;
-}
+};
 
 const loadModules = (serverInstance: Hapi.Server) => {
   presentationModule.register(serverInstance, serverInstance);
@@ -70,7 +70,10 @@ const startServer = (serverInstance: Hapi.Server) => serverInstance.register([
 ]).then(() => {
 
   databaseSetup.init({
-    connectionString: env.dbHost
+    connectionString: env.dbHost,
+  },
+  {
+     socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 }
   });
 
   serverInstance.on('stop', () => databaseSetup.dispose());

@@ -17,7 +17,6 @@ export interface BrowserInfo extends BaseDocument {
 // todo add required fields (not in first iteration)
 export const BrowserInfoSchema = new Mongoose.Schema(
     {
-        _id: Mongoose.Schema.Types.ObjectId,
         system: VersionInfoSchema,
         browser: VersionInfoSchema,
         navigator: {

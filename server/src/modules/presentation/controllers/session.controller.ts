@@ -29,7 +29,8 @@ function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hap
         createdAt: new Date(),
         currentSlideFeatureId: '',
         browserInfo: [],
-        clientIdentifiers: []
+        clientIdentifiers: [],
+        clientResults: []
     } as SessionModel;
 
     return sessionRepository.create(session)

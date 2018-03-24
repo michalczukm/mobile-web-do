@@ -1,5 +1,4 @@
 import { DATA } from '../../data';
-import { Result } from '../../../common';
 import { BrowserInfoModel } from '../models';
 
 /**
