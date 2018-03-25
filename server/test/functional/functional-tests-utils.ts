@@ -26,16 +26,18 @@ export const databaseSetup = new class DatabaseSetup implements TestsSetup {
                     createdAt: new Date(),
                     browserInfo: [],
                     state: 'WELCOME',
-                    clientResults: []
+                    clientResults: [],
+                    currentSlideFeatureId: '',
                 },
                 {
                     id: '19c4f674-f312-4f7f-94fa-a5e898bb9b46',
-                    name: 'Goyello',
+                    name: 'company specific session',
                     clientIdentifiers: [],
                     createdAt: new Date(),
                     browserInfo: [],
                     state: 'WELCOME',
-                    clientResults: []
+                    clientResults: [],
+                    currentSlideFeatureId: '',
                 }).catch(reason => this.onRejected('session')(reason))
         ]);
     }
