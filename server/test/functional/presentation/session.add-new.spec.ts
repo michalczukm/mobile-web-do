@@ -23,6 +23,20 @@ describe('session: add new', () => {
         }
     });
 
+    it('should return 200 for new session added', async () => {
+        // act
+        const actual = await server.inject({
+            method: 'POST',
+            url: `/api/sessions`,
+            payload: {
+                name: 'test session'
+            }
+        });
+
+        // assert
+        expect(actual.statusCode).to.equal(200);
+    });
+
     it('should add new session', async () => {
         // arrange
         const baseSessionAmount = getSessionsAmount(await callForSessions(server));
