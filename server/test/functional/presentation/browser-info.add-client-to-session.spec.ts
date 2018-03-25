@@ -1,21 +1,27 @@
 import 'mocha';
 import { expect } from 'chai';
 import * as Hapi from 'hapi';
-
-process.env.PORT = '5252';
-
 import startServer from '../../../src/server'
 import testConstants from '../tests.constants';
+import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 describe('browser info: add client to session', () => {
     let server: Hapi.Server;
+    let testSetup: TestsSetup;
 
-    before(() => {
+    before(async () => {
+        testSetup = integrationTestsSetupBuilder.withStandardSetup();
         server = new Hapi.Server();
-        return startServer(server);
+        await (startServer(server).then(testSetup.setup));
     });
 
-    after(() => server.stop());
+    after(async () => {
+        try {
+            await testSetup.tearDown();
+        } finally {
+            server.stop();
+        }
+    });
 
     it('should add new client to the session results', async () => {
         // arrange

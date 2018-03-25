@@ -7,9 +7,8 @@ import {
     clientIdentifiersRepository
 } from '../data-access';
 
-import { Result } from '../../../common';
 import { RequestHandler } from '../../../hapi-utils';
-import { BrowserInfoModel, VersionInfo } from '../models';
+import { BrowserInfoModel } from '../models';
 import { userAgentService } from '../services/browser-info'
 
 function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
@@ -26,7 +25,7 @@ function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hap
             browserInfoRepository.add(sessionId, clientId, browserInfo)
         ])
             .then(() => reply().state('client-id', clientId));
-    }
+    };
 
     return sessionRepository.exists(sessionId)
         .then(exists => !exists

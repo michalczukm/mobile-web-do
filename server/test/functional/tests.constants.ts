@@ -1,6 +1,6 @@
 const testConstants = {
-    sessionIdFeatureState: '8d4d98a8-eb90-4942-87f2-5fb57e7abc0f',
-    sessionIdWelcomeState: '7c527737-6728-49ce-b770-3c47eb86ed90'
+    sessionIdFeatureState: '5ab6f4000210b1df5d4f70c1',
+    sessionIdWelcomeState: '5ab6f40019089dda5260217a'
 };
 
 export default testConstants;

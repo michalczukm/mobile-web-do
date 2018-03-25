@@ -1,16 +1,17 @@
 import database from '../../src/data/document-storage/database';
+import testConstants from './tests.constants';
 
-interface TestsSetup {
+export interface TestsSetup {
     setup(): Promise<any>;
     tearDown(): Promise<any>;
 }
 
-export const databaseSetup = new class DatabaseSetup implements TestsSetup {
+const databaseSetup = new class DatabaseSetup implements TestsSetup {
     setup(): Promise<any> {
         return Promise.all([
             database.session.create(
                 {
-                    id: '8d4d98a8-eb90-4942-87f2-5fb57e7abc0f',
+                    id: testConstants.sessionIdFeatureState,
                     name: 'running test session',
                     createdAt: new Date(),
                     clientIdentifiers: [],
@@ -20,7 +21,7 @@ export const databaseSetup = new class DatabaseSetup implements TestsSetup {
                     clientResults: []
                 },
                 {
-                    id: '7c527737-6728-49ce-b770-3c47eb86ed90',
+                    id: testConstants.sessionIdWelcomeState,
                     name: 'not opened test session',
                     clientIdentifiers: [],
                     createdAt: new Date(),
@@ -30,7 +31,7 @@ export const databaseSetup = new class DatabaseSetup implements TestsSetup {
                     currentSlideFeatureId: '',
                 },
                 {
-                    id: '19c4f674-f312-4f7f-94fa-a5e898bb9b46',
+                    id: '5ab6f400ae92cba4516d534c',
                     name: 'company specific session',
                     clientIdentifiers: [],
                     createdAt: new Date(),
@@ -54,3 +55,8 @@ export const databaseSetup = new class DatabaseSetup implements TestsSetup {
         throw reason;
     };
 }();
+
+
+export const integrationTestsSetupBuilder = {
+    withStandardSetup: (): TestsSetup => databaseSetup
+};

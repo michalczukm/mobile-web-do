@@ -83,4 +83,8 @@ const SessionSchema = new Mongoose.Schema(
         timestamps: true
     });
 
+SessionSchema.virtual('id').set(function (id: string): void {
+    this._id = new Mongoose.Types.ObjectId(id);
+});
+
 export const SessionModel = Mongoose.model('Session', SessionSchema);

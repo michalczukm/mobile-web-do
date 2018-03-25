@@ -1,20 +1,23 @@
 import 'mocha';
 import { expect } from 'chai';
 import * as Hapi from 'hapi';
+import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
-import { databaseSetup } from '../functional-tests-utils';
 import startServer from '../../../src/server'
 
 describe('session: add new', () => {
     let server: Hapi.Server;
+    let testSetup: TestsSetup;
+
     before(async () => {
+        testSetup = integrationTestsSetupBuilder.withStandardSetup();
         server = new Hapi.Server();
-        await (startServer(server).then(databaseSetup.setup));
+        await (startServer(server).then(testSetup.setup));
     });
 
     after(async () => {
         try {
-            await databaseSetup.tearDown();
+            await testSetup.tearDown();
         } finally {
             server.stop();
         }

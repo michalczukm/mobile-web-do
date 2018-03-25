@@ -10,7 +10,7 @@ interface DatabaseContext {
     session: Mongoose.Model<Session>;
 }
 
-export default <DatabaseContext>{
+export default <DatabaseContext> {
     browserInfo: BrowserInfoModel,
     clientIdentifier: ClientIdentifierModel,
     session: SessionModel

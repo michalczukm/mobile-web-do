@@ -20,12 +20,12 @@ function create(session: SessionModel): Promise<SessionModel> {
 }
 
 function get(): Promise<SessionModel[]> {
-    return sessionsDbCollection.find()
+    return sessionsDbCollection.find().exec()
         .then(sessions => sessions.map(session => mapSessionToSessionModel(session)));
 }
 
 function getById(id: string): Promise<SessionModel> {
-    return sessionsDbCollection.findById(id).then(mapSessionToSessionModel);
+    return sessionsDbCollection.findById(id).exec().then(mapSessionToSessionModel);
 }
 
 function updateFields(sessionId: string, modifyFields: { [key in keyof SessionModel]: any }): Promise<void> {
@@ -45,8 +45,7 @@ function addClientResult(sessionId: string, clientResult: ClientInfoModel): Prom
 }
 
 const mapSessionToSessionModel = (session: Session): SessionModel => {
-    const { _id, ...sessionModel } = session;
-    return sessionModel;
+    return session;
 };
 
 export default {
