@@ -11,8 +11,7 @@ export const ClientIdentifierSchema = new Mongoose.Schema(
         identifier: {
             type: String,
             required: true,
-            index: true,
-            unique: true
+            index: true
         }
     },
     {

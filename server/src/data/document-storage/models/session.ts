@@ -46,7 +46,6 @@ const ClientInfoSchema = new Mongoose.Schema({
     clientIdentifier: {
         type: String,
         required: true,
-        unique: true,
         index: true
     },
     clientResults: [ClientSessionResultsSchema],
@@ -67,9 +66,18 @@ const SessionSchema = new Mongoose.Schema(
         currentSlideFeatureId: {
             type: String
         },
-        browserInfo: BrowserInfoSchema,
-        clientIdentifiers: [ClientIdentifierSchema],
-        clientResults: [ClientInfoSchema]
+        browserInfo: {
+            type: [BrowserInfoSchema],
+            default: []
+        },
+        clientIdentifiers: {
+            type: [ClientIdentifierSchema],
+            default: []
+        },
+        clientResults: {
+            type: [ClientInfoSchema],
+            default: []
+        }
     },
     {
         timestamps: true

@@ -7,10 +7,9 @@ import startServer from '../../../src/server'
 
 describe('session: add new', () => {
     let server: Hapi.Server;
-
     before(async () => {
         server = new Hapi.Server();
-        return startServer(server).then(databaseSetup.setup);
+        await (startServer(server).then(databaseSetup.setup));
     });
 
     after(async () => {
@@ -34,8 +33,6 @@ describe('session: add new', () => {
                 name: 'test session'
             }
         });
-
-
 
         // assert
         const actualSessionAmount = getSessionsAmount(await callForSessions(server));
