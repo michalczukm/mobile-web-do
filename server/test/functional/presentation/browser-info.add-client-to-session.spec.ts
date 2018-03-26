@@ -5,7 +5,7 @@ import startServer from '../../../src/server'
 import testConstants from '../tests.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
-describe('browser info: add client to session', () => {
+describe.only('browser info: add client to session', () => {
     let server: Hapi.Server;
     let testSetup: TestsSetup;
 
@@ -17,7 +17,7 @@ describe('browser info: add client to session', () => {
 
     after(async () => {
         try {
-            await testSetup.tearDown();
+            // await testSetup.tearDown();
         } finally {
             server.stop();
         }

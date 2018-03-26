@@ -14,7 +14,7 @@ function create(session: SessionModel): Promise<SessionModel> {
 
     return sessionsDbCollection.create(sessionDocument).then(mapSessionToSessionModel)
         .catch(reason => {
-            logger.error('Cannot create session', reason);
+            logger.error(`Cannot create session for name: '${session.name}'`, reason);
             throw reason;
         });
 }
@@ -39,7 +39,7 @@ function updateFields(sessionId: string, modifyFields: { [key in keyof SessionMo
 function addClientResult(sessionId: string, clientResult: ClientInfoModel): Promise<void> {
     return new Promise((resolve, reject) => {
         sessionsDbCollection.update({ _id: sessionId }, {
-            $push: { clientResults: clientResult }
+            $push: { [((key: keyof Session) => key)('clientResults')]: clientResult }
         }, (error, _) => error ? reject(error) : resolve());
     });
 }
