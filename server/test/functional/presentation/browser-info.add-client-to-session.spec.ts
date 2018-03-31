@@ -17,7 +17,7 @@ describe.only('browser info: add client to session', () => {
 
     after(async () => {
         try {
-            // await testSetup.tearDown();
+            await testSetup.tearDown();
         } finally {
             server.stop();
         }

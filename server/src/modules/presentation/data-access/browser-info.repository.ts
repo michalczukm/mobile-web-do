@@ -7,7 +7,7 @@ const clientIdentifierDbCollection = documentDatabase.clientIdentifier;
 const sessionsDbCollection = documentDatabase.session;
 
 function add(sessionId: string, clientIdentifier: string, browserInfo: BrowserInfoModel): Promise<void> {
-    return Promise.sessionsDbCollection.update({_id: sessionId}, {
+    return sessionsDbCollection.update({_id: sessionId}, {
         $push: {
             [((key: keyof Session) => key)('browserInfo')]: browserInfo,
             [((key: keyof Session) => key)('browserInfo')]: { identifier: clientIdentifier } as ClientIdentifier
@@ -17,7 +17,6 @@ function add(sessionId: string, clientIdentifier: string, browserInfo: BrowserIn
         logger.error(`Cannot add browser into to client: '${clientIdentifier}'`, reason);
         throw reason;
     });
-
 
     // const session = DATA.sessions.find(s => s.id === sessionId);
     // session.browserInfo.push(browserInfo);
