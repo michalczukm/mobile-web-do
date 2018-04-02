@@ -1,7 +1,5 @@
 import * as Hapi from 'hapi';
 import * as Boom from 'boom';
-import * as fs from 'fs';
-import * as Path from 'path';
 
 import { RequestHandler } from '../../../hapi-utils';
 import { SessionModel, ClientSessionResults } from '../models';
@@ -11,8 +9,7 @@ import { presentationNotifier } from '../services/notifications';
 import featureService from '../services/features';
 import { userAgentService } from '../services/browser-info';
 import { validation } from '../validators';
-import { SessionState, logger } from '../../../common';
-import { DATA } from '../../data';
+import { SessionState } from '../../../common';
 
 const mapSession = (session: SessionModel) => ({
     id: session.id,
@@ -133,32 +130,11 @@ function addResults(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise
         });
 }
 
-function persist(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
-    const sessionId = request.params.id;
-
-    const date = new Date();
-    const dataToSave = JSON.stringify(DATA);
-
-    const dateString = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}_${date.getHours()}-${date.getMinutes()}`;
-
-    return new Promise((resolve, reject) => {
-        fs.writeFile(Path.join(__dirname, `session-${sessionId}_${dateString}.db`), dataToSave, { encoding: 'utf8' }, (error) => {
-            if (error) {
-                logger.error('Cannot persist session data', error);
-                resolve(reply(Boom.internal('Cannot persist session data')));
-            } else {
-                resolve(reply().code(200));
-            }
-        });
-    });
-}
-
 export default {
     create: <RequestHandler>create,
     get: <RequestHandler>get,
     getById: <RequestHandler>getById,
     setState: <RequestHandler>setState,
     setSlideFeature: <RequestHandler>setSlideFeature,
-    addResults: <RequestHandler>addResults,
-    persist: <RequestHandler>persist
+    addResults: <RequestHandler>addResults
 };

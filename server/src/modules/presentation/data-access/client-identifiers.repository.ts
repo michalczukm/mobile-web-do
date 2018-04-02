@@ -1,7 +1,6 @@
-
 import { documentDatabase, ClientIdentifier } from '../../../data';
-import { Result, logger } from '../../../common';
-import { BrowserInfoModel, ClientIdentifierModel } from '../models';
+import { logger } from '../../../common';
+import { ClientIdentifierModel } from '../models';
 
 const clientIdentifierDbCollection = documentDatabase.clientIdentifier;
 const sessionsDbCollection = documentDatabase.session;
@@ -13,13 +12,6 @@ function add(clientIdentifier: string): Promise<ClientIdentifierModel> {
             logger.error(`Cannot create client identifier for identifier: '${clientIdentifier}'`, reason);
             throw reason;
         });
-
-    // DATA.clientIdentifiers.push({
-    //     identifier: clientIdentifier,
-    //     createdAt: new Date()
-    // } as ClientIdentifierModel);
-
-    // return Promise.resolve();
 }
 
 function existInSession(clientIdentifier: string, sessionId: string): Promise<boolean> {
@@ -29,12 +21,6 @@ function existInSession(clientIdentifier: string, sessionId: string): Promise<bo
             'clientIdentifiers.identifier': clientIdentifier
         })
         .then(count => !!count);
-
-    // return Promise.resolve(
-    //     !!DATA.sessions
-    //         .find(session => session.id === sessionId)
-    //         .clientIdentifiers
-    //         .find(id => id.identifier === clientIdentifier));
 }
 
 function existInSessionResults(clientIdentifier: string, sessionId: string): Promise<boolean> {
@@ -44,11 +30,6 @@ function existInSessionResults(clientIdentifier: string, sessionId: string): Pro
             'clientResults.clientIdentifier': clientIdentifier
         })
         .then(count => !!count);
-    // return Promise.resolve(
-    //     !!DATA.sessions
-    //         .find(session => session.id === sessionId)
-    //         .clientResults
-    //         .find(result => result. === clientIdentifier));
 }
 
 export default {
