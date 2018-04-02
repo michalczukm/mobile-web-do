@@ -1,5 +1,7 @@
 export class Result {
-    public get isFail(): boolean { return !this.isSuccess };
+    public get isFail(): boolean {
+        return !this.isSuccess
+    };
 
     static success(): Result {
         return new Result(true);
@@ -9,6 +11,12 @@ export class Result {
         return new Result(false, errors);
     }
 
-    private constructor(public isSuccess: boolean, public errors = [] as string[]) {
+    get errorsMessage(): string {
+        return this.errors.join((','));
+    }
+
+    private constructor(
+        public isSuccess: boolean,
+        public errors = [] as string[]) {
     }
 }

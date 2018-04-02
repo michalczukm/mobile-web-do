@@ -5,14 +5,14 @@ import startServer from '../../../src/server'
 import testConstants from '../tests.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
-describe.only('browser info: add client to session', () => {
+describe('browser info: add client to session', () => {
     let server: Hapi.Server;
     let testSetup: TestsSetup;
 
     before(async () => {
         testSetup = integrationTestsSetupBuilder.withStandardSetup();
         server = new Hapi.Server();
-        await (startServer(server).then(testSetup.setup));
+        await startServer(server).then(testSetup.setup);
     });
 
     after(async () => {

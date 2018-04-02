@@ -10,6 +10,7 @@ import { SessionWebModel } from './web-models/session';
 import { presentationNotifier } from '../services/notifications';
 import featureService from '../services/features';
 import { userAgentService } from '../services/browser-info';
+import { validation } from '../validators';
 import { SessionState, logger } from '../../../common';
 import { DATA } from '../../data';
 
@@ -53,30 +54,29 @@ function getById(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Ha
         });
 }
 
-function setState(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+async function setState(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
     const sessionId = request.params.id;
     const newState = request.payload.state as SessionState;
 
-    return sessionRepository.exists(sessionId)
-        .then(sessionExists => {
-            if (!sessionExists) {
-                return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
-            }
+    const validationResult = await validation.sessionExists(sessionId);
 
-            const sessionUpdates = {
-                state: newState
-            } as {[key in keyof SessionModel]: any };
+    if (validationResult.isSuccess) {
+        const sessionUpdates = {
+            state: newState
+        } as {[key in keyof SessionModel]: any };
 
-            if (newState === SessionState.Feature) {
-                sessionUpdates.currentSlideFeatureId = featureService.getFirstFeature().id;
-            }
+        if (newState === SessionState.Feature) {
+            sessionUpdates.currentSlideFeatureId = featureService.getFirstFeature().id;
+        }
 
-            return sessionRepository.updateFields(sessionId, sessionUpdates)
-                .then(() => {
-                    presentationNotifier.setState(newState, sessionUpdates);
-                    return reply().code(200);
-                });
-        });
+        return sessionRepository.updateFields(sessionId, sessionUpdates)
+            .then(() => {
+                presentationNotifier.setState(newState, sessionUpdates);
+                return reply().code(200);
+            });
+    } else {
+        return reply(Boom.notFound(validationResult.errorsMessage));
+    }
 }
 
 function setSlideFeature(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {

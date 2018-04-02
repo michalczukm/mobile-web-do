@@ -4,16 +4,25 @@ import * as Hapi from 'hapi';
 
 import startServer from '../../../src/server'
 import testConstants from '../tests.constants';
+import {integrationTestsSetupBuilder, TestsSetup} from '../functional-tests-utils';
 
 describe('browser info: add new client', () => {
     let server: Hapi.Server;
+    let testSetup: TestsSetup;
 
-    before(() => {
+    before(async () => {
+        testSetup = integrationTestsSetupBuilder.withStandardSetup();
         server = new Hapi.Server();
-        return startServer(server);
+        await startServer(server).then(testSetup.setup);
     });
 
-    after(() => server.stop());
+    after(async () => {
+        try {
+            await testSetup.tearDown();
+        } finally {
+            server.stop();
+        }
+    });
 
     it('should add browser info for correct data', async () => {
         const actual = await server.inject({
@@ -100,6 +109,7 @@ describe('browser info: add new client', () => {
 
     it('should not set cookie `client-id` if it exists in request', async () => {
         const fixedClientIdCookie = `client-id=ImExNDQ5ZGY3LTIyNDQtNGRmMy1hYzQxLThhZTFiYzhmYmNiMCI=`;
+        const expected = `${fixedClientIdCookie}; HttpOnly`;
 
         const actual = await server.inject({
             method: 'POST',
@@ -112,7 +122,7 @@ describe('browser info: add new client', () => {
 
         expect(actual.statusCode).to.equal(200);
         // tslint:disable-next-line:no-unused-expression
-        expect(actual.headers['set-cookie']).to.be.undefined;
+        expect(actual.headers['set-cookie'][0]).equal(expected);
     });
 });
 

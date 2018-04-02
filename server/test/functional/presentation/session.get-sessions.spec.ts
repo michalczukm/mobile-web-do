@@ -4,16 +4,25 @@ import * as Hapi from 'hapi';
 
 import startServer from '../../../src/server'
 import testConstants from '../tests.constants';
+import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 describe('session: get sessions', () => {
     let server: Hapi.Server;
+    let testSetup: TestsSetup;
 
-    before(() => {
+    before(async () => {
+        testSetup = integrationTestsSetupBuilder.withStandardSetup();
         server = new Hapi.Server();
-        return startServer(server);
+        await startServer(server).then(testSetup.setup);
     });
 
-    after(() => server.stop());
+    after(async () => {
+        try {
+            await testSetup.tearDown();
+        } finally {
+            server.stop();
+        }
+    });
 
     it('should get all sesions', async () => {
         const actual = await server.inject({

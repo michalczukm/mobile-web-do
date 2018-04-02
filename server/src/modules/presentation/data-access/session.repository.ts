@@ -1,12 +1,17 @@
 import { SessionModel, ClientInfoModel } from '../models';
 import { documentDatabase, Session } from '../../../data';
-import {logger} from '../../../common';
+import { logger } from '../../../common';
+import { isIdValid } from './validation/mongoose-basic.validation';
 
 const sessionsDbCollection = documentDatabase.session;
 
-function exists(sessionId: string): Promise<boolean> {
-    return sessionsDbCollection.count({ _id: sessionId })
-        .then(result => result > 0);
+async function exists(sessionId: string): Promise<boolean> {
+    if (isIdValid(sessionId)) {
+        const count = await sessionsDbCollection.count({ _id: sessionId });
+        return count > 0;
+    } else {
+        return false;
+    }
 }
 
 function create(session: SessionModel): Promise<SessionModel> {
@@ -24,8 +29,8 @@ function get(): Promise<SessionModel[]> {
         .then(sessions => sessions.map(session => mapSessionToSessionModel(session)));
 }
 
-function getById(id: string): Promise<SessionModel> {
-    return sessionsDbCollection.findById(id).exec().then(mapSessionToSessionModel);
+async function getById(id: string): Promise<SessionModel | null> {
+    return isIdValid(id) ? sessionsDbCollection.findById(id).exec().then(mapSessionToSessionModel) : null;
 }
 
 function updateFields(sessionId: string, modifyFields: { [key in keyof SessionModel]: any }): Promise<void> {

@@ -4,16 +4,25 @@ import * as Hapi from 'hapi';
 
 import startServer from '../../../src/server'
 import testConstants from '../tests.constants';
+import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 describe('session: set state', () => {
     let server: Hapi.Server;
+    let testSetup: TestsSetup;
 
-    before(() => {
+    before(async () => {
+        testSetup = integrationTestsSetupBuilder.withStandardSetup();
         server = new Hapi.Server();
-        return startServer(server);
+        await startServer(server).then(testSetup.setup);
     });
 
-    after(() => server.stop());
+    after(async () => {
+        try {
+            await testSetup.tearDown();
+        } finally {
+            server.stop();
+        }
+    });
 
     it(`should set session feature for session in FEATURE state`, async () => {
         const actual = await server.inject({
@@ -77,8 +86,17 @@ describe('session: set state', () => {
         expect(actual.statusCode).to.equal(400);
     });
 
-    // todo, to be implemented. Now all sessions use same features set
-    it('should return client 400 error when getting session features if session at given id not exists');
+    it('should return client 404 error when getting session features if session at given id not exists', async () => {
+        const nonExistingSessionId = '123123123';
+
+        const actual = await
+            server.inject({
+                method: 'GET',
+                url: `/api/sessions/${nonExistingSessionId}/features`
+            });
+
+        expect(actual.statusCode).to.equal(404);
+    });
 
     it('should get session features', async () => {
         const actual = await server.inject({
