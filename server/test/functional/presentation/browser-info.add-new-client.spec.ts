@@ -3,10 +3,11 @@ import { expect } from 'chai';
 import * as Hapi from 'hapi';
 
 import startServer from '../../../src/server'
-import testConstants from '../tests.constants';
+import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
 import {integrationTestsSetupBuilder, TestsSetup} from '../functional-tests-utils';
 
-describe('browser info: add new client', () => {
+describe('browser info: add new client', function(): void {
+    this.timeout(10000);
     let server: Hapi.Server;
     let testSetup: TestsSetup;
 
@@ -72,7 +73,7 @@ describe('browser info: add new client', () => {
             method: 'POST',
             url: '/api/browser-info',
             payload: {
-                sessionId: testConstants.sessionIdFeatureState,
+                sessionId: seedConstants.sessionIdFeatureState,
                 browserInfo: {
                     window: {}
                 }
@@ -87,7 +88,7 @@ describe('browser info: add new client', () => {
             method: 'POST',
             url: '/api/browser-info',
             payload: {
-                sessionId: testConstants.sessionIdFeatureState,
+                sessionId: seedConstants.sessionIdFeatureState,
                 browserInfo: {
                     navigator: {}
                 }
@@ -128,7 +129,7 @@ describe('browser info: add new client', () => {
 
 const buildCorrectPayload = (): Object => (
     {
-        sessionId: testConstants.sessionIdFeatureState,
+        sessionId: seedConstants.sessionIdFeatureState,
         browserInfo: {
             navigator: {},
             window: {}

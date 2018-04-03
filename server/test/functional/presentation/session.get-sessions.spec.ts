@@ -3,10 +3,11 @@ import { expect } from 'chai';
 import * as Hapi from 'hapi';
 
 import startServer from '../../../src/server'
-import testConstants from '../tests.constants';
+import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
-describe('session: get sessions', () => {
+describe('session: get sessions', function (): void {
+    this.timeout(10000);
     let server: Hapi.Server;
     let testSetup: TestsSetup;
 
@@ -37,7 +38,7 @@ describe('session: get sessions', () => {
     it('should get single session', async () => {
         const actual = await server.inject({
             method: 'GET',
-            url: `/api/sessions/${testConstants.sessionIdFeatureState}`
+            url: `/api/sessions/${seedConstants.sessionIdFeatureState}`
         });
 
         expect(actual.statusCode).to.equal(200);

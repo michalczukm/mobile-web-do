@@ -3,10 +3,11 @@ import { expect } from 'chai';
 import * as Hapi from 'hapi';
 
 import startServer from '../../../src/server'
-import testConstants from '../tests.constants';
+import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
-describe('session: set state', () => {
+describe('session: set state', function(): void {
+    this.timeout(10000);
     let server: Hapi.Server;
     let testSetup: TestsSetup;
 
@@ -27,7 +28,7 @@ describe('session: set state', () => {
     ['WELCOME', 'FEATURE', 'SUMMARY', 'CLOSED'].forEach(state => {
         it(`should set new session "${state}" state`, async () => {
             // arrange
-            const sessionId = testConstants.sessionIdFeatureState;
+            const sessionId = seedConstants.sessionIdFeatureState;
             const callGetSessionState = () => server.inject({
                 method: 'GET',
                 url: `/api/sessions/${sessionId}`,

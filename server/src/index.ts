@@ -1,12 +1,13 @@
 import * as Hapi from 'hapi';
 import startServer from './server';
+import { logger } from './common';
 
 process.on('uncaughtException', (error: Error) => {
-    console.error(`uncaughtException ${error.message}`);
+    logger.error(`uncaughtException: ${error.message}`, error);
 });
 
 process.on('unhandledRejection', (reason: any) => {
-    console.error(`unhandledRejection ${reason}`);
+    logger.error('unhandledRejection', reason);
 });
 
 const server = new Hapi.Server();

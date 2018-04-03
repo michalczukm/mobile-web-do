@@ -5,7 +5,8 @@ import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-ut
 
 import startServer from '../../../src/server'
 
-describe('session: add new', () => {
+describe('session: add new', function (): void {
+    this.timeout(10000);
     let server: Hapi.Server;
     let testSetup: TestsSetup;
 

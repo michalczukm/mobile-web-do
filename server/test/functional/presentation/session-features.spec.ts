@@ -3,10 +3,11 @@ import { expect } from 'chai';
 import * as Hapi from 'hapi';
 
 import startServer from '../../../src/server'
-import testConstants from '../tests.constants';
+import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
-describe('session: set state', () => {
+describe('session: set state', function(): void {
+    this.timeout(10000);
     let server: Hapi.Server;
     let testSetup: TestsSetup;
 
@@ -27,7 +28,7 @@ describe('session: set state', () => {
     it(`should set session feature for session in FEATURE state`, async () => {
         const actual = await server.inject({
             method: 'PUT',
-            url: `/api/sessions/${testConstants.sessionIdFeatureState}/features/current`,
+            url: `/api/sessions/${seedConstants.sessionIdFeatureState}/features/current`,
             payload: {
                 slideFeatureId: 'device-RAM-memory'
             }
@@ -38,7 +39,7 @@ describe('session: set state', () => {
 
     it(`should set session current feature`, async () => {
         // arrange
-        const sessionId = testConstants.sessionIdFeatureState;
+        const sessionId = seedConstants.sessionIdFeatureState;
         const featureId = 'device-RAM-memory';
 
         const callGetCurrentSessionFeature = () => server.inject({
@@ -77,7 +78,7 @@ describe('session: set state', () => {
     it(`should return 400 client error when session is not in FEATURE state`, async () => {
         const actual = await server.inject({
             method: 'PUT',
-            url: `/api/sessions/${testConstants.sessionIdWelcomeState}/features/current`,
+            url: `/api/sessions/${seedConstants.sessionIdWelcomeState}/features/current`,
             payload: {
                 slideFeatureId: 'device-RAM-memory'
             }
@@ -101,7 +102,7 @@ describe('session: set state', () => {
     it('should get session features', async () => {
         const actual = await server.inject({
             method: 'GET',
-            url: `/api/sessions/${testConstants.sessionIdFeatureState}/features`
+            url: `/api/sessions/${seedConstants.sessionIdFeatureState}/features`
         });
 
         expect(actual.statusCode).to.equal(200);

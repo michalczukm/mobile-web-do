@@ -66,11 +66,9 @@ async function setState(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Pro
             sessionUpdates.currentSlideFeatureId = featureService.getFirstFeature().id;
         }
 
-        return sessionRepository.updateFields(sessionId, sessionUpdates)
-            .then(() => {
-                presentationNotifier.setState(newState, sessionUpdates);
-                return reply().code(200);
-            });
+        await sessionRepository.updateFields(sessionId, sessionUpdates);
+        presentationNotifier.setState(newState, await sessionRepository.getById(sessionId));
+        return reply().code(200);
     } else {
         return reply(Boom.notFound(validationResult.errorsMessage));
     }

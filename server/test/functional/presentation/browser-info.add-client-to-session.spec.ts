@@ -2,10 +2,11 @@ import 'mocha';
 import { expect } from 'chai';
 import * as Hapi from 'hapi';
 import startServer from '../../../src/server'
-import testConstants from '../tests.constants';
+import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
-describe('browser info: add client to session', () => {
+describe('browser info: add client to session', function (): void {
+    this.timeout(10000);
     let server: Hapi.Server;
     let testSetup: TestsSetup;
 
@@ -95,7 +96,7 @@ describe('browser info: add client to session', () => {
 
 const callForSessionResults = (server: Hapi.Server) => server.inject({
     method: 'GET',
-    url: `/api/sessions/${testConstants.sessionIdFeatureState}/results`,
+    url: `/api/sessions/${seedConstants.sessionIdFeatureState}/results`,
     payload: buildCorrectPayload(),
 });
 
@@ -103,7 +104,7 @@ const getClientsQuantity = (response: Hapi.InjectedResponseObject) => (response.
 
 const buildCorrectPayload = (): Object => (
     {
-        sessionId: testConstants.sessionIdFeatureState,
+        sessionId: seedConstants.sessionIdFeatureState,
         browserInfo: {
             navigator: {},
             window: {}
