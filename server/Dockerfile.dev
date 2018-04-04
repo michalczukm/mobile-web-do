@@ -1,0 +1,10 @@
+FROM node:latest
+RUN mkdir -p /usr/app
+WORKDIR /usr/app
+COPY . /usr/app
+
+WORKDIR server
+RUN npm install
+
+EXPOSE 3000
+CMD [ "npm", "start" ]

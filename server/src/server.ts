@@ -2,20 +2,12 @@ import * as Hapi from 'hapi';
 import * as inert from 'inert';
 import * as vision from 'vision';
 import * as Path from 'path';
-import * as dotenv from 'dotenv';
 import * as hapiSwagger from 'hapi-swagger';
 import staticModule from './modules/static';
 import presentationModule from './modules/presentation';
-import * as databaseSetup from './infrastructure/database.setup';
-import { seedDatabase } from './infrastructure/db-seeds';
+import { seedDatabase, databaseSetup, environmentConfig } from './infrastructure';
 
-dotenv.config();
-
-const env = {
-    serverPort: process.env.PORT,
-    dbHost: process.env.DB_HOST,
-    isProd: process.env.IS_PROD === 'true'
-};
+const env = environmentConfig;
 
 const Pack = require('../package.json');
 const serverPort = env.serverPort || 5050;

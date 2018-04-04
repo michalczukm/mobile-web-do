@@ -1,6 +1,6 @@
 import * as Mongoose from 'mongoose';
 
-import { seedDatabase } from '../../src/infrastructure/db-seeds';
+import { seedDatabase } from '../../src/infrastructure';
 
 export interface TestsSetup {
     setup(): Promise<any>;

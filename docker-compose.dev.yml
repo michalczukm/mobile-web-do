@@ -2,26 +2,24 @@ version: '3'
 
 services:
   mobile-web-do:
-    container_name: mobile-web-do
+    container_name: mobile-web-do__dev_server
     restart: always
-    build: .
+    build: ./server/Dockerfile.dev
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       PORT: 3000
       DB_HOST: mongodb://mongo:27017/mobile-web-do
     links:
       - mongo
     ports:
-      - 3000:3000
+      - 3095:3000
     networks:
       - mwdnet
     depends_on:
       - mongo
   mongo:
-    container_name: mobile-web-do_storage
+    container_name: mobile-web-do_storage__dev_server
     image: mongo
-    volumes:
-      - ../data:/data/db
     ports:
       - "27017:27017"
     networks:
