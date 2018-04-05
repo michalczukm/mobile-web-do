@@ -36,7 +36,15 @@ export default (server: SocketIO.Server) => {
     server.on('connection', (socket: SocketIO.Socket) => {
         registerClient(socket);
 
-        sessionRepository.getById(getSessionId(socket))
+        const sessionId = getSessionId(socket);
+        sessionRepository.getById(sessionId)
+            .then(session => {
+                if (!!session) {
+                    return session;
+                } else {
+                    throw new Error(`Session id:'${sessionId}' doesn't exist`);
+                }
+            })
             .then(session => socket.emit('switch-slide',
                 new PresentationMessage(session.state, { id: session.id, name: session.name }, session.currentSlideFeatureId)
             ))
