@@ -1,4 +1,4 @@
-import { InjectionToken, Injectable, Inject, Optional } from '@angular/core';
+import { InjectionToken, Injectable, Inject } from '@angular/core';
 
 export const ENVIRONMENT_TOKEN = new InjectionToken<Environment>('environment');
 
@@ -9,8 +9,10 @@ export interface Environment {
 
 @Injectable()
 export class EnvironmentProvider {
-    constructor( @Optional() @Inject(ENVIRONMENT_TOKEN) private environment: Environment) {
+    constructor(@Inject(ENVIRONMENT_TOKEN) private environment: Environment) {
     }
 
-    get current(): Environment { return { ...this.environment }; }
+    get current(): Environment {
+        return {...this.environment};
+    }
 }

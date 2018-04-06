@@ -11,7 +11,8 @@ import { Session, SessionService } from '../shared';
 export class SessionsListComponent implements OnInit {
     sessions$: Observable<Session[]>;
 
-    constructor(private sessionService: SessionService) { }
+    constructor(private sessionService: SessionService) {
+    }
 
     ngOnInit(): void {
         this.sessions$ = this.sessionService.get();

@@ -6,7 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 
-import { PageNotFoundComponent } from './components';
+import { LoggedComponent, PageNotFoundComponent, TopNavbarComponent, UnauthorizedComponent } from './components';
+import { AuthService, AuthGuard } from './auth';
 
 @NgModule({
     imports: [
@@ -18,16 +19,25 @@ import { PageNotFoundComponent } from './components';
         ToastrModule.forRoot(),
     ],
     declarations: [
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        LoggedComponent,
+        TopNavbarComponent,
+        UnauthorizedComponent
     ],
     providers: [
+        AuthService,
+        AuthGuard
     ],
     exports: [
         CommonModule,
         FormsModule,
         HttpClientModule,
         RouterModule,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        LoggedComponent,
+        TopNavbarComponent,
+        UnauthorizedComponent
     ],
 })
-export class CoreModule { }
+export class CoreModule {
+}

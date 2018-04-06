@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" routerLink="/">Mobile Browser Do</a>
+        <div class="ml-auto">
+            <button
+                class="btn btn-outline-primarybtn btn-margin btn-sm"
+                *ngIf="!isAuthenticated; else logoutButton"
+                (click)="login()">
+                Log In
+            </button>
+
+            <ng-template #logoutButton>
+                <button
+                    class="btn btn-danger btn-margin btn-sm ml-auto"
+                    (click)="logout()">
+                    Log Out
+                </button>
+            </ng-template>
+        </div>
+    </div>
+</nav>
