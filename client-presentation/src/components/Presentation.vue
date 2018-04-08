@@ -1,12 +1,10 @@
 <template>
-    <!-- <div class="container"> -->
-        <transition name="slide-fade">
-            <div v-bind:class="{'slide-out': !transition, 'slide-in': transition }">
-                <feature class="feature " v-bind:feature="currentFeature"/>
-                <feature-description class="description" v-bind:feature="currentFeature"/>
-            </div>
-        </transition>
-    <!-- </div> -->
+    <transition name="slide-fade">
+        <div v-bind:class="{'slide-out': !transition, 'slide-in': transition }">
+            <feature class="feature " v-bind:feature="currentFeature"/>
+            <feature-description class="description" v-bind:feature="currentFeature"/>
+        </div>
+    </transition>
 </template>
 
 <script>

@@ -41,6 +41,16 @@ function getSessionResults() {
         .catch(reason => logger.error('Fetching session results failed', reason));
 }
 
+function getFeatureResult(featureId) {
+    return getSessionResults()
+        .then(result => ({
+            clientsQuantity: result.clientsQuantity,
+            systems: result.systems,
+            browsers: result.browsers,
+            result: result.results.find(r => r.featureId === featureId)
+        }));
+}
+
 function getCurrentSession() {
     const sessionId = getCurrentSessionId();
 
@@ -56,5 +66,6 @@ export default {
     getCurrentSessionId,
     sendClientSessionResults,
     getSessionResults,
-    getCurrentSession
+    getCurrentSession,
+    getFeatureResult
 };

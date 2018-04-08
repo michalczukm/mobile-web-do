@@ -221,4 +221,29 @@
         position: absolute;
         transform: translate(-100%, 0);
     }
+
+    .charts-container {
+        .chart {
+            border-bottom: 1px solid $secondary;
+            padding-top: 30px;
+            padding-bottom: 30px;
+        }
+
+        .chart-last {
+            border-bottom: 0px;
+        }
+    }
+
+    @media (min-width: 60rem) {
+        .charts-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .chart {
+            border: 1px solid $secondary;
+            margin: 0.5em;
+        }
+    }
 </style>

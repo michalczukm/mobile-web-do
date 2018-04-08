@@ -40,9 +40,8 @@
 <script>
     import DoughnutChart from './reports/DoughnutChart';
     import Loading from './Loading';
-    import {supportStatus} from '../features/support-status';
-    import colorsSet from './reports/colors-set';
     import sessionService from '../sessions';
+    import chartDataService from './reports/chart-data.service';
     import {logger} from '../logging';
 
     export default {
@@ -59,31 +58,10 @@
         },
         methods: {
             mapStatisticsToChartData: function (statistics) {
-                return {
-                    labels: statistics.map(stat => stat.family),
-                    datasets: [{
-                        backgroundColor: colorsSet.getColorsSet(),
-                        data: statistics.map(stat => stat.quantity)
-                    }]
-                };
+                return chartDataService.mapStatisticsToChartData(statistics);
             },
             mapStatusesToChartData: function (statuses) {
-                const refs = [supportStatus.STANDARD, supportStatus.VENDOR_SPECIFIC, supportStatus.NO_SUPPORT];
-                const data = refs.map(ref => statuses.filter(status => status === ref).length);
-
-                return {
-                    labels: ['Standard', 'Vendor specific', 'No support'],
-                    datasets: [
-                        {
-                            backgroundColor: [
-                                '#97D100',
-                                '#E8AB19',
-                                '#E85E39'
-                            ],
-                            data: data
-                        }
-                    ]
-                };
+                return chartDataService.mapStatusesToChartData(statuses);
             }
         },
         mounted: function () {
@@ -98,30 +76,4 @@
 </script>
 
 <style lang="scss" scoped>
-    $bordercolor: #0073D1;
-
-    .charts-container {
-        .chart {
-            border-bottom: 1px solid $bordercolor;
-            padding-top: 30px;
-            padding-bottom: 30px;
-        }
-
-        .chart-last {
-            border-bottom: 0px;
-        }
-    }
-
-    @media (min-width: 60rem) {
-        .charts-container {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .chart {
-            border: 1px solid $bordercolor;
-            margin: 0.5em;
-        }
-    }
 </style>

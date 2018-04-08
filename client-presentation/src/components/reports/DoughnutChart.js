@@ -14,12 +14,28 @@ export default {
             type: Object
         }
     },
-    mounted() {
-        const defaultOptions = {
-            responsive: true,
-            maintainAspectRatio: false
-        };
+    methods: {
+        doRender() {
+            if (this.$data._chart) {
+                this.$data._chart.destroy();
+            }
 
-        this.renderChart(this.data, ({...defaultOptions, ...this.options}));
+            const defaultOptions = {
+                responsive: true,
+                maintainAspectRatio: false
+            };
+
+            this.renderChart(this.data, ({...defaultOptions, ...this.options}));
+        }
+    },
+    watch: {
+        data: {
+            handler(oldVal, newVal) {
+                this.doRender();
+            }
+        }
+    },
+    mounted() {
+        this.doRender();
     }
 };
