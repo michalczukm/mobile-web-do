@@ -5,6 +5,7 @@ const isProd = true;
 const environment = 'prod';
 
 const targetPath = `./src/environments/environment.${environment}.ts`;
+
 const envConfigFile = `
 export const environment = {
     production: ${isProd},
@@ -12,11 +13,12 @@ export const environment = {
 };
 
 export const authConfig = {
-    clientID: ${process.env.AUTH_CLIENT_ID},
-    domain: ${process.env.AUTH_DOMAIN},
-    callbackURL: ${process.env.AUTH_CALLBACK_URL}
+    clientID: '${process.env.AUTH_CLIENT_ID}',
+    domain: '${process.env.AUTH_DOMAIN}',
+    callbackURL: '${process.env.AUTH_CALLBACK_URL}'
 };
-`
+`;
+
 writeFile(targetPath, envConfigFile, (err) => {
   if (err) {
     console.log(err);
