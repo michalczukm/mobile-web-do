@@ -9,6 +9,9 @@ services:
       NODE_ENV: production
       PORT: 3000
       DB_HOST: mongodb://mongo:27017/mobile-web-do
+      AUTH_CLIENT_ID: {AUTH_CLIENT_ID}
+      AUTH_DOMAIN: {AUTH_DOMAIN}
+      AUTH_CALLBACK_URL: {AUTH_CALLBACK_URL}
     links:
       - mongo
     ports:
