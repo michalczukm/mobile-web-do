@@ -15,7 +15,7 @@ export default new ModuleBootstrapper({
         });
         server.route({
             method: 'GET',
-            path: '/dasadmin/{param*}',
+            path: '/admin/{param*}',
             handler: {
                 directory: {
                     path: './admin/dist',
