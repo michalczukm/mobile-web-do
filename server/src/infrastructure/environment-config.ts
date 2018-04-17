@@ -3,7 +3,11 @@ import * as dotenv from 'dotenv';
 export type EnvironmentConfig = {
     serverPort: string,
     dbHost: string,
-    isProd: boolean
+    isProd: boolean,
+    auth: {
+        jwksUri: string,
+        issuer: string
+    }
 };
 
 export const environmentConfig = ((): EnvironmentConfig => {
@@ -20,6 +24,10 @@ export const environmentConfig = ((): EnvironmentConfig => {
     return {
         serverPort: process.env.PORT,
         dbHost: getDbHost(),
-        isProd: getNodeEnv() === 'production'
-    }
+        isProd: getNodeEnv() === 'production',
+        auth: {
+            jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
+            issuer: `https://${process.env.AUTH0_DOMAIN}/`
+        }
+    };
 })();

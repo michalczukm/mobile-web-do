@@ -71,6 +71,9 @@ export default (server: Hapi.Server) => {
             : sessionController.get(request, reply),
         config: {
             tags: ['api', 'presentation', 'admin'],
+            auth: {
+                scope: 'crud:sessions'
+            },
             validate: {
                 params: {
                     id: Joi.string().allow(null).optional()
@@ -85,6 +88,9 @@ export default (server: Hapi.Server) => {
         handler: (request, reply) => sessionController.create(request, reply),
         config: {
             tags: ['api', 'admin'],
+            auth: {
+                scope: 'crud:sessions'
+            },
             validate: {
                 payload: Joi.object({
                     name: Joi.string().required()
@@ -99,6 +105,9 @@ export default (server: Hapi.Server) => {
         handler: (request, reply) => sessionController.setSlideFeature(request, reply),
         config: {
             tags: ['api', 'admin'],
+            auth: {
+                scope: 'crud:sessions'
+            },
             validate: {
                 payload: Joi.object({
                     slideFeatureId: Joi.string().required(),
@@ -116,6 +125,9 @@ export default (server: Hapi.Server) => {
         handler: (request, reply) => featureController.get(request, reply),
         config: {
             tags: ['api', 'admin'],
+            auth: {
+                scope: 'crud:sessions'
+            },
             validate: {
                 params: {
                     id: Joi.string().required()
@@ -130,6 +142,9 @@ export default (server: Hapi.Server) => {
         handler: (request, reply) => sessionController.setState(request, reply),
         config: {
             tags: ['api', 'admin'],
+            auth: {
+                scope: 'crud:sessions'
+            },
             validate: {
                 payload: Joi.object({
                     state: Joi.string().required()

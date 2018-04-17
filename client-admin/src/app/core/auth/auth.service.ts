@@ -16,7 +16,7 @@ export class AuthService {
         responseType: 'token id_token',
         audience: `https://${this.authConfig.domain}/userinfo`,
         redirectUri: this.authConfig.callbackURL,
-        scope: 'openid'
+        scope: 'openid crud:sessions'
     });
 
     isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject$.asObservable();
