@@ -13,5 +13,6 @@ export const environment = {
 export const authConfig = {
     clientID: 'AUTH_CLIENT_ID',
     domain: 'AUTH_DOMAIN',
-    callbackURL: 'AUTH_CALLBACK_URL'
+    callbackURL: 'AUTH_CALLBACK_URL',
+    whitelistedDomains: []
 };
