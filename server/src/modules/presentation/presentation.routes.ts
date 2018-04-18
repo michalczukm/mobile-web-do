@@ -72,6 +72,7 @@ export default (server: Hapi.Server) => {
         config: {
             tags: ['api', 'presentation', 'admin'],
             auth: {
+                strategy: 'jwt',
                 scope: 'crud:sessions'
             },
             validate: {
@@ -89,6 +90,7 @@ export default (server: Hapi.Server) => {
         config: {
             tags: ['api', 'admin'],
             auth: {
+                strategy: 'jwt',
                 scope: 'crud:sessions'
             },
             validate: {
@@ -106,6 +108,7 @@ export default (server: Hapi.Server) => {
         config: {
             tags: ['api', 'admin'],
             auth: {
+                strategy: 'jwt',
                 scope: 'crud:sessions'
             },
             validate: {
@@ -126,6 +129,7 @@ export default (server: Hapi.Server) => {
         config: {
             tags: ['api', 'admin'],
             auth: {
+                strategy: 'jwt',
                 scope: 'crud:sessions'
             },
             validate: {
@@ -143,6 +147,7 @@ export default (server: Hapi.Server) => {
         config: {
             tags: ['api', 'admin'],
             auth: {
+                strategy: 'jwt',
                 scope: 'crud:sessions'
             },
             validate: {

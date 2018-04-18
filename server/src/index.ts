@@ -12,6 +12,7 @@ process.on('unhandledRejection', (reason: any) => {
 
 const server = new Hapi.Server();
 
+
 startServer(server);
 
 // stop the server on SIGINT signal

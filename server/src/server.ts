@@ -25,6 +25,20 @@ const swaggerOptions = {
     }
 };
 
+const validateUser = (decoded: any, request: Hapi.Request, callback: (_: any, isValid: boolean, payload?: object) => any) => {
+    if (decoded && decoded.sub) {
+        if (decoded.scope) {
+            return callback(null, true, {
+                scope: decoded.scope.split(' ')
+            });
+        }
+
+        return callback(null, true);
+    }
+
+    return callback(null, false);
+};
+
 const setupApiConnection = (serverInstance: Hapi.Server): Hapi.Server => {
     const apiConnection = serverInstance.connection({
         labels: ['api', 'web-sockets'],
@@ -54,7 +68,7 @@ const setupApiConnection = (serverInstance: Hapi.Server): Hapi.Server => {
 };
 
 const setupAuth = (serverInstance: Hapi.Server): void => {
-    serverInstance.auth.strategy('jwt', 'jwt', 'required', {
+    serverInstance.auth.strategy('jwt', 'jwt', {
         complete: true,
         key: jwksRsa.hapiJwt2Key({
             cache: true,
@@ -66,7 +80,8 @@ const setupAuth = (serverInstance: Hapi.Server): void => {
             audience: '/admin',
             issuer: env.auth.issuer,
             algorithms: ['RS256']
-        }
+        },
+        validateFunc: validateUser
     });
 };
 
@@ -77,13 +92,15 @@ const loadModules = (serverInstance: Hapi.Server): void => {
     staticModule.register(serverInstance);
 };
 
-const startServer = (serverInstance: Hapi.Server) =>
+const startServer = (serverInstance: Hapi.Server) => {
+    setupApiConnection(serverInstance);
+
     serverInstance.register([
-        inert, vision as any as Hapi.PluginFunction<any>, jwt,
+        jwt, inert, vision as any as Hapi.PluginFunction<any>,
         {
             register: hapiSwagger,
             options: swaggerOptions
-        } as Hapi.PluginRegistrationObject<any>
+        } as Hapi.PluginRegistrationObject<any>,
     ])
         .then(() =>
             databaseSetup.init({ connectionString: env.dbHost },
@@ -93,8 +110,9 @@ const startServer = (serverInstance: Hapi.Server) =>
         .then(() => loadSeeds(env.isProd))
         .then(() => {
             serverInstance.on('stop', () => databaseSetup.dispose());
-            loadModules(setupApiConnection(serverInstance));
+
             setupAuth(serverInstance);
+            loadModules(serverInstance);
 
             serverInstance.start((err) => {
                 if (err) {
@@ -108,5 +126,7 @@ const startServer = (serverInstance: Hapi.Server) =>
             console.error('Server plugins registration failed!');
             throw error;
         });
+};
+
 
 export default startServer;

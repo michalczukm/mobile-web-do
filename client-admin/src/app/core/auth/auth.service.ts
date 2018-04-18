@@ -14,7 +14,7 @@ export class AuthService {
         clientID: this.authConfig.clientID,
         domain: this.authConfig.domain,
         responseType: 'token id_token',
-        audience: `https://${this.authConfig.domain}/userinfo`,
+        audience: `/admin`,
         redirectUri: this.authConfig.callbackURL,
         scope: 'openid crud:sessions'
     });
