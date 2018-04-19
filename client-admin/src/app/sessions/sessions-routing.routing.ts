@@ -2,7 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { AuthGuard } from '../core';
-import { SessionsListComponent } from './sessions-list';
+import { SessionsListComponent, SessionsListResolver } from './sessions-list';
 import { SessionDetailsComponent, SessionDetailsResolver } from './session-details';
 import { SessionCreateComponent } from './session-create';
 
@@ -14,7 +14,10 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                component: SessionsListComponent
+                component: SessionsListComponent,
+                resolve: {
+                    payload: SessionsListResolver
+                }
             },
             {
                 path: 'create',
@@ -45,5 +48,6 @@ export const routedComponents = [
 ];
 
 export const componentsResolvers = [
-    SessionDetailsResolver
+    SessionDetailsResolver,
+    SessionsListResolver
 ];

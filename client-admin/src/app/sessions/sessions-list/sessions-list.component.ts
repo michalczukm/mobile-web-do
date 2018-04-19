@@ -1,20 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Component } from '@angular/core';
 
-import { Session, SessionService } from '../shared';
+import { Session } from '../shared';
+import { ActivatedRoute } from '@angular/router';
+import { SessionsListPayload } from './sessions-list-resolver';
 
 @Component({
     selector: 'app-sessions-list',
     templateUrl: './sessions-list.component.html',
     styleUrls: ['./sessions-list.component.scss']
 })
-export class SessionsListComponent implements OnInit {
-    sessions$: Observable<Session[]>;
+export class SessionsListComponent {
+    sessions: Session[];
 
-    constructor(private sessionService: SessionService) {
-    }
-
-    ngOnInit(): void {
-        this.sessions$ = this.sessionService.get();
+    constructor(private route: ActivatedRoute) {
+        const payload = this.route.snapshot.data['payload'] as SessionsListPayload;
+        this.sessions = payload.sessions;
     }
 }

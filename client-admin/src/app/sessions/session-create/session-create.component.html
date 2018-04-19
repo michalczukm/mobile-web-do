@@ -1,6 +1,10 @@
+<div class="header">
+    <a [routerLink]="['./..']" class="btn btn-warning btn-back">&larr;</a>
+    <h1>Create session</h1>
+</div>
+
 <form [formGroup]="form" (ngSubmit)="form.valid && submit()" novalidate>
     <div class="form-group">
-        <label for="name">Name</label>
         <input [formControlName]="'name'"
                type="text" class="form-control" id="name" aria-describedby="name"
                placeholder="Session name">

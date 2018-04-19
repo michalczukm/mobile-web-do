@@ -8,7 +8,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let session of sessions$ | async" [routerLink]="[session.id]">
+        <tr *ngFor="let session of sessions" [routerLink]="[session.id]">
             <td>{{ session.name }}</td>
             <td>{{ session.state }}</td>
             <td>{{ session.createdAt | date }}</td>

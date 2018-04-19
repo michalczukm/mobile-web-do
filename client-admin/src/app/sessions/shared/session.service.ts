@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { Session, Feature } from './models';
 import { EnvironmentProvider } from '../../core';
 import { SessionState } from './models';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class SessionService {
