@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AuthGuard } from '../core';
 import { SessionsListComponent } from './sessions-list';
 import { SessionDetailsComponent, SessionDetailsResolver } from './session-details';
+import { SessionCreateComponent } from './session-create';
 
 const routes: Routes = [
     {
@@ -14,6 +15,10 @@ const routes: Routes = [
             {
                 path: '',
                 component: SessionsListComponent
+            },
+            {
+                path: 'create',
+                component: SessionCreateComponent
             },
             {
                 path: ':id',
@@ -35,7 +40,8 @@ export class SessionsRoutingModule {
 
 export const routedComponents = [
     SessionsListComponent,
-    SessionDetailsComponent
+    SessionDetailsComponent,
+    SessionCreateComponent
 ];
 
 export const componentsResolvers = [

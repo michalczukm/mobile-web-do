@@ -18,7 +18,6 @@ export function tokenGetter(): string {
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule,
         HttpClientModule,
         RouterModule,
         BrowserAnimationsModule,

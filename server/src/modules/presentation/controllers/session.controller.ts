@@ -32,7 +32,7 @@ function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hap
     } as SessionModel;
 
     return sessionRepository.create(session)
-        .then(() => reply().code(200));
+        .then(sessionModel => reply(mapSession(sessionModel)).code(200));
 }
 
 function get(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {

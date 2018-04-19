@@ -1,13 +1,13 @@
 export const logger = new class ConsoleLogger {
-    error(message, error): void {
+    error(message: string, error?: Error | Partial<Error>): void {
         console.error('=== ERROR ===', message, error);
     }
 
-    info(message, payload): void {
+    info(message: string, payload?: object): void {
         console.log('===', message, payload);
     }
 
-    debug(message, payload): void {
+    debug(message: string, payload?: object): void {
         console.log('=== DEBUG ===', message, payload);
     }
 };

@@ -1,16 +1,26 @@
-<table class="table table-hover">
-    <thead class="thead-light">
-    <tr>
-        <th scope="col">Name</th>
-        <th scope="col">State</th>
-        <th scope="col">Created</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let session of sessions$ | async" [routerLink]="[session.id]">
-        <td>{{ session.name }}</td>
-        <td>{{ session.state }}</td>
-        <td>{{ session.createdAt | date }}</td>
-    </tr>
-    </tbody>
-</table>
+<div class="row">
+    <table class="table table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">State</th>
+            <th scope="col">Created</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let session of sessions$ | async" [routerLink]="[session.id]">
+            <td>{{ session.name }}</td>
+            <td>{{ session.state }}</td>
+            <td>{{ session.createdAt | date }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<hr>
+
+<div class="row justify-content-sm-center col-sm-12">
+    <a [routerLink]="['create']" class="btn btn-success create">
+        Create new
+    </a>
+</div>

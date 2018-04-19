@@ -1,0 +1,12 @@
+<form [formGroup]="form" (ngSubmit)="form.valid && submit()" novalidate>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input [formControlName]="'name'"
+               type="text" class="form-control" id="name" aria-describedby="name"
+               placeholder="Session name">
+        <div *ngIf="typedForm.name.invalid">
+            <span class="text-danger" *ngIf="typedForm.name.hasError('required')">Field is required</span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
