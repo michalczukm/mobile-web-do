@@ -1,10 +1,16 @@
-<h1>{{ session.name }}</h1>
+<div class="session-name">
+    <a [routerLink]="['./..']" class="btn btn-warning btn-back">&larr;</a>
+    <h1>{{ session.name }}</h1>
+</div>
+
 <h3>{{ session.createdAt | date}}</h3>
 
 <hr>
 
 <h3>State: {{session.state}} </h3>
-<button *ngFor="let state of availableStates" (click)="setState(state)">{{ state }}</button>
+<button *ngFor="let state of availableStates" (click)="setState(state)" class="feature-button">
+    {{ state }}
+</button>
 
 <hr>
 
@@ -12,7 +18,9 @@
     <h3>Feature</h3>
     <ol>
         <li *ngFor="let feature of features">
-            <button [ngStyle]="{'color': session.currentSlideFeatureId == feature.id ? 'green' : 'gray' }" (click)="setFeature(feature)">
+            <button [ngStyle]="{'color': session.currentSlideFeatureId == feature.id ? 'green' : 'gray' }"
+                    (click)="setFeature(feature)"
+                    class="feature-button">
                 {{ feature.id }}
             </button>
         </li>

@@ -1,5 +1,14 @@
-button {
+.feature-button {
     font-size: 1.5em;
     margin: 10px;
     border: 1px solid black;
+}
+
+.session-name {
+    display: flex;
+    flex-direction: row;
+
+    .btn-back {
+        margin-left: 0;
+    }
 }
