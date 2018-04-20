@@ -7,6 +7,9 @@ export type EnvironmentConfig = {
     auth: {
         jwksUri: string,
         issuer: string
+    },
+    presentation: {
+        hostUrl: string
     }
 };
 
@@ -28,6 +31,9 @@ export const environmentConfig = ((): EnvironmentConfig => {
         auth: {
             jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
             issuer: `https://${process.env.AUTH0_DOMAIN}/`
+        },
+        presentation: {
+            hostUrl: process.env.PRESENTATION_HOST_URL
         }
     };
 })();

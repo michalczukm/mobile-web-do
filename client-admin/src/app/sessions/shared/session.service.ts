@@ -34,7 +34,7 @@ export class SessionService {
         });
     }
 
-    create(session: Session): Observable<Session> {
+    create(session: Partial<Session>): Observable<Session> {
         return this.http.post<Session>(this.buildUrl(`sessions`), session, { observe: 'body'});
     }
 

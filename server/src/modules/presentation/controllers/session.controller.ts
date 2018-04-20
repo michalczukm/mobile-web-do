@@ -10,13 +10,15 @@ import featureService from '../services/features';
 import { userAgentService } from '../services/browser-info';
 import { validation } from '../validators';
 import { SessionState } from '../../../common';
+import { environmentConfig } from '../../../infrastructure';
 
 const mapSession = (session: SessionModel) => ({
     id: session.id,
     name: session.name,
     createdAt: session.createdAt,
     state: session.state,
-    currentSlideFeatureId: session.currentSlideFeatureId
+    currentSlideFeatureId: session.currentSlideFeatureId,
+    sessionUrl: `${environmentConfig.presentation.hostUrl}?sessionId=${session.id}`
 } as SessionWebModel);
 
 function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {

@@ -7,6 +7,7 @@ export interface Session {
     state: SessionState;
     currentSlideFeatureId: string;
     availableSlides: Slide[];
+    sessionUrl: string;
 }
 
 export enum SessionState {

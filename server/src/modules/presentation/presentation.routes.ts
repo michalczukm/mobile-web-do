@@ -71,10 +71,6 @@ export default (server: Hapi.Server) => {
             : sessionController.get(request, reply),
         config: {
             tags: ['api', 'presentation', 'admin'],
-            auth: {
-                strategy: 'jwt',
-                scope: 'crud:sessions'
-            },
             validate: {
                 params: {
                     id: Joi.string().allow(null).optional()
