@@ -13,3 +13,8 @@ This repository contains application which I'm using during my presentations abo
 > :warning: Warning: Please take your smartphone and connect it to the network.
 
 ---
+
+## How to run it locally
+Everything is dockerized, but some variables in Docker-Compose should be provided for connection with Auth0.
+
+TBA soon.
