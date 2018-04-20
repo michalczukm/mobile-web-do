@@ -24,5 +24,12 @@ export default new ModuleBootstrapper({
                 }
             }
         });
+        server.ext('onPostHandler', (request, reply) => {
+            const response = request.response;
+            if (response.isBoom && response.output.statusCode === 404) {
+                return reply.file('./admin/dist/index.html');
+            }
+            return reply.continue();
+        });
     })
 });

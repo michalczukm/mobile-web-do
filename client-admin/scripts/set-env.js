@@ -1,4 +1,4 @@
-const writeFile = require('fs').writeFile;
+const writeFileSync = require('fs').writeFileSync;
 
 // fixed values - for now we only need this for production build
 const isProd = true;
@@ -15,14 +15,17 @@ export const environment = {
 export const authConfig = {
     clientID: '${process.env.AUTH_CLIENT_ID}',
     domain: '${process.env.AUTH_DOMAIN}',
-    callbackURL: '${process.env.AUTH_CALLBACK_URL}'
+    callbackURL: '${process.env.AUTH_CALLBACK_URL}',
+    whitelistedDomains: ['${process.env.AUTH_WHITELISTED_DOMAIN}']
 };
 `;
 
-writeFile(targetPath, envConfigFile, (err) => {
-  if (err) {
+try {
+    writeFileSync(targetPath, envConfigFile, 'utf8');
+    console.log(`Output generated at ${targetPath}`);
+}
+catch
+    (error) {
     console.log(err);
-  }
+}
 
-  console.log(`Output generated at ${targetPath}`);
-});
