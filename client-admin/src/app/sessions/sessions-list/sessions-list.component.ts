@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SessionsListPayload } from './sessions-list-resolver';
 
 @Component({
-    selector: 'app-sessions-list',
+    selector: 'mwd-sessions-list',
     templateUrl: './sessions-list.component.html',
     styleUrls: ['./sessions-list.component.scss']
 })

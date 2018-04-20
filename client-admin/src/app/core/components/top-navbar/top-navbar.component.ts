@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from '../../auth';
 
 @Component({
-    selector: 'app-top-navbar',
+    selector: 'mwd-top-navbar',
     templateUrl: './top-navbar.component.html',
     styleUrls: ['./top-navbar.component.scss']
 })

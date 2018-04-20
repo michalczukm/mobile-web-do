@@ -6,7 +6,7 @@ import { SessionService, Session, SessionState, Feature } from '../shared';
 import { SessionDetailsPayload } from './session-details.resolver';
 
 @Component({
-    selector: 'app-session-details',
+    selector: 'mwd-session-details',
     templateUrl: './session-details.component.html',
     styleUrls: ['./session-details.component.scss']
 })

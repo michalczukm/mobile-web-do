@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../auth';
 
 @Component({
-    selector: 'app-logged',
+    selector: 'mwd-logged',
     templateUrl: './logged.component.html',
     styleUrls: ['./logged.component.scss']
 })
