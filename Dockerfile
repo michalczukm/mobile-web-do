@@ -1,11 +1,5 @@
 FROM node:latest
 
-ARG AUTH_CLIENT_ID
-ARG AUTH_DOMAIN
-ARG AUTH_CALLBACK_URL
-ARG AUTH_WHITELISTED_DOMAIN
-ARG PRESENTATION_HOST_URL
-
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies:
 # for client-presentation
@@ -26,6 +20,13 @@ RUN cp -a /tmp/client-presentation/node_modules /usr/app/client-presentation
 RUN cp -a /tmp/client-admin/node_modules /usr/app/client-admin
 RUN cp -a /tmp/server/node_modules /usr/app/server
 
+# all previous steps depends only on package.json, if it doesn't change they're get from cache
+
+ARG AUTH_CLIENT_ID
+ARG AUTH_DOMAIN
+ARG AUTH_CALLBACK_URL
+ARG AUTH_WHITELISTED_DOMAIN
+ARG PRESENTATION_HOST_URL
 
 ENV AUTH_CLIENT_ID ${AUTH_CLIENT_ID}
 ENV AUTH_DOMAIN ${AUTH_DOMAIN}
