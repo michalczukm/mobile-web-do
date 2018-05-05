@@ -37,7 +37,7 @@ export default new Feature('share',
                     const shareByShare = () => {
                         navigator.share({
                             title: 'I am on @michalczukm presentation about mobile browsers.',
-                            text: 'I am on @michalczukm presentation about mobile browsers. This was send via `navigator.share` feature. #webdev',
+                            text: 'I am on @michalczukm presentation about mobile browsers. This was send via `navigator.share` feature. #webdev #javascript',
                             url: urlToShare
                         });
                     };
