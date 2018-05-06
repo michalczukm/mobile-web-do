@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { EnvironmentProvider } from '../../core';
 import { Feature } from './models';
+import { SessionsModule } from '../sessions.module';
 
 @Injectable()
 export class FeatureService {

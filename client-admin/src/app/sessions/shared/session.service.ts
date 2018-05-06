@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { Session, Feature } from './models';
 import { EnvironmentProvider } from '../../core';
 import { SessionState } from './models';
+import { SessionsModule } from '../sessions.module';
 
 @Injectable()
 export class SessionService {

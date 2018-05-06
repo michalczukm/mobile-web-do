@@ -12,7 +12,7 @@ import { AuthService, AuthGuard, UnauthorizedInterceptor } from './auth';
 import { authConfig } from '../../environments/environment';
 
 export function tokenGetter(): string {
-    return localStorage.getItem('access_token');
+    return localStorage.getItem('access_token') || '';
 }
 
 @NgModule({

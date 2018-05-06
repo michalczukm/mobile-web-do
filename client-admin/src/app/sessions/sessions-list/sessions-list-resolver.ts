@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
+import { Observable } from 'rxjs';
 
 import { Session, SessionService } from '../shared';
 import { map } from 'rxjs/operators';

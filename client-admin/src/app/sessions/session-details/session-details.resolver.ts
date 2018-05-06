@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import 'rxjs/add/observable/forkJoin';
 
 import { Session, SessionService, Feature } from '../shared';
 import { FeatureService } from '../shared/feature.service';
@@ -24,11 +23,15 @@ export class SessionDetailsResolver implements Resolve<SessionDetailsPayload> {
     ): Observable<any> | Promise<any> | any {
         const sessionId = route.paramMap.get('id');
 
-        return Observable.forkJoin([
+        if (!sessionId) {
+            throw new Error('No session id provided');
+        }
+
+        return forkJoin([
             this.featureService.getForSession(sessionId),
             this.sessionService.getById(sessionId)
         ])
-            .pipe(map((data: any[]) => ({
+            .pipe(map((data: Array<Feature[] | Session>) => ({
                 features: data[0],
                 session: data[1]
             } as SessionDetailsPayload)));

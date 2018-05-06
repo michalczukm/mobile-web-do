@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { AUTH_CONFIG_TOKEN, AuthConfig } from './auth-config.model';
 import { logger } from '../../utils';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class AuthService {
@@ -61,9 +60,9 @@ export class AuthService {
     }
 
     private setSession(authResult: auth0.Auth0DecodedHash): void {
-        const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-        localStorage.setItem('access_token', authResult.accessToken);
-        localStorage.setItem('id_token', authResult.idToken);
+        const expiresAt = JSON.stringify(((authResult.expiresIn || 0) * 1000) + new Date().getTime());
+        localStorage.setItem('access_token', authResult.accessToken || '');
+        localStorage.setItem('id_token', authResult.idToken || '');
         localStorage.setItem('expires_at', expiresAt);
     }
 }

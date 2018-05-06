@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth';
 
 @Component({
     selector: 'mwd-top-navbar',
-    templateUrl: './top-navbar.component.html',
-    styleUrls: ['./top-navbar.component.scss']
+    templateUrl: './top-navbar.component.html'
 })
 export class TopNavbarComponent implements OnInit, OnDestroy {
     subscriptions = [] as Subscription[];
