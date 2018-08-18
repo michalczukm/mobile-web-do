@@ -14,7 +14,7 @@ services:
         PRESENTATION_HOST_URL: ${PRESENTATION_HOST_URL}
     environment:
       NODE_ENV: production
-      PORT: 3000
+      PORT: ${SERVER_EXPOSE_PORT}
       DB_HOST: mongodb://mongo:27017/mobile-web-do
     links:
       - mongo

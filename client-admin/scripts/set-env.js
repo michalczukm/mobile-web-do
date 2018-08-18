@@ -20,6 +20,8 @@ export const authConfig = {
 };
 `;
 
+console.log('Admin BUILD debug', '------------- envConfigFile:', envConfigFile);
+
 try {
     writeFileSync(targetPath, envConfigFile, 'utf8');
     console.log(`Output generated at ${targetPath}`);

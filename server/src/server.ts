@@ -8,7 +8,7 @@ import * as jwksRsa from 'jwks-rsa';
 
 import staticModule from './modules/static';
 import presentationModule from './modules/presentation';
-import { seedDatabase, databaseSetup, environmentConfig } from './infrastructure';
+import { seedDatabase, databaseSetup, environmentConfig, apiLoggingSetup } from './infrastructure';
 
 const env = environmentConfig;
 
@@ -92,6 +92,10 @@ const loadModules = (serverInstance: Hapi.Server): void => {
     staticModule.register(serverInstance);
 };
 
+const setupLogging = (serverInstance: Hapi.Server): void => {
+    apiLoggingSetup(serverInstance);
+};
+
 const startServer = (serverInstance: Hapi.Server) => {
     setupApiConnection(serverInstance);
 
@@ -113,6 +117,7 @@ const startServer = (serverInstance: Hapi.Server) => {
 
             setupAuth(serverInstance);
             loadModules(serverInstance);
+            setupLogging(serverInstance);
 
             serverInstance.start((err) => {
                 if (err) {

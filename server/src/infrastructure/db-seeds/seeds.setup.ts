@@ -18,7 +18,6 @@ export const seedDatabase = async (config: { isProduction: boolean }): Promise<v
 };
 
 const checkIfAnyCollectionsInDb = (): Promise<boolean> => new Promise<boolean>((resolve, reject) => {
-    // Promise.resolve(Object.keys(database.session.db.collections).length > 0);
     Mongoose.connection.db.listCollections()
         .next((error, result) => {
                 if (error) {

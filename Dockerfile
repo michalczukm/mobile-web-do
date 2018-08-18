@@ -12,6 +12,8 @@ RUN cd /tmp/client-admin && npm install
 COPY server/package.json /tmp/server/package.json
 RUN cd /tmp/server && npm install
 
+# all previous steps depends only on package.json, if it doesn't change they're get from cache
+
 RUN mkdir -p /usr/app
 WORKDIR /usr/app
 COPY . /usr/app
@@ -20,19 +22,17 @@ RUN cp -a /tmp/client-presentation/node_modules /usr/app/client-presentation
 RUN cp -a /tmp/client-admin/node_modules /usr/app/client-admin
 RUN cp -a /tmp/server/node_modules /usr/app/server
 
-# all previous steps depends only on package.json, if it doesn't change they're get from cache
-
 ARG AUTH_CLIENT_ID
 ARG AUTH_DOMAIN
 ARG AUTH_CALLBACK_URL
 ARG AUTH_WHITELISTED_DOMAIN
 ARG PRESENTATION_HOST_URL
 
-ENV AUTH_CLIENT_ID ${AUTH_CLIENT_ID}
-ENV AUTH_DOMAIN ${AUTH_DOMAIN}
-ENV AUTH_CALLBACK_URL ${AUTH_CALLBACK_URL}
-ENV AUTH_WHITELISTED_DOMAIN ${AUTH_WHITELISTED_DOMAIN}
-ENV PRESENTATION_HOST_URL ${PRESENTATION_HOST_URL}
+ENV AUTH_CLIENT_ID=$AUTH_CLIENT_ID
+ENV AUTH_DOMAIN=$AUTH_DOMAIN
+ENV AUTH_CALLBACK_URL=$AUTH_CALLBACK_URL
+ENV AUTH_WHITELISTED_DOMAIN=$AUTH_WHITELISTED_DOMAIN
+ENV PRESENTATION_HOST_URL=$PRESENTATION_HOST_URL
 
 RUN (cd client-presentation && npm run build && cp -r dist/ ../server/src/client-dist/presentation/)
 RUN (cd client-admin && npm run build -- --base-href /admin/ && cp -r dist/ ../server/src/client-dist/admin/)

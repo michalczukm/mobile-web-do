@@ -21,6 +21,7 @@ export const environmentConfig = ((): EnvironmentConfig => {
 
     if (!variablesAreSetInEnv()) {
         // setup `process.env` variables from '.env' file
+        console.log('### used dotenv configuration ###');
         dotenv.config();
     }
 
@@ -29,8 +30,8 @@ export const environmentConfig = ((): EnvironmentConfig => {
         dbHost: getDbHost(),
         isProd: getNodeEnv() === 'production',
         auth: {
-            jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
-            issuer: `https://${process.env.AUTH0_DOMAIN}/`
+            jwksUri: `https://${process.env.AUTH_DOMAIN}/.well-known/jwks.json`,
+            issuer: `https://${process.env.AUTH_DOMAIN}/`
         },
         presentation: {
             hostUrl: process.env.PRESENTATION_HOST_URL
