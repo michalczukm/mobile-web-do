@@ -1,10 +1,18 @@
-const writeFileSync = require('fs').writeFileSync;
+const fs = require('fs');
+const path = require('path');
 
 // fixed values - for now we only need this for production build
 const isProd = true;
 const environment = 'prod';
 
-const targetPath = `./src/environments/environment.${environment}.ts`;
+const baseEnvPath = './src/environments';
+const targetPath = path.join(__dirname, baseEnvPath,`environment.${environment}.ts`);
+
+const createDefaultEnvironmentIfNotExist = () => {
+    const defaultEnvironmentPath = path.join(baseEnvPath,`environment.ts`);
+    fs.openSync(defaultEnvironmentPath, 'w');
+    fs.closeSync(fs.openSync(defaultEnvironmentPath, 'w'));
+};
 
 const envConfigFile = `
 export const environment = {
@@ -23,11 +31,12 @@ export const authConfig = {
 console.log('Admin BUILD debug', '------------- envConfigFile:', envConfigFile);
 
 try {
-    writeFileSync(targetPath, envConfigFile, 'utf8');
+    createDefaultEnvironmentIfNotExist();
+    fs.writeFileSync(targetPath, envConfigFile, 'utf8');
     console.log(`Output generated at ${targetPath}`);
 }
 catch
     (error) {
-    console.log(err);
+    console.log(error);
 }
 
