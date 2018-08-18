@@ -5,13 +5,13 @@ const path = require('path');
 const isProd = true;
 const environment = 'prod';
 
-const baseEnvPath = './src/environments';
-const targetPath = path.join(__dirname, baseEnvPath,`environment.${environment}.ts`);
+const baseEnvPath = path.join(__dirname, '../src/environments');
 
 const createDefaultEnvironmentIfNotExist = () => {
     const defaultEnvironmentPath = path.join(baseEnvPath,`environment.ts`);
-    fs.openSync(defaultEnvironmentPath, 'w');
-    fs.closeSync(fs.openSync(defaultEnvironmentPath, 'w'));
+    if (!fs.existsSync(defaultEnvironmentPath)) {
+        fs.writeFileSync(defaultEnvironmentPath, '', 'utf8');
+    }
 };
 
 const envConfigFile = `
@@ -32,6 +32,8 @@ console.log('Admin BUILD debug', '------------- envConfigFile:', envConfigFile);
 
 try {
     createDefaultEnvironmentIfNotExist();
+
+    const targetPath = path.join(baseEnvPath,`environment.${environment}.ts`);
     fs.writeFileSync(targetPath, envConfigFile, 'utf8');
     console.log(`Output generated at ${targetPath}`);
 }
