@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 
 export type EnvironmentConfig = {
-    serverPort: string,
+    serverPort: number,
     dbHost: string,
     isProd: boolean,
     auth: {
@@ -14,8 +14,8 @@ export type EnvironmentConfig = {
 };
 
 export const environmentConfig = ((): EnvironmentConfig => {
-    const getDbHost = () => process.env.DB_HOST;
-    const getNodeEnv = () => process.env.NODE_ENV;
+    const getDbHost = () => process.env.DB_HOST as string;
+    const getNodeEnv = () => process.env.NODE_ENV as string;
 
     const variablesAreSetInEnv = () => !!getDbHost() && !!getNodeEnv();
 
@@ -26,7 +26,7 @@ export const environmentConfig = ((): EnvironmentConfig => {
     }
 
     return {
-        serverPort: process.env.PORT,
+        serverPort: +(process.env.PORT || 5050),
         dbHost: getDbHost(),
         isProd: getNodeEnv() === 'production',
         auth: {
@@ -34,7 +34,7 @@ export const environmentConfig = ((): EnvironmentConfig => {
             issuer: `https://${process.env.AUTH_DOMAIN}/`
         },
         presentation: {
-            hostUrl: process.env.PRESENTATION_HOST_URL
+            hostUrl: process.env.PRESENTATION_HOST_URL as string
         }
     };
 })();

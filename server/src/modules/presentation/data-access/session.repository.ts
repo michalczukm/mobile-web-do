@@ -1,6 +1,6 @@
-import { SessionModel, ClientInfoModel } from '../models';
+import { SessionModel, ClientInfoModel, CreateSessionModel } from '../models';
 import { documentDatabase, Session } from '../../../data';
-import { logger } from '../../../common';
+import { logger, NullEntityError } from '../../../common';
 import { isIdValid } from './validation/mongoose-basic.validation';
 
 const sessionsDbCollection = documentDatabase.session;
@@ -14,10 +14,12 @@ async function exists(sessionId: string): Promise<boolean> {
     }
 }
 
-function create(session: SessionModel): Promise<SessionModel> {
-    const { id, ...sessionDocument } = session;
+function create(session: CreateSessionModel | SessionModel): Promise<SessionModel> {
+    const { ...sessionDocument } = session;
+    // @ts-ignore
+    delete sessionDocument['id'];
 
-    return sessionsDbCollection.create(sessionDocument).then(mapSessionToSessionModel)
+    return sessionsDbCollection.create({ ...sessionDocument }).then(mapSessionToSessionModel)
         .catch(reason => {
             logger.error(`Cannot create session for name: '${session.name}'`, reason);
             throw reason;
@@ -49,7 +51,13 @@ function addClientResult(sessionId: string, clientResult: ClientInfoModel): Prom
     });
 }
 
-const mapSessionToSessionModel = (session: Session): SessionModel => {
+const mapSessionToSessionModel = (session: Session | null): SessionModel => {
+    if (!session) {
+        throw new NullEntityError(
+            'Session cannot be null here. Probably data consistency was violated, or problems with creating occurred'
+        );
+    }
+
     return session;
 };
 

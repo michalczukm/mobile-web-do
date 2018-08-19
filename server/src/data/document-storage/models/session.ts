@@ -1,6 +1,6 @@
 import * as Mongoose from 'mongoose';
-import { BaseDocument } from './base-document';
 import { SessionState, SupportStatus } from '../../../common';
+import { BaseDocument } from './base-document';
 import { BrowserInfo, BrowserInfoSchema } from './browser-info';
 import { ClientIdentifier, ClientIdentifierSchema } from './client-identifier';
 import { VersionInfo, VersionInfoSchema } from './complex-types';
@@ -84,6 +84,7 @@ const SessionSchema = new Mongoose.Schema(
     });
 
 SessionSchema.virtual('id').set(function (id: string): void {
+    // @ts-ignore
     this._id = new Mongoose.Types.ObjectId(id);
 });
 

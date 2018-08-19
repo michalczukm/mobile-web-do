@@ -8,12 +8,11 @@ import * as jwksRsa from 'jwks-rsa';
 
 import staticModule from './modules/static';
 import presentationModule from './modules/presentation';
-import { seedDatabase, databaseSetup, environmentConfig, apiLoggingSetup } from './infrastructure';
+import { apiLoggingSetup, databaseSetup, environmentConfig, seedDatabase } from './infrastructure';
 
 const env = environmentConfig;
 
 const Pack = require('../package.json');
-const serverPort = env.serverPort || 5050;
 
 const swaggerOptions = {
     basePath: '/api/',
@@ -42,7 +41,7 @@ const validateUser = (decoded: any, request: Hapi.Request, callback: (_: any, is
 const setupApiConnection = (serverInstance: Hapi.Server): Hapi.Server => {
     const apiConnection = serverInstance.connection({
         labels: ['api', 'web-sockets'],
-        port: serverPort,
+        port: env.serverPort,
         routes: {
             cors: {
                 origin: ['*'],
@@ -99,7 +98,7 @@ const setupLogging = (serverInstance: Hapi.Server): void => {
 const startServer = (serverInstance: Hapi.Server) => {
     setupApiConnection(serverInstance);
 
-    serverInstance.register([
+    return serverInstance.register([
         jwt, inert, vision as any as Hapi.PluginFunction<any>,
         {
             register: hapiSwagger,

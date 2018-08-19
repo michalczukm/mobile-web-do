@@ -3,20 +3,6 @@ import * as Mongoose from 'mongoose';
 import database from '../../data/document-storage/database';
 import seedConstants from './seed.constants';
 
-export const seedDatabase = async (config: { isProduction: boolean }): Promise<void> => {
-    const anyCollections: boolean = await checkIfAnyCollectionsInDb();
-
-    // don't seed for production env or if there are any collections in db
-    if (config.isProduction || anyCollections) {
-        return;
-    }
-
-    return Promise.all([
-        seedSessions()
-    ])
-        .then(() => console.log(`### Database seeded, ${new Date()}`));
-};
-
 const checkIfAnyCollectionsInDb = (): Promise<boolean> => new Promise<boolean>((resolve, reject) => {
     Mongoose.connection.db.listCollections()
         .next((error, result) => {
@@ -69,4 +55,18 @@ const seedSessions = (): Promise<any> => {
 const onRejected = (entityName: string) => (reason: any) => {
     console.error(`Failed at seeding ${entityName}`);
     throw reason;
+};
+
+export const seedDatabase = async (config: { isProduction: boolean }): Promise<void> => {
+    const anyCollections: boolean = await checkIfAnyCollectionsInDb();
+
+    // don't seed for production env or if there are any collections in db
+    if (config.isProduction || anyCollections) {
+        return;
+    }
+
+    return Promise.all([
+        seedSessions()
+    ])
+        .then(() => console.log(`### Database seeded, ${new Date()}`));
 };

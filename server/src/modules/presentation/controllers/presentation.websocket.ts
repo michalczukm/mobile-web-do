@@ -51,10 +51,15 @@ export default (server: SocketIO.Server) => {
             .catch(reason => logger.error('Cannot get presentation session at WS connection open.', reason));
 
         socket.on('disconnect', () => {
-            const sessionId = getSessionId(socket);
+            const clientSession = sessions[getSessionId(socket)]
+                .find(client => client.clientConnectionId === socket.id);
 
-            sessions[sessionId]
-                .find(client => client.clientConnectionId === socket.id)
+            if (!clientSession) {
+                logger.error(`WS client for sessionId: ${getSessionId(socket)}, was not found.`, {});
+                return;
+            }
+
+            clientSession
                 .handlersToUnsubscribe
                 .forEach(sub => sub.unsubscribe());
 

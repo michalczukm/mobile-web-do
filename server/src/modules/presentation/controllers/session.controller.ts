@@ -2,7 +2,7 @@ import * as Hapi from 'hapi';
 import * as Boom from 'boom';
 
 import { RequestHandler } from '../../../hapi-utils';
-import { SessionModel, ClientSessionResults } from '../models';
+import { SessionModel, ClientSessionResults, CreateSessionModel } from '../models';
 import { sessionRepository, clientIdentifiersRepository } from '../data-access';
 import { SessionWebModel } from './web-models/session';
 import { presentationNotifier } from '../services/notifications';
@@ -31,7 +31,7 @@ function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hap
         browserInfo: [],
         clientIdentifiers: [],
         clientResults: []
-    } as SessionModel;
+    } as CreateSessionModel;
 
     return sessionRepository.create(session)
         .then(sessionModel => reply(mapSession(sessionModel)).code(200));
@@ -62,14 +62,20 @@ async function setState(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Pro
     if (validationResult.isSuccess) {
         const sessionUpdates = {
             state: newState
-        } as {[key in keyof SessionModel]: any };
+        } as { [key in keyof SessionModel]: any };
 
         if (newState === SessionState.Feature) {
             sessionUpdates.currentSlideFeatureId = featureService.getFirstFeature().id;
         }
 
         await sessionRepository.updateFields(sessionId, sessionUpdates);
-        presentationNotifier.setState(newState, await sessionRepository.getById(sessionId));
+        const session = await sessionRepository.getById(sessionId);
+
+        if (!session) {
+            return reply(Boom.notFound(validationResult.errorsMessage));
+        }
+
+        presentationNotifier.setState(newState, session);
         return reply().code(200);
     } else {
         return reply(Boom.notFound(validationResult.errorsMessage));
@@ -100,34 +106,31 @@ function setSlideFeature(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Pr
         });
 }
 
-function addResults(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+async function addResults(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
     const clientSessionResults = request.payload as ClientSessionResults[];
     const sessionId = request.params.id;
     const clientId = request.state['client-id'];
     const clientSystemInfo = userAgentService.mapUserAgent(request.headers['user-agent']);
 
-    return sessionRepository.exists(sessionId)
-        .then(sessionExists => {
-            if (!sessionExists) {
-                return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
-            }
+    const sessionExists = await sessionRepository.exists(sessionId);
+    if (!sessionExists) {
+        return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
+    }
 
-            clientIdentifiersRepository.existInSessionResults(clientId, sessionId)
-                .then(exists => {
-                    if (exists) {
-                        return reply();
-                    }
+    const exists = await clientIdentifiersRepository.existInSessionResults(clientId, sessionId);
+    if (exists) {
+        return reply();
+    }
 
-                    return sessionRepository.addClientResult(
-                        sessionId,
-                        {
-                            ...clientSystemInfo,
-                            clientIdentifier: clientId,
-                            clientResults: clientSessionResults
-                        })
-                        .then(() => reply());
-                });
+    await sessionRepository.addClientResult(
+        sessionId,
+        {
+            ...clientSystemInfo,
+            clientIdentifier: clientId,
+            clientResults: clientSessionResults
         });
+
+    return reply();
 }
 
 export default {
