@@ -6,7 +6,7 @@ import startServer from '../../../src/server'
 import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
-describe('session: set state', function(): void {
+describe('session: set state', function (): void {
     this.timeout(10000);
     let server: Hapi.Server;
     let testSetup: TestsSetup;
@@ -31,6 +31,19 @@ describe('session: set state', function(): void {
             url: `/api/sessions/${seedConstants.sessionIdFeatureState}/features/current`,
             payload: {
                 slideFeatureId: 'device-RAM-memory'
+            },
+            headers: {
+                Authorization: 'Bearer x'
+            },
+            validate: false,
+            credentials: {
+                iss: 'https://michalczukm.eu.auth0.com/',
+                sub: 'auth0|5ad9384615421f34664289bb',
+                aud: ['/admin', 'https://michalczukm.eu.auth0.com/userinfo'],
+                iat: 1534799743,
+                exp: 2934806943,
+                azp: 'TIsHcZi5YiUEplz9rkrZUcbHKaENE16r',
+                scope: 'openid crud:sessions'
             }
         });
 
