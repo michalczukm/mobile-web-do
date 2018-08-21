@@ -1,4 +1,4 @@
-import { Subject, Observable } from '@reactivex/rxjs';
+import { Observable, Subject } from 'rxjs';
 import {logger, SessionState} from '../../../../common';
 import { SessionModel } from '../../models';
 import { PresentationMessage } from '../../dtos/notifications';

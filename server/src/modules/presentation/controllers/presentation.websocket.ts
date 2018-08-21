@@ -1,4 +1,5 @@
-import { Subscription } from '@reactivex/rxjs';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { logger } from '../../../common';
 import { sessionRepository } from '../data-access';
 import { notificationBus } from '../services/notifications';
@@ -19,7 +20,9 @@ export default (server: SocketIO.Server) => {
     const registerClient = (socket: SocketIO.Socket) => {
         const subscription = notificationBus.presentationStateChange
             .observe()
-            .filter(message => message.session.id === getSessionId(socket))
+            .pipe(
+                filter(message => message.session.id === getSessionId(socket))
+            )
             .subscribe(message => socket.emit('switch-slide', message));
 
         const clientInfo = {
