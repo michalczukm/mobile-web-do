@@ -21,8 +21,9 @@ const mapSession = (session: SessionModel) => ({
     sessionUrl: `${environmentConfig.presentation.hostUrl}?sessionId=${session.id}`
 } as SessionWebModel);
 
-function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
-    const name = request.payload.name;
+async function create(request: Hapi.Request): Promise<Hapi.Lifecycle.ReturnValueTypes> {
+    const payload: any = request.payload;
+    const name = payload.name;
     const session = {
         name: name,
         state: SessionState.Welcome,
@@ -33,29 +34,26 @@ function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hap
         clientResults: []
     } as CreateSessionModel;
 
-    return sessionRepository.create(session)
-        .then(sessionModel => reply(mapSession(sessionModel)).code(200));
+    return mapSession(await sessionRepository.create(session));
 }
 
-function get(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
-    return sessionRepository.get()
-        .then(sessions => reply(sessions.map(item => mapSession(item))));
+async function get(request: Hapi.Request): Promise<Hapi.Lifecycle.ReturnValueTypes> {
+    return (await sessionRepository.get()).map(item => mapSession(item));
 }
 
-function getById(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+async function getById(request: Hapi.Request): Promise<Hapi.Lifecycle.ReturnValueTypes> {
     const sessionId = request.params.id;
-    return sessionRepository.getById(sessionId)
-        .then(session => {
-            if (!session) {
-                return reply(Boom.notFound(`Session at id: "${sessionId}", doesn't exist`));
-            }
-            return reply(mapSession(session));
-        });
+    const session = await sessionRepository.getById(sessionId);
+    if (!session) {
+        throw Boom.notFound(`Session at id: "${sessionId}", doesn't exist`);
+    }
+    return mapSession(session);
 }
 
-async function setState(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+async function setState(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit): Promise<Hapi.Lifecycle.ReturnValueTypes> {
     const sessionId = request.params.id;
-    const newState = request.payload.state as SessionState;
+    const payload: any = request.payload;
+    const newState = payload.state as SessionState;
 
     const validationResult = await validation.sessionExists(sessionId);
 
@@ -72,41 +70,39 @@ async function setState(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Pro
         const session = await sessionRepository.getById(sessionId);
 
         if (!session) {
-            return reply(Boom.notFound(validationResult.errorsMessage));
+            throw Boom.notFound(validationResult.errorsMessage);
         }
 
         presentationNotifier.setState(newState, session);
-        return reply().code(200);
+        return {};
     } else {
-        return reply(Boom.notFound(validationResult.errorsMessage));
+        throw Boom.notFound(validationResult.errorsMessage);
     }
 }
 
-function setSlideFeature(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
-    const { slideFeatureId } = request.payload;
+async function setSlideFeature(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit): Promise<Hapi.Lifecycle.ReturnValueTypes> {
+    const payload: any = request.payload;
+    const { slideFeatureId } = payload;
     const sessionId = request.params.id;
 
-    return sessionRepository.getById(sessionId)
-        .then(session => {
-            if (!session) {
-                return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
-            }
-            if (session.state !== SessionState.Feature) {
-                return reply(Boom.badRequest(`Session ${session.name} should be in presentation state!`));
-            }
+    const session = await sessionRepository.getById(sessionId);
+    if (!session) {
+        throw Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`);
+    }
+    if (session.state !== SessionState.Feature) {
+        throw Boom.badRequest(`Session ${session.name} should be in presentation state!`);
+    }
 
-
-            return sessionRepository.updateFields(sessionId, {
-                currentSlideFeatureId: slideFeatureId
-            } as { [key in keyof SessionModel]: any })
-                .then(() => {
-                    presentationNotifier.setSlideFeature(slideFeatureId, session);
-                    return reply();
-                });
+    return sessionRepository.updateFields(sessionId, {
+        currentSlideFeatureId: slideFeatureId
+    } as { [key in keyof SessionModel]: any })
+        .then(() => {
+            presentationNotifier.setSlideFeature(slideFeatureId, session);
+            return {};
         });
 }
 
-async function addResults(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
+async function addResults(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit): Promise<Hapi.Lifecycle.ReturnValueTypes> {
     const clientSessionResults = request.payload as ClientSessionResults[];
     const sessionId = request.params.id;
     const clientId = request.state['client-id'];
@@ -114,12 +110,12 @@ async function addResults(request: Hapi.Request, reply: Hapi.ReplyNoContinue): P
 
     const sessionExists = await sessionRepository.exists(sessionId);
     if (!sessionExists) {
-        return reply(Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`));
+        throw Boom.badRequest(`Session at id: "${sessionId}", doesn't exist`);
     }
 
     const exists = await clientIdentifiersRepository.existInSessionResults(clientId, sessionId);
     if (exists) {
-        return reply();
+        return {};
     }
 
     await sessionRepository.addClientResult(
@@ -130,7 +126,7 @@ async function addResults(request: Hapi.Request, reply: Hapi.ReplyNoContinue): P
             clientResults: clientSessionResults
         });
 
-    return reply();
+    return {};
 }
 
 export default {

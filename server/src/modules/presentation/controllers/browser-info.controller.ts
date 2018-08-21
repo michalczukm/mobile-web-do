@@ -2,39 +2,39 @@ import * as Hapi from 'hapi';
 import * as Boom from 'boom';
 import * as uuid from 'uuid/v4';
 
-import {
-    sessionRepository, browserInfoRepository,
-    clientIdentifiersRepository
-} from '../data-access';
+import { browserInfoRepository, sessionRepository } from '../data-access';
 
 import { RequestHandler } from '../../../hapi-utils';
 import { BrowserInfoModel } from '../models';
 import { userAgentService } from '../services/browser-info'
+import clientIdentifiersRepository from '../data-access/client-identifiers.repository';
 
-function create(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<Hapi.Response> {
-    const sessionId = request.payload.sessionId;
+async function create(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit): Promise<Hapi.Lifecycle.ReturnValueTypes> {
+    const payload: any = request.payload;
+
+    const sessionId = payload.sessionId;
     const clientId: string = request.state['client-id'] || uuid();
 
-    const addBrowserInfo = () => {
+    const addBrowserInfo = async () => {
         const browserInfo: BrowserInfoModel = ({
-            ...request.payload, ...userAgentService.mapUserAgent(request.headers['user-agent'])
+            ...payload, ...userAgentService.mapUserAgent(request.headers['user-agent'])
         });
 
-        return Promise.all([
+        await Promise.all([
             clientIdentifiersRepository.add(clientId),
             browserInfoRepository.add(sessionId, clientId, browserInfo)
-        ])
-            .then(() => reply().state('client-id', clientId));
+        ]);
+        responseToolkit.state('client-id', clientId);
     };
 
-    return sessionRepository.exists(sessionId)
-        .then(exists => !exists
-            ? reply(Boom.notFound(`Session ${sessionId} not found`))
-            : clientIdentifiersRepository.existInSession(clientId, sessionId)
-                .then(contains => contains
-                    ? reply()
-                    : addBrowserInfo())
-        )
+    const exists = await sessionRepository.exists(sessionId);
+    if (!exists) {
+        throw Boom.notFound(`Session ${sessionId} not found`);
+    } else if (!await clientIdentifiersRepository.existInSession(clientId, sessionId)) {
+        await addBrowserInfo();
+    }
+
+    return {};
 }
 
 export default {

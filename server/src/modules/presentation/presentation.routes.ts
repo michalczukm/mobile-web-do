@@ -11,7 +11,7 @@ export default (server: Hapi.Server) => {
         method: 'POST',
         path: '/api/browser-info',
         handler: (request, reply) => browserInfoController.create(request, reply),
-        config: {
+        options: {
             tags: ['api', 'presentation'],
             validate: {
                 payload: Joi.object({
@@ -33,7 +33,7 @@ export default (server: Hapi.Server) => {
         method: 'GET',
         path: '/api/sessions/{id}/results',
         handler: (request, reply) => resultController.getForSession(request, reply),
-        config: {
+        options: {
             tags: ['api', 'presentation'],
             validate: {
                 params: {
@@ -47,7 +47,7 @@ export default (server: Hapi.Server) => {
         method: 'POST',
         path: '/api/sessions/{id}/results',
         handler: (request, reply) => sessionController.addResults(request, reply),
-        config: {
+        options: {
             tags: ['api', 'presentation'],
             validate: {
                 payload: Joi.array().items(
@@ -69,7 +69,7 @@ export default (server: Hapi.Server) => {
         handler: (request, reply) => request.params.id
             ? sessionController.getById(request, reply)
             : sessionController.get(request, reply),
-        config: {
+        options: {
             tags: ['api', 'presentation', 'admin'],
             validate: {
                 params: {
@@ -83,7 +83,7 @@ export default (server: Hapi.Server) => {
         method: 'POST',
         path: '/api/sessions',
         handler: (request, reply) => sessionController.create(request, reply),
-        config: {
+        options: {
             tags: ['api', 'admin'],
             auth: {
                 strategy: 'jwt',
@@ -101,7 +101,7 @@ export default (server: Hapi.Server) => {
         method: 'PUT',
         path: '/api/sessions/{id}/features/current',
         handler: (request, reply) => sessionController.setSlideFeature(request, reply),
-        config: {
+        options: {
             tags: ['api', 'admin'],
             auth: {
                 strategy: 'jwt',
@@ -122,7 +122,7 @@ export default (server: Hapi.Server) => {
         method: 'GET',
         path: '/api/sessions/{id}/features',
         handler: (request, reply) => featureController.get(request, reply),
-        config: {
+        options: {
             tags: ['api', 'admin'],
             auth: {
                 strategy: 'jwt',
@@ -140,7 +140,7 @@ export default (server: Hapi.Server) => {
         method: 'PUT',
         path: '/api/sessions/{id}/state',
         handler: (request, reply) => sessionController.setState(request, reply),
-        config: {
+        options: {
             tags: ['api', 'admin'],
             auth: {
                 strategy: 'jwt',

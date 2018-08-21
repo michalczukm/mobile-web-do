@@ -1,4 +1,9 @@
+import * as Hapi from 'hapi';
+import * as Boom from 'boom';
+
 import { ModuleBootstrapper } from '../../common';
+
+const isBoomResponse = (response: Hapi.ResponseObject | Boom): response is Boom => (response as Boom).isBoom !== undefined;
 
 export default new ModuleBootstrapper({
     routing: (server => {
@@ -24,12 +29,24 @@ export default new ModuleBootstrapper({
                 }
             }
         });
-        server.ext('onPostHandler', (request, reply) => {
-            const response = request.response;
-            if (response && response.isBoom && response.output && response.output.statusCode === 404) {
-                return reply.file('./admin/dist/index.html');
+        server.route({
+            method: '*',
+            path: '/{param*}',
+            options: {
+                cors: true,
+                handler: () => {
+                    throw Boom.notFound('Ups!');
+                }
             }
-            return reply.continue();
+        });
+        server.ext('onPostHandler', (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
+            const response = request.response;
+            if (response && isBoomResponse(response) &&
+                response.isBoom && response.output &&
+                response.output.statusCode === 404) {
+                return h.file('./presentation/dist/index.html');
+            }
+            return h.continue;
         });
     })
 });

@@ -1,26 +1,25 @@
 import 'mocha';
 import { expect } from 'chai';
 import * as Hapi from 'hapi';
-import startServer from '../../../src/server'
+import setupServer from '../../../src/server'
 import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 describe('browser info: add client to session', function (): void {
-    this.timeout(10000);
     let server: Hapi.Server;
-    let testSetup: TestsSetup;
 
+    const testSetup: TestsSetup = integrationTestsSetupBuilder.withStandardSetup();
     before(async () => {
-        testSetup = integrationTestsSetupBuilder.withStandardSetup();
-        server = new Hapi.Server();
-        await startServer(server).then(testSetup.setup);
+        server = await setupServer();
+        await testSetup.setup();
+        await server.start();
     });
 
     after(async () => {
         try {
             await testSetup.tearDown();
         } finally {
-            server.stop();
+            await server.stop();
         }
     });
 
@@ -100,7 +99,7 @@ const callForSessionResults = (server: Hapi.Server) => server.inject({
     payload: buildCorrectPayload(),
 });
 
-const getClientsQuantity = (response: Hapi.InjectedResponseObject) => (response.result as any).clientsQuantity;
+const getClientsQuantity = (response: Hapi.ServerInjectResponse) => (response.result as any).clientsQuantity;
 
 const buildCorrectPayload = (): Object => (
     {
