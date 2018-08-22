@@ -90,4 +90,4 @@ const callForSessions = (server: Hapi.Server) => server.inject({
     url: '/api/sessions'
 });
 
-const getSessionsAmount = (response: Hapi.InjectedResponseObject) => (response.result as any[]).length;
+const getSessionsAmount = (response: Hapi.ServerInjectResponse) => (response.result as any[]).length;

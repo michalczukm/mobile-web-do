@@ -1,24 +1,11 @@
 import * as Hapi from 'hapi';
 import * as Path from 'path';
-import * as hapiSwagger from 'hapi-swagger';
 import * as jwksRsa from 'jwks-rsa';
 
 import staticModule from './modules/static';
 import presentationModule from './modules/presentation';
 import { apiLoggingSetup, databaseSetup, environmentConfig, seedDatabase } from './infrastructure';
 const env = environmentConfig;
-
-const Pack = require('../package.json');
-
-const swaggerOptions = {
-    basePath: '/api/',
-    pathPrefixSize: 2,
-    payloadType: 'json',
-    info: {
-        title: Pack.description,
-        version: Pack.version
-    }
-};
 
 const validateUser = (decoded: any, request: Hapi.Request, callback: (_: any, isValid: boolean, payload?: object) => any) => {
     if (decoded && decoded.sub) {
@@ -101,10 +88,6 @@ const setupServer = async (): Promise<Hapi.Server> => {
         require('inert'),
         require('vision'),
         require('hapi-auth-jwt2')
-        // {
-        //     plugin: hapiSwagger,
-        //     options: swaggerOptions
-        // } as Hapi.Plugin<any>
     ]);
     await databaseSetup.init({ connectionString: env.dbHost },
         {
