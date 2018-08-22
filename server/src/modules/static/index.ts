@@ -25,26 +25,31 @@ export default new ModuleBootstrapper({
                 directory: {
                     path: './admin/dist',
                     redirectToSlash: true,
-                    index: true
+                    index: true,
+
                 }
             }
         });
         server.route({
             method: '*',
-            path: '/{param*}',
+            path: '/{any*}',
             options: {
                 cors: true,
                 handler: () => {
-                    throw Boom.notFound('Ups!');
+                    return Boom.notFound('Ups!');
                 }
             }
         });
-        server.ext('onPostHandler', (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
+        server.ext('onPreResponse', (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
             const response = request.response;
             if (response && isBoomResponse(response) &&
                 response.isBoom && response.output &&
                 response.output.statusCode === 404) {
-                return h.file('./presentation/dist/index.html');
+                if (request.path.includes('admin')) {
+                    return h.file('./admin/dist/index.html');
+                } else {
+                    return h.file('./presentation/dist/index.html');
+                }
             }
             return h.continue;
         });
