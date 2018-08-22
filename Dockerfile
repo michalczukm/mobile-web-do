@@ -4,12 +4,15 @@ FROM node:latest
 # when we change our application's nodejs dependencies:
 # for client-presentation
 COPY client-presentation/package.json /tmp/client-presentation/package.json
+COPY client-presentation/package-lock.json /tmp/client-presentation/package-lock.json
 RUN cd /tmp/client-presentation && npm install
 # for client-admin
 COPY client-admin/package.json /tmp/client-admin/package.json
+COPY client-admin/package-lock.json /tmp/client-admin/package-lock.json
 RUN cd /tmp/client-admin && npm install
 # for server
 COPY server/package.json /tmp/server/package.json
+COPY server/package-lock.json /tmp/server/package-lock.json
 RUN cd /tmp/server && npm install
 
 # all previous steps depends only on package.json, if it doesn't change they're get from cache
