@@ -14,10 +14,15 @@ const createDefaultEnvironmentIfNotExist = () => {
     }
 };
 
+/**
+ *  API url has to exact match with whitelisted domain. (even if ui is served the same server)
+ *  Its auth0 binder issue.
+ *  It also implies that we're only whitelisting our API
+ */
 const envConfigFile = `
 export const environment = {
     production: ${isProd},
-    apiBaseUrl: '/api'
+    apiBaseUrl: 'http://${process.env.AUTH_WHITELISTED_DOMAIN}/api'
 };
 
 export const authConfig = {

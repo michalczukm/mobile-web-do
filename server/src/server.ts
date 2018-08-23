@@ -1,25 +1,11 @@
 import * as Hapi from 'hapi';
 import * as Path from 'path';
-import * as jwksRsa from 'jwks-rsa';
 
 import staticModule from './modules/static';
 import presentationModule from './modules/presentation';
-import { apiLoggingSetup, databaseSetup, environmentConfig, seedDatabase } from './infrastructure';
-const env = environmentConfig;
+import { apiLoggingSetup, authSetup, databaseSetup, EnvironmentConfig, environmentConfig, seedDatabase } from './infrastructure';
 
-const validateUser = (decoded: any, request: Hapi.Request, callback: (_: any, isValid: boolean, payload?: object) => any) => {
-    if (decoded && decoded.sub) {
-        if (decoded.scope) {
-            return callback(null, true, {
-                scope: decoded.scope.split(' ')
-            });
-        }
-
-        return callback(null, true);
-    }
-
-    return callback(null, false);
-};
+const env: EnvironmentConfig = environmentConfig;
 
 const setupApiConnection = (): Hapi.Server => {
     const server = new Hapi.Server({
@@ -53,21 +39,7 @@ const setupApiConnection = (): Hapi.Server => {
 };
 
 const setupAuth = (serverInstance: Hapi.Server): void => {
-    serverInstance.auth.strategy('jwt', 'jwt', {
-        complete: true,
-        key: jwksRsa.hapiJwt2Key({
-            cache: true,
-            rateLimit: true,
-            jwksRequestsPerMinute: 5,
-            jwksUri: env.auth.jwksUri
-        }),
-        verifyOptions: {
-            audience: '/admin',
-            issuer: env.auth.issuer,
-            algorithms: ['RS256']
-        },
-        verify: validateUser
-    });
+    authSetup(serverInstance, env);
 };
 
 const loadSeeds = (isProduction: boolean): Promise<any> => seedDatabase({ isProduction });
@@ -102,6 +74,5 @@ const setupServer = async (): Promise<Hapi.Server> => {
 
     return server;
 };
-
 
 export default setupServer;
