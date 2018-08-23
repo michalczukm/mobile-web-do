@@ -1,19 +1,22 @@
-FROM node:latest
+FROM node:8.11.4-jessie
+
+# update npm to newer - for `ci` command
+RUN npm i -g npm@6.2.0
 
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies:
 # for client-presentation
 COPY client-presentation/package.json /tmp/client-presentation/package.json
 COPY client-presentation/package-lock.json /tmp/client-presentation/package-lock.json
-RUN cd /tmp/client-presentation && npm install
+RUN cd /tmp/client-presentation && npm ci
 # for client-admin
 COPY client-admin/package.json /tmp/client-admin/package.json
 COPY client-admin/package-lock.json /tmp/client-admin/package-lock.json
-RUN cd /tmp/client-admin && npm install
+RUN cd /tmp/client-admin && npm ci
 # for server
 COPY server/package.json /tmp/server/package.json
 COPY server/package-lock.json /tmp/server/package-lock.json
-RUN cd /tmp/server && npm install
+RUN cd /tmp/server && npm ci
 
 # all previous steps depends only on package.json, if it doesn't change they're get from cache
 
