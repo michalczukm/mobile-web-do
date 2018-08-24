@@ -22,7 +22,7 @@ const createDefaultEnvironmentIfNotExist = () => {
 const envConfigFile = `
 export const environment = {
     production: ${isProd},
-    apiBaseUrl: 'http://${process.env.AUTH_WHITELISTED_DOMAIN}/api'
+    apiBaseUrl: '${process.env.API_HOST_URL}'
 };
 
 export const authConfig = {
