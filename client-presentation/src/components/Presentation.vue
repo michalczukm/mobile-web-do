@@ -1,10 +1,13 @@
 <template>
-    <transition name="slide-fade">
-        <div v-bind:class="{'slide-out': !transition, 'slide-in': transition }">
-            <feature class="feature " v-bind:feature="currentFeature"/>
-            <feature-description class="description" v-bind:feature="currentFeature"/>
-        </div>
-    </transition>
+    <div>
+        <button v-on:click="toggleDisplayType" class="toggle-display-type">Switch display</button>
+        <transition name="slide-fade">
+            <div v-bind:class="{'slide-out': !transition, 'slide-in': transition }">
+                <feature v-if="displayType === 'feature'" v-bind:feature="currentFeature"/>
+                <feature-description v-if="displayType === 'description'" v-bind:feature="currentFeature"/>
+            </div>
+        </transition>
+    </div>
 </template>
 
 <script>
@@ -27,8 +30,16 @@
                 required: true
             }
         },
+        methods: {
+            toggleDisplayType: function() {
+                this.displayType = this.displayType === 'feature' ? 'description' : 'feature';
+            }
+        },
         data: function () {
-            return {transition: false};
+            return {
+                transition: false,
+                displayType: 'feature'
+            };
         },
         computed: {
             currentFeature: function () {
@@ -56,18 +67,15 @@
         opacity: 0;
         transform: translate(100%, 0);
     }
-    .description {
+    .toggle-display-type {
         display: none;
     }
     @media (min-width: 60rem) {
         .container {
             max-width: 100%
         }
-        .feature {
-            display: none;
-        }
-        .description {
-            display: block;
+        .toggle-display-type {
+            display: inline-block;
         }
     }
 </style>
