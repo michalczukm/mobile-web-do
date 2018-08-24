@@ -1,4 +1,5 @@
 import * as Mongoose from 'mongoose';
+import * as Hapi from 'hapi';
 
 import { seedDatabase } from '../../src/infrastructure';
 
@@ -23,7 +24,8 @@ const databaseSetup = new class DatabaseSetup implements TestsSetup {
     }
 }();
 
-
 export const integrationTestsSetupBuilder = {
     withStandardSetup: (): TestsSetup => databaseSetup
 };
+
+export const getAdminCredentialsToInject = (): Hapi.AuthCredentials => ({scope: ['openid', 'crud:sessions']});

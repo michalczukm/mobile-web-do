@@ -4,7 +4,7 @@ import * as Hapi from 'hapi';
 
 import setupServer from '../../../src/server'
 import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
-import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
+import { getAdminCredentialsToInject, integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 describe('session: set state', function (): void {
     let server: Hapi.Server;
@@ -34,16 +34,7 @@ describe('session: set state', function (): void {
             headers: {
                 Authorization: 'Bearer x'
             },
-            validate: false,
-            credentials: {
-                iss: 'https://michalczukm.eu.auth0.com/',
-                sub: 'auth0|5ad9384615421f34664289bb',
-                aud: ['/admin', 'https://michalczukm.eu.auth0.com/userinfo'],
-                iat: 1534799743,
-                exp: 2934806943,
-                azp: 'TIsHcZi5YiUEplz9rkrZUcbHKaENE16r',
-                scope: 'openid crud:sessions'
-            }
+            credentials: getAdminCredentialsToInject()
         });
 
         expect(actual.statusCode).to.equal(200);
@@ -65,7 +56,8 @@ describe('session: set state', function (): void {
             url: `/api/sessions/${sessionId}/features/current`,
             payload: {
                 slideFeatureId: featureId
-            }
+            },
+            credentials: getAdminCredentialsToInject()
         });
 
         // assert
@@ -81,7 +73,8 @@ describe('session: set state', function (): void {
             url: `/api/sessions/${nonExistingSessionId}}/features/current`,
             payload: {
                 slideFeatureId: 'device-RAM-memory'
-            }
+            },
+            credentials: getAdminCredentialsToInject()
         });
 
         expect(actual.statusCode).to.equal(400);
@@ -93,7 +86,8 @@ describe('session: set state', function (): void {
             url: `/api/sessions/${seedConstants.sessionIdWelcomeState}/features/current`,
             payload: {
                 slideFeatureId: 'device-RAM-memory'
-            }
+            },
+            credentials: getAdminCredentialsToInject()
         });
 
         expect(actual.statusCode).to.equal(400);
@@ -105,7 +99,8 @@ describe('session: set state', function (): void {
         const actual = await
             server.inject({
                 method: 'GET',
-                url: `/api/sessions/${nonExistingSessionId}/features`
+                url: `/api/sessions/${nonExistingSessionId}/features`,
+                credentials: getAdminCredentialsToInject()
             });
 
         expect(actual.statusCode).to.equal(404);
@@ -114,7 +109,8 @@ describe('session: set state', function (): void {
     it('should get session features', async () => {
         const actual = await server.inject({
             method: 'GET',
-            url: `/api/sessions/${seedConstants.sessionIdFeatureState}/features`
+            url: `/api/sessions/${seedConstants.sessionIdFeatureState}/features`,
+            credentials: getAdminCredentialsToInject()
         });
 
         expect(actual.statusCode).to.equal(200);

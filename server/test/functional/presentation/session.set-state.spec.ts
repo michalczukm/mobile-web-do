@@ -4,7 +4,7 @@ import * as Hapi from 'hapi';
 
 import setupServer from '../../../src/server'
 import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
-import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
+import { getAdminCredentialsToInject, integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 describe('session: set state', function(): void {
     let server: Hapi.Server;
@@ -31,6 +31,7 @@ describe('session: set state', function(): void {
             const callGetSessionState = () => server.inject({
                 method: 'GET',
                 url: `/api/sessions/${sessionId}`,
+                credentials: getAdminCredentialsToInject()
             }).then(response => (response.result as any).state);
             const expected = state;
 
@@ -40,7 +41,8 @@ describe('session: set state', function(): void {
                 url: `/api/sessions/${sessionId}/state`,
                 payload: {
                     state: state
-                }
+                },
+                credentials: getAdminCredentialsToInject()
             });
 
             // assert
@@ -54,7 +56,8 @@ describe('session: set state', function(): void {
 
         const actual = await server.inject({
             method: 'PUT',
-            url: `/api/sessions/${nonExistingSessionId}/state`
+            url: `/api/sessions/${nonExistingSessionId}/state`,
+            credentials: getAdminCredentialsToInject()
         });
 
         expect(actual.statusCode).to.equal(400);
