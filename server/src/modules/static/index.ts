@@ -42,7 +42,7 @@ export default new ModuleBootstrapper({
         });
         server.ext('onPreResponse', (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
             const response = request.response;
-            if (response && isBoomResponse(response) &&
+            if (!request.path.startsWith('/api') && response && isBoomResponse(response) &&
                 response.isBoom && response.output &&
                 response.output.statusCode === 404) {
                 if (request.path.includes('admin')) {
