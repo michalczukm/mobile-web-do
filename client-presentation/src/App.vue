@@ -44,7 +44,10 @@
     import {logger} from './logging/logger';
     import configuration from './configuration';
 
-    const socket = io(configuration.wsUrl, {query: `sessionId=${sessionService.getCurrentSessionId()}`});
+    const socket = io(configuration.wsUrl, {
+        query: `sessionId=${sessionService.getCurrentSessionId()}`,
+        autoConnect: false
+    });
 
     export default {
         name: 'app',
@@ -73,6 +76,7 @@
             };
 
             const connect = () => {
+                console.log('PING!!!!');
                 socket.on('connect', () => {
                     // todo  check actual state -> send empty message
                     logger.info('WS connected');
@@ -97,7 +101,8 @@
                         logger.info('WS message:', message);
                     }
                 );
-                socket.on('finish', _ => console.log('=== finish'));
+                socket.on('finish', () => console.log('=== finish'));
+                socket.open();
 
                 browserInfoService.sendInfo()
                     .then(() => sessionService.sendClientSessionResults())
