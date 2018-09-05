@@ -32,7 +32,7 @@ export default new Feature('device-orientation',
                 round: (value) => Math.round(value)
             }
         }),
-        infoArray: ['Example is using `window.DeviceOrientationEvent`']
+        infoArray: ['This example uses `window.DeviceOrientationEvent`']
     }),
     {test: () => window.DeviceOrientationEvent, specification: specificationType.STANDARD},
     {test: () => window.AbsoluteOrientationSensor, specification: specificationType.STANDARD},

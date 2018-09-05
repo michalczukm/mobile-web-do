@@ -46,7 +46,7 @@ export default new Feature('share',
                 }
             }
         }),
-        infoArray: [`The API required to be launched by tapping frame.`]
+        infoArray: [`The API requires user interaction.`]
     }), {
         test: () => navigator.share,
         specification: specificationType.STANDARD

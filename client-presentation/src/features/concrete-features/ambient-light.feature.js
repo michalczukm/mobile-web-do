@@ -28,7 +28,7 @@ export default new Feature('ambient-light',
                 }
             }
         }),
-        infoArray: [`Example is using AmbientLightSensor`]
+        infoArray: [`This example uses AmbientLightSensor`]
     }),
     {test: () => window.ondevicelight, specification: specificationType.STANDARD},
     {test: () => window.AmbientLightSensor, specification: specificationType.STANDARD}
