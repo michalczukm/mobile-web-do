@@ -25,15 +25,11 @@
         </div>
         <table class='code-samples'>
             <tr v-if="feature.testsResult.isSuccess" v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="index" class="success">
-                <td>
-                    <pre v-html="$options.filters.code(testResult.test)"></pre>
-                </td>
+                <td>{{ testResult.test | code}}</td>
             </tr>
 
             <tr v-if="feature.testsResult.isFailure" v-for="(testResult, index) in feature.testsResult.failed" v-bind:key="index" class="failed">
-                <td>
-                    <pre v-html="$options.filters.code(testResult.test)"></pre>
-                </td>
+                <td>{{ testResult.test | code}}</td>
             </tr>
         </table>
 
@@ -66,11 +62,18 @@
         },
         filters: {
             code: function(value) {
-                const removeFirstAndLastLine = (text) => text.replace(/(^.*\r?\n|\n[^\n\r\r]*$)/g, '').trim();
-                const removeReturnFromBeginning = (text) => text.replace(/return/g, '').trim();
-                const processText = (text) => removeReturnFromBeginning(removeFirstAndLastLine(text));
+                // test functions are either
+                // "() => window.Accelerometer" in dev
+                // or "function(){return window.Accelerometer}" in prod
+                const processText = (text) => {
+                    if (text.indexOf('function') === 0) {
+                        return text.substr(0, text.length - 1).replace('function(){return ', '')
+                    }
 
-                return Prism.highlight(processText(value.toString()), Prism.languages.javascript);
+                    return text.replace('() => ', '')
+                };
+
+                return processText(value.toString());
             }
         }
     };
@@ -82,9 +85,19 @@
         width: 100%;
         margin-bottom: 10%;
 
-        pre {
-            padding-left: 0.5em;
-            white-space: pre-wrap;
+        td {
+            padding: 1em;
+            font-family: monospace;
+        }
+
+        .success td {
+            background: #97d100;
+            color: black;
+        }
+
+        .failure td {
+            background: #e85e39;
+            color: white;
         }
     }
     ul.in-browser-results {
