@@ -37,11 +37,6 @@
 </template>
 
 <script>
-    import Prism from 'prismjs/components/prism-core';
-    import 'prismjs/components/prism-clike';
-    import 'prismjs/components/prism-javascript';
-    import 'prismjs/themes/prism.css';
-
     import SupportStatus from './SupportStatus';
 
     export default {
@@ -67,10 +62,10 @@
                 // or "function(){return window.Accelerometer}" in prod
                 const processText = (text) => {
                     if (text.indexOf('function') === 0) {
-                        return text.substr(0, text.length - 1).replace('function(){return ', '')
+                        return text.substr(0, text.length - 1).replace('function(){return ', '');
                     }
 
-                    return text.replace('() => ', '')
+                    return text.replace('() => ', '');
                 };
 
                 return processText(value.toString());
