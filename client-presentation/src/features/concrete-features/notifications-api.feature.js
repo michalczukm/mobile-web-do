@@ -26,7 +26,7 @@ export default new Feature('notifications-api',
         navigator.serviceWorker.ready.then(registration => registration.showNotification('Notifications API', notification));
 
         return {
-            infoArray: [`Please allow permission to see result`]
+            infoArray: [`Please grant permission to see the result`]
         };
     },
     { test: () => window.Notification, specification: specificationType.STANDARD },

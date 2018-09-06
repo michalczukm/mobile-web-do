@@ -13,7 +13,7 @@ export default new Feature('storage-quota',
         component: Vue.component(makeExampleId('storage-quota'), {
             template: `<div>
                         <p>Used storage for page: ~{{storage.usage | mb}} MB</p>
-                        <p>Quota storage for page: ~{{storage.quota | mb}} MB</p>
+                        <p>Storage quota for page: ~{{storage.quota | mb}} MB</p>
                     </div>`,
             data: () => ({
                 storage: {}

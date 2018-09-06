@@ -21,7 +21,7 @@ navigator.vibrate([500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 20
                 }
             }
         }),
-        infoArray: [`The API required to be launched by tapping frame.`]
+        infoArray: [`The API requires user interaction.`]
     }), {
         test: () => navigator.vibrate,
         specification: specificationType.STANDARD
