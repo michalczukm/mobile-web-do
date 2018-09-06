@@ -4,7 +4,9 @@ services:
   mobile-web-do:
     container_name: mobile-web-do__dev_server
     restart: always
-    build: ./server/Dockerfile.dev
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile.dev
     environment:
       NODE_ENV: development
       PORT: 3000
