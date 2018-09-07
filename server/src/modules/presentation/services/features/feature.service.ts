@@ -23,7 +23,8 @@ const FEATURES = [
         { id: 'speech-recognition', name: 'Speech Recognition' },
         { id: 'share', name: 'Share media' },
         { id: 'usb', name: 'Web USB' },
-        { id: 'nfc', name: 'NFC' }
+        { id: 'nfc', name: 'NFC' },
+        { id: 'camera', name: 'Camera' }
     ];
 
 function getPresentationSet(): FeatureDto[] {
