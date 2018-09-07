@@ -16,6 +16,7 @@ const FEATURES = [
         { id: 'battery-status', name: 'Battery Status' },
         { id: 'vibration', name: 'Vibration' },
         { id: 'geolocation', name: 'Geolocation' },
+        { id: 'storage', name: 'Storage' },
         { id: 'storage-quota', name: 'Storage Quota' },
         { id: 'gyroscope', name: 'Gyroscope' },
         { id: 'accelerometer', name: 'Accelerometer' },

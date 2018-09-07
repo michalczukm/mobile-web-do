@@ -16,6 +16,7 @@ import pushApi from './push-api.feature';
 import screenOrientation from './screen-orientation.feature';
 import share from './share.feature';
 import speechRecognition from './speech-recognition.feature';
+import storage from './storage.feature';
 import storageQuota from './storage-quota.feature';
 import usb from './usb.feature';
 import vibration from './vibration.feature';
@@ -39,6 +40,7 @@ export default [
     screenOrientation,
     share,
     speechRecognition,
+    storage,
     storageQuota,
     usb,
     vibration
