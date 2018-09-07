@@ -2,6 +2,7 @@ import accelerometer from './accelerometer.feature';
 import ambientLight from './ambient-light.feature';
 import batteryStatus from './battery-status.feature';
 import bluetooth from './bluetooth.feature';
+import camera from './camera.feature';
 import deviceMotion from './device-motion.feature';
 import deviceOrientation from './device-orientation.feature';
 import deviceRamMemory from './device-RAM-memory.feature';
@@ -25,6 +26,7 @@ export default [
     ambientLight,
     batteryStatus,
     bluetooth,
+    camera,
     deviceMotion,
     deviceOrientation,
     deviceRamMemory,
