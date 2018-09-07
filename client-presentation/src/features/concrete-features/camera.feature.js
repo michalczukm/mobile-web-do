@@ -49,6 +49,15 @@ export default new Feature('camera',
         test: () => window.getUserMedia,
         specification: specificationType.STANDARD
     }, {
+        test: () => window.webkitGetUserMedia,
+        specification: specificationType.VENDOR
+    }, {
+        test: () => window.mozGetUserMedia,
+        specification: specificationType.VENDOR
+    }, {
+        test: () => window.msGetUserMedia,
+        specification: specificationType.VENDOR
+    }, {
         test: () => window.mediaDevices,
         specification: specificationType.STANDARD
     }
