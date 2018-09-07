@@ -22,8 +22,10 @@ export default new Feature('storage',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('storage'), {
-            data: {
-                value: window.localStorage.myKey || ''
+            data: function() {
+                return {
+                    value: window.localStorage.myKey || ''
+                };
             },
             template: `<div>
                         <input type="text" placeholder="Data to store" v-model="value"/>
