@@ -46,19 +46,19 @@ export default new Feature('camera',
             }
         })
     }), {
-        test: () => window.getUserMedia,
+        test: () => navigator.getUserMedia,
         specification: specificationType.STANDARD
     }, {
-        test: () => window.webkitGetUserMedia,
+        test: () => navigator.webkitGetUserMedia,
         specification: specificationType.VENDOR
     }, {
-        test: () => window.mozGetUserMedia,
+        test: () => navigator.mozGetUserMedia,
         specification: specificationType.VENDOR
     }, {
-        test: () => window.msGetUserMedia,
+        test: () => navigator.msGetUserMedia,
         specification: specificationType.VENDOR
     }, {
-        test: () => window.mediaDevices,
+        test: () => navigator.mediaDevices,
         specification: specificationType.STANDARD
     }
 );
