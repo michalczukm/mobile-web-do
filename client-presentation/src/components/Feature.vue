@@ -60,15 +60,21 @@
                 // test functions are either
                 // "() => window.Accelerometer" in dev
                 // or "function(){return window.Accelerometer}" in prod
-                const processText = (text) => {
-                    if (text.indexOf('function') === 0) {
-                        return text.substr(0, text.length - 1).replace('function(){return ', '');
+                const getBodyExtractor = (text) => {
+                    if (text.indexOf('return') !== -1) {
+                        return /return (.*)[;}]/;
                     }
 
-                    return text.replace('() => ', '');
+                    return /\(\) ?=> ?{? ?(?:return)? ([^;\n]*)/;
                 };
 
-                return processText(value.toString());
+                const allowSplitByDots = (text) => {
+                    // insert zero-width joiner after dots to enable line breaking
+                    return text.replace('.', '\u200B.');
+                };
+
+                const functionBody = getBodyExtractor(value.toString()).exec(value)[1].trim();
+                return allowSplitByDots(functionBody);
             }
         }
     };
