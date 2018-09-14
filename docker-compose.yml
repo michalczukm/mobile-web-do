@@ -16,7 +16,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: ${SERVER_EXPOSE_PORT}
-      DB_CONNECTION_STRING: mongodb://${DB_USER}:${DB_PASS}@mongo:27017/mobile-web-do
+      DB_CONNECTION_STRING: mongodb://${DB_APP_USERNAME}:${DB_APP_PASS}@mongo:27017/mobile-web-do
     links:
       - mongo
     ports:
@@ -29,10 +29,16 @@ services:
     container_name: mobile-web-do_storage
     image: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ADMIN_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ADMIN_PASS}
+      APP_DB: mobile-web-do
+      DB_ADMIN_USERNAME: ${DB_ADMIN_USERNAME}
+      DB_ADMIN_PASS: ${DB_ADMIN_PASS}
+      DB_APP_USERNAME: ${DB_APP_USERNAME}
+      DB_APP_PASS: ${DB_APP_PASS}
     volumes:
       - ../data:/data/db
+      - ./scripts/mongo-entrypoint-initdb/:/docker-entrypoint-initdb.d/
     networks:
       - mwdnet
     expose:
