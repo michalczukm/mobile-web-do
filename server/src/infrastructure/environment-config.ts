@@ -10,7 +10,8 @@ export type EnvironmentConfig = {
     },
     presentation: {
         hostUrl: string
-    }
+    },
+    corsSetup: boolean | {}
 };
 
 export const environmentConfig = ((): EnvironmentConfig => {
@@ -25,16 +26,25 @@ export const environmentConfig = ((): EnvironmentConfig => {
         dotenv.config();
     }
 
+    const isProd = getNodeEnv() === 'production';
+    const corsSetup = isProd
+        ? false
+        : {
+            origin: ['*'],
+            credentials: true
+        };
+
     return {
         serverPort: +(process.env.PORT || 5050),
         dbHost: getDbHost(),
-        isProd: getNodeEnv() === 'production',
+        isProd,
         auth: {
             jwksUri: `https://${process.env.AUTH_DOMAIN}/.well-known/jwks.json`,
             issuer: `https://${process.env.AUTH_DOMAIN}/`
         },
         presentation: {
             hostUrl: process.env.PRESENTATION_HOST_URL as string
-        }
+        },
+        corsSetup
     };
 })();

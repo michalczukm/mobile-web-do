@@ -14,10 +14,7 @@ const setupConnection = (): Hapi.Server => {
                 stripTrailingSlash: true
             },
             routes: {
-                cors: {
-                    origin: ['*'],
-                    credentials: true
-                },
+                cors: env.corsSetup,
                 files: {
                     relativeTo: Path.join(__dirname, 'client-dist')
                 }
