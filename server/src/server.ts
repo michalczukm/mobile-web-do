@@ -46,9 +46,7 @@ const loadModules = (serverInstance: Hapi.Server): void => {
     staticModule.register(serverInstance);
 };
 
-const setupLogging = (serverInstance: Hapi.Server): void => {
-    apiLoggingSetup(serverInstance);
-};
+const setupLogging = async (serverInstance: Hapi.Server): Promise<void> => apiLoggingSetup(serverInstance);
 
 const setupServer = async (): Promise<Hapi.Server> => {
     const server = setupConnection();
@@ -67,7 +65,7 @@ const setupServer = async (): Promise<Hapi.Server> => {
 
     setupAuth(server);
     loadModules(server);
-    setupLogging(server);
+    await setupLogging(server);
 
     return server;
 };
