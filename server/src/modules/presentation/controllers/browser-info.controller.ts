@@ -4,13 +4,13 @@ import * as uuid from 'uuid/v4';
 
 import { browserInfoRepository, sessionRepository } from '../data-access';
 
-import { RequestHandler } from '../../../hapi-utils';
+import { getPayload, RequestHandler } from '../../../hapi-utils';
 import { BrowserInfoModel } from '../models';
 import { userAgentService } from '../services/browser-info'
 import clientIdentifiersRepository from '../data-access/client-identifiers.repository';
 
 async function create(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit): Promise<Hapi.Lifecycle.ReturnValueTypes> {
-    const payload: any = request.payload;
+    const payload: any = getPayload(request);
 
     const sessionId = payload.sessionId;
     const clientId: string = request.state['client-id'] || uuid();

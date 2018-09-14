@@ -1,7 +1,7 @@
 import * as Hapi from 'hapi';
 import * as Boom from 'boom';
 
-import { RequestHandler } from '../../../hapi-utils';
+import { getPayload, RequestHandler } from '../../../hapi-utils';
 import { SessionModel, ClientSessionResults, CreateSessionModel } from '../models';
 import { sessionRepository, clientIdentifiersRepository } from '../data-access';
 import { SessionWebModel } from './web-models/session';
@@ -22,7 +22,7 @@ const mapSession = (session: SessionModel) => ({
 } as SessionWebModel);
 
 async function create(request: Hapi.Request): Promise<Hapi.Lifecycle.ReturnValueTypes> {
-    const payload: any = request.payload;
+    const payload: any = getPayload(request);
     const name = payload.name;
     const session = {
         name: name,
@@ -52,7 +52,7 @@ async function getById(request: Hapi.Request): Promise<Hapi.Lifecycle.ReturnValu
 
 async function setState(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit): Promise<Hapi.Lifecycle.ReturnValueTypes> {
     const sessionId = request.params.id;
-    const payload: any = request.payload;
+    const payload: any = getPayload(request);
     const newState = payload.state as SessionState;
 
     const validationResult = await validation.sessionExists(sessionId);
@@ -81,7 +81,7 @@ async function setState(request: Hapi.Request, responseToolkit: Hapi.ResponseToo
 }
 
 async function setSlideFeature(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit): Promise<Hapi.Lifecycle.ReturnValueTypes> {
-    const payload: any = request.payload;
+    const payload: any = getPayload(request);
     const { slideFeatureId } = payload;
     const sessionId = request.params.id;
 
@@ -103,7 +103,7 @@ async function setSlideFeature(request: Hapi.Request, responseToolkit: Hapi.Resp
 }
 
 async function addResults(request: Hapi.Request, responseToolkit: Hapi.ResponseToolkit): Promise<Hapi.Lifecycle.ReturnValueTypes> {
-    const clientSessionResults = request.payload as ClientSessionResults[];
+    const clientSessionResults = getPayload<ClientSessionResults[]>(request);
     const sessionId = request.params.id;
     const clientId = request.state['client-id'];
     const clientSystemInfo = userAgentService.mapUserAgent(request.headers['user-agent']);
