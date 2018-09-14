@@ -16,7 +16,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: ${SERVER_EXPOSE_PORT}
-      DB_HOST: mongodb://mongo:27017/mobile-web-do
+      DB_CONNECTION_STRING: mongodb://${DB_USER}:${DB_PASS}@mongo:27017/mobile-web-do
     links:
       - mongo
     ports:
@@ -28,6 +28,9 @@ services:
   mongo:
     container_name: mobile-web-do_storage
     image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
     volumes:
       - ../data:/data/db
     networks:

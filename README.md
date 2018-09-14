@@ -17,4 +17,5 @@ This repository contains application which I'm using during my presentations abo
 ## How to run it locally
 Everything is dockerized, but some variables in Docker-Compose should be provided for connection with Auth0.
 
-TBA soon.
+### Set .env
+Please check [.env.example](./.env.example) file and make its copy with your own data.

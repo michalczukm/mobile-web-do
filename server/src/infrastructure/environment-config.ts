@@ -15,7 +15,7 @@ export type EnvironmentConfig = {
 };
 
 export const environmentConfig = ((): EnvironmentConfig => {
-    const getDbHost = () => process.env.DB_HOST as string;
+    const getDbHost = () => process.env.DB_CONNECTION_STRING as string;
     const getNodeEnv = () => process.env.NODE_ENV as string;
 
     const variablesAreSetInEnv = () => !!getDbHost() && !!getNodeEnv();
