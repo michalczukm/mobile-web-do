@@ -7,7 +7,7 @@ import { apiLoggingSetup, authSetup, databaseSetup, EnvironmentConfig, environme
 
 const env: EnvironmentConfig = environmentConfig;
 
-const setupApiConnection = (): Hapi.Server => {
+const setupConnection = (): Hapi.Server => {
     const server = new Hapi.Server({
             port: env.serverPort,
             router: {
@@ -54,7 +54,7 @@ const setupLogging = (serverInstance: Hapi.Server): void => {
 };
 
 const setupServer = async (): Promise<Hapi.Server> => {
-    const server = setupApiConnection();
+    const server = setupConnection();
 
     await server.register([
         require('inert'),
