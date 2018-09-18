@@ -89,6 +89,7 @@
         td {
             padding: 1em;
             font-family: monospace;
+            overflow-x: scroll;
         }
 
         .success td {
