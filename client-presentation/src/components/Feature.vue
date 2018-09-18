@@ -25,15 +25,11 @@
         </div>
         <table class='code-samples'>
             <tr v-if="feature.testsResult.isSuccess" v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="index" class="success">
-                <td>
-                    <pre v-html="$options.filters.code(testResult.test)"></pre>
-                </td>
+                <td>{{ testResult.test | code}}</td>
             </tr>
 
             <tr v-if="feature.testsResult.isFailure" v-for="(testResult, index) in feature.testsResult.failed" v-bind:key="index" class="failed">
-                <td>
-                    <pre v-html="$options.filters.code(testResult.test)"></pre>
-                </td>
+                <td>{{ testResult.test | code}}</td>
             </tr>
         </table>
 
@@ -41,11 +37,6 @@
 </template>
 
 <script>
-    import Prism from 'prismjs/components/prism-core';
-    import 'prismjs/components/prism-clike';
-    import 'prismjs/components/prism-javascript';
-    import 'prismjs/themes/prism.css';
-
     import SupportStatus from './SupportStatus';
 
     export default {
@@ -66,11 +57,24 @@
         },
         filters: {
             code: function(value) {
-                const removeFirstAndLastLine = (text) => text.replace(/(^.*\r?\n|\n[^\n\r\r]*$)/g, '').trim();
-                const removeReturnFromBeginning = (text) => text.replace(/return/g, '').trim();
-                const processText = (text) => removeReturnFromBeginning(removeFirstAndLastLine(text));
+                // test functions are either
+                // "() => window.Accelerometer" in dev
+                // or "function(){return window.Accelerometer}" in prod
+                const getBodyExtractor = (text) => {
+                    if (text.indexOf('return') !== -1) {
+                        return /return (.*)[;}]/;
+                    }
 
-                return Prism.highlight(processText(value.toString()), Prism.languages.javascript);
+                    return /\(\) ?=> ?{? ?(?:return)? ([^;\n]*)/;
+                };
+
+                const allowSplitByDots = (text) => {
+                    // insert zero-width joiner after dots to enable line breaking
+                    return text.replace('.', '\u200B.');
+                };
+
+                const functionBody = getBodyExtractor(value.toString()).exec(value)[1].trim();
+                return allowSplitByDots(functionBody);
             }
         }
     };
@@ -82,9 +86,19 @@
         width: 100%;
         margin-bottom: 10%;
 
-        pre {
-            padding-left: 0.5em;
-            white-space: pre-wrap;
+        td {
+            padding: 1em;
+            font-family: monospace;
+        }
+
+        .success td {
+            background: #97d100;
+            color: black;
+        }
+
+        .failure td {
+            background: #e85e39;
+            color: white;
         }
     }
     ul.in-browser-results {
