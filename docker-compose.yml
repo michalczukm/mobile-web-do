@@ -16,7 +16,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: ${SERVER_EXPOSE_PORT}
-      DB_CONNECTION_STRING: mongodb://${DB_APP_USERNAME}:${DB_APP_PASS}@mongo:27017/mobile-web-do
+      DB_CONNECTION_STRING: ${DB_CONNECTION_STRING}
     links:
       - mongo
     ports:
