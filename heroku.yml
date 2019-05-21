@@ -1,0 +1,5 @@
+build:
+  docker:
+    mobile-web-do: Dockerfile
+run:
+  mobile-web-do: npm start
