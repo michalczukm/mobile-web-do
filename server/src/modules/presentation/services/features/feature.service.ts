@@ -24,7 +24,8 @@ const FEATURES = [
         { id: 'share', name: 'Share media' },
         { id: 'usb', name: 'Web USB' },
         { id: 'nfc', name: 'NFC' },
-        { id: 'camera', name: 'Camera' }
+        { id: 'camera', name: 'Camera' },
+        { id: 'gamepad-api', name: 'Gamepad API' }
     ];
 
 function getPresentationSet(): FeatureDto[] {

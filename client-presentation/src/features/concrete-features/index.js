@@ -6,6 +6,7 @@ import camera from './camera.feature';
 import deviceMotion from './device-motion.feature';
 import deviceOrientation from './device-orientation.feature';
 import deviceRamMemory from './device-RAM-memory.feature';
+import gamepadApi from './gamepad-api.feature';
 import geolocation from './geolocation.feature';
 import gyroscope from './gyroscope.feature';
 import homeScreen from './home-screen.feature';
@@ -31,6 +32,7 @@ export default [
     deviceMotion,
     deviceOrientation,
     deviceRamMemory,
+    gamepadApi,
     geolocation,
     gyroscope,
     homeScreen,
