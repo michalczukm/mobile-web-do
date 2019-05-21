@@ -23,15 +23,8 @@ export default {
                 { separator: ',' }
             ]
         }, {
-            module: 'rotating-file-stream',
-            args: [
-                'webserver',
-                {
-                    size: '100MB',
-                    path: './log/web'
-                }
-            ]
-        }],
+            module: 'good-console'
+        }, 'stdout'],
         logsFileReporter: [{
             module: 'good-squeeze',
             name: 'Squeeze',
@@ -44,14 +37,7 @@ export default {
                 { separator: ',' }
             ]
         }, {
-            module: 'rotating-file-stream',
-            args: [
-                'logs',
-                {
-                    size: '100MB',
-                    path: './log/logs'
-                }
-            ]
-        }]
+            module: 'good-console'
+        }, 'stdout']
     }
 };

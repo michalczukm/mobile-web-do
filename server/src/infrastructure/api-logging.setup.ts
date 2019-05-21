@@ -24,5 +24,9 @@ function logErrorRequests(serverInstance: Hapi.Server): void {
 export const apiLoggingSetup = async (serverInstance: Hapi.Server): Promise<void> => {
     logErrorRequests(serverInstance);
     logger.setupServerLogging(serverInstance);
+    /**
+     * Heroku have some problem with writing to files, probably due to size quota
+     * I disabled logging to files till finding workaround or move to some storage with logs (preferable)
+     */
     await logRequests(serverInstance);
 };
