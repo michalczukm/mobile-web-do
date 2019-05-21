@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  mobile-web-do:
+  web:
     container_name: mobile-web-do__dev_server
     restart: always
     build:
@@ -14,7 +14,7 @@ services:
     links:
       - mongo
     ports:
-      - 3095:3000
+      - 3000:3000
     networks:
       - mwdnet
     depends_on:
