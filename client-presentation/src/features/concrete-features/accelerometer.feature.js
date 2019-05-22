@@ -4,8 +4,7 @@ import {
     specificationType
 } from '../feature';
 import {
-    makeExampleId,
-    humanReadableByKeys
+    makeExampleId
 } from './features-utils';
 
 export default new Feature('accelerometer',
@@ -19,19 +18,25 @@ accelerometer.start();
     () => ({
         component: Vue.component(makeExampleId('accelerometer'), {
             template: `<div>
-                        <p>acceleration: <b>{{acceleration || 'loading' | axisMotion}}</b></p>
+                        <p>event: {{event}}</p>
+                        <p>acceleration: <b>{{result || 'loading' | axisMotion}}</b></p>
                     </div>`,
             data: () => ({
-                acceleration: ''
+                result: {},
+                event: {}
             }),
             created: function () {
                 // eslint-disable-next-line no-undef
                 const accelerometer = new Accelerometer();
-                accelerometer.addEventListener('reading', result => (this.acceleration = result));
+                accelerometer.addEventListener('reading', event => {
+                    this.event = event;
+                    this.result = accelerometer;
+                });
                 accelerometer.start();
             },
             filters: {
-                axisMotion: (value) => humanReadableByKeys(value, 'x', 'y', 'z')
+                axisMotion: (value) =>
+                    ['x', 'y', 'z'].map(key => `${key}: ${(value[key] || 0).toFixed(2)}`, '').join(',')
             }
         }),
         infoArray: [`This example uses Accelerometer`]

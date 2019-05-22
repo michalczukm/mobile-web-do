@@ -21,7 +21,7 @@ navigator.vibrate([500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 20
                 }
             }
         }),
-        infoArray: [`The API requires user interaction.`]
+        infoArray: [`The API requires user interaction.`, `You cannot be in non-vibration silent mode`]
     }), {
         test: () => navigator.vibrate,
         specification: specificationType.STANDARD

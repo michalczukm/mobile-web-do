@@ -76,7 +76,6 @@
             };
 
             const connect = () => {
-                console.log('PING!!!!');
                 socket.on('connect', () => {
                     // todo  check actual state -> send empty message
                     logger.info('WS connected');
