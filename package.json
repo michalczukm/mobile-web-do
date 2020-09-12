@@ -5,7 +5,8 @@
   "main": "server/src/server",
   "scripts": {
     "install": "(cd server && npm install)",
-    "start": "npm start --prefix server"
+    "start": "npm start --prefix server",
+    "run-local-db": "docker-compose run -p 27017:27017 mongo"
   },
   "repository": {
     "type": "git",

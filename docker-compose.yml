@@ -27,7 +27,7 @@ services:
       - mongo
   mongo:
     container_name: mobile-web-do_storage
-    image: mongo
+    image: mongo:3.6.2-jessie
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DB_ADMIN_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_ADMIN_PASS}
