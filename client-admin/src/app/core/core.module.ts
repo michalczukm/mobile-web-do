@@ -25,7 +25,7 @@ export function tokenGetter(): string {
         JwtModule.forRoot({
             config: {
                 tokenGetter: tokenGetter,
-                whitelistedDomains: authConfig.whitelistedDomains,
+                allowedDomains: authConfig.whitelistedDomains,
                 throwNoTokenError: true
             }
         })
