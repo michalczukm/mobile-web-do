@@ -15,6 +15,7 @@ import nfc from './nfc.feature';
 import notificationsApi from './notifications-api.feature';
 import onlineState from './online-state.feature';
 import pushApi from './push-api.feature';
+import relativeOrientationSensor from './relative-orientation-sensor.feature';
 import screenOrientation from './screen-orientation.feature';
 import share from './share.feature';
 import speechRecognition from './speech-recognition.feature';
@@ -48,4 +49,5 @@ export default [
     storageQuota,
     usb,
     vibration,
+    relativeOrientationSensor,
 ];

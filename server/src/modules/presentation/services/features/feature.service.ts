@@ -20,6 +20,7 @@ const FEATURES = [
         { id: 'storage-quota', name: 'Storage Quota' },
         { id: 'gyroscope', name: 'Gyroscope' },
         { id: 'accelerometer', name: 'Accelerometer' },
+        { id: 'relative-orientation-sensor', name: 'Relative Orientation Sensor' },
         { id: 'speech-recognition', name: 'Speech Recognition' },
         { id: 'share', name: 'Share media' },
         { id: 'usb', name: 'Web USB' },

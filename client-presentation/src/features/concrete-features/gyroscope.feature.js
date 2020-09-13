@@ -6,8 +6,8 @@ import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// based on new GenericSensorAPI
 const gyroscope = new Gyroscope();
-gyroscope.addEventListener('reading', result => {
-    [x, y, z] = result;
+gyroscope.addEventListener('reading', () => {
+    [x, y, z] = gyroscope;
 }));
 gyroscope.start();
 `;

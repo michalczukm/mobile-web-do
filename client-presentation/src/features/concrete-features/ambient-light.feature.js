@@ -5,7 +5,7 @@ import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// based on new GenericSensorAPI
 const sensor = new AmbientLightSensor();
-sensor.addEventListener('reading', (_) => {
+sensor.addEventListener('reading', () => {
     const illuminance = sensor.illuminance;
 });
 sensor.start();`;

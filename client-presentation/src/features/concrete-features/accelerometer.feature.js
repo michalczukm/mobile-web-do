@@ -8,8 +8,8 @@ export default new Feature(
     'accelerometer',
     `// based on new GenericSensorAPI
 const accelerometer = new Accelerometer();
-accelerometer.addEventListener('reading', result => {
-    [x, y, z] = result;
+accelerometer.addEventListener('reading', () => {
+    [x, y, z] = accelerometer;
 }));
 accelerometer.start();
 `,
