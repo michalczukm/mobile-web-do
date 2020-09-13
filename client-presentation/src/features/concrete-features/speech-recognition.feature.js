@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
+import { createEventsSubscription } from '../../utils';
 import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// the absolutely simplest case, when we want only most probable results, no alternatives
@@ -34,13 +35,16 @@ export default new Feature(
                 listening: false,
                 recognitions: [],
                 recognizer: {},
+                eventsSubscription: null,
             }),
             created: function() {
                 this.recognizer = new (window.SpeechRecognition ||
                     window.webkitSpeechRecognition)();
                 this.recognizer.continuous = true;
 
-                this.recognizer.addEventListener('result', event => {
+                this.eventsSubscription = createEventsSubscription(this.recognizer);
+
+                this.eventsSubscription.subscribe('result', event => {
                     this.recognitions = Array.from(event.results)
                         .filter(res => res.isFinal)
                         .map(res => ({
@@ -48,6 +52,9 @@ export default new Feature(
                             confidencePercentage: (res[0].confidence * 100).toFixed(2),
                         }));
                 });
+            },
+            beforeDestroy: function() {
+                this.eventsSubscription.unsubscribeAll();
             },
             methods: {
                 listen: function() {

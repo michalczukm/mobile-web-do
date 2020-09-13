@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
+import { createEventsSubscription } from '../../utils';
 import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// based on new GenericSensorAPI
@@ -22,15 +23,23 @@ export default new Feature(
             data: () => ({
                 result: {},
                 event: {},
+                eventsSubscription: null,
             }),
             created: function() {
                 // eslint-disable-next-line no-undef
                 const gyroscope = new Gyroscope();
-                gyroscope.addEventListener('reading', event => {
+
+                this.eventsSubscription = createEventsSubscription(gyroscope);
+
+                this.eventsSubscription.subscribe('reading', event => {
                     this.event = event;
                     this.result = gyroscope;
                 });
+
                 gyroscope.start();
+            },
+            beforeDestroy: function() {
+                this.eventsSubscription.unsubscribeAll();
             },
             filters: {
                 axisMotion: value =>

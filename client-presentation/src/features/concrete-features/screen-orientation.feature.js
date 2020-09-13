@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
+import { createEventsSubscription } from '../../utils';
 import { makeExampleId } from './features-utils';
 
 const exampleUsage = `
@@ -7,8 +8,8 @@ const exampleUsage = `
 const type = window.screen.orientation.type;
 
 // orientation changed
-window.screen.orientation.addEventListener('change', _ => {
-    ...
+window.screen.orientation.addEventListener('change', () => {
+    console.log(window.screen.orientation);
 });
 `;
 
@@ -22,18 +23,25 @@ export default new Feature(
             window.screen.msOrientation ||
             window.screen.lockOrientation ||
             {};
+
         const getOrientation = () => orientationApi.type || '';
-        const onOrientationChange = callback => orientationApi.addEventListener('change', callback);
 
         return {
             component: Vue.component(makeExampleId('screen-orientation'), {
                 template: `<div><h4>{{orientation}}</h4></div>`,
-                data: () => ({ orientation: '' }),
+                data: () => ({
+                    orientation: '',
+                    eventsSubscription: createEventsSubscription(orientationApi),
+                }),
                 created: function() {
                     const setOrientation = () => (this.orientation = getOrientation());
-                    onOrientationChange(() => setOrientation());
+
+                    this.eventsSubscription.subscribe('change', setOrientation);
 
                     setOrientation();
+                },
+                beforeDestroy: function() {
+                    this.eventsSubscription.unsubscribeAll();
                 },
             }),
             infoArray: [],

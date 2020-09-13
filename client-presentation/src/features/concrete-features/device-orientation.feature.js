@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
+import { createEventsSubscription } from '../../utils';
 import { makeExampleId } from './features-utils';
 
 const exampleUsage = `
@@ -27,13 +28,17 @@ export default new Feature(
                     beta: 0,
                     gamma: 0,
                 },
+                eventsSubscription: createEventsSubscription(),
             }),
             created: function() {
-                window.addEventListener(
+                this.eventsSubscription.subscribe(
                     'deviceorientation',
                     orientation => (this.orientation = orientation),
                     false,
                 );
+            },
+            beforeDestroy: function() {
+                this.eventsSubscription.unsubscribeAll();
             },
             filters: {
                 round: value => Math.round(value),

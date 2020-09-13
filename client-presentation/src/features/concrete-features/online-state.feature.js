@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
+import { createEventsSubscription } from '../../utils';
 import { makeExampleId } from './features-utils';
 
 const exampleUsage = `//add listeners for online state change
@@ -21,11 +22,16 @@ export default new Feature(
                     </div>`,
             data: () => ({
                 onlineState: false,
+                eventsSubscription: createEventsSubscription(),
             }),
             created: function() {
-                window.addEventListener('online', () => (this.onlineState = true));
-                window.addEventListener('offline', () => (this.onlineState = false));
+                this.eventsSubscription.subscribe('online', () => (this.onlineState = true));
+                this.eventsSubscription.subscribe('offline', () => (this.onlineState = false));
+
                 this.onlineState = navigator.onLine;
+            },
+            beforeDestroy: function() {
+                this.eventsSubscription.unsubscribeAll();
             },
         }),
         infoArray: [],

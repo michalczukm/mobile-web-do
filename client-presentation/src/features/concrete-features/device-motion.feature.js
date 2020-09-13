@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
+import { createEventsSubscription } from '../../utils';
 import { makeExampleId, humanReadableByKeys } from './features-utils';
 
 const exampleUsage = `// based on DeviceMotionEvent
@@ -26,9 +27,17 @@ export default new Feature(
                     </div>`,
             data: () => ({
                 motion: {},
+                eventsSubscription: createEventsSubscription(),
             }),
             created: function() {
-                window.addEventListener('devicemotion', motion => (this.motion = motion), false);
+                this.eventsSubscription.subscribe(
+                    'devicemotion',
+                    motion => (this.motion = motion),
+                    false,
+                );
+            },
+            beforeDestroy: function() {
+                this.eventsSubscription.unsubscribeAll();
             },
             filters: {
                 axisMotion: value => humanReadableByKeys(value, 'x', 'y', 'z'),

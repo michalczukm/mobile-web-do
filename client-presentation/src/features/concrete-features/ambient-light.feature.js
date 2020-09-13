@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
+import { createEventsSubscription } from '../../utils';
 import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// based on new GenericSensorAPI
@@ -15,19 +16,26 @@ export default new Feature(
     () => ({
         component: Vue.component(makeExampleId('ambient-light'), {
             template: `<div>Illuminance on your sensor: <b>{{illuminance}}</b></div>`,
-            data: () => ({ illuminance: 0 }),
+            data: () => ({ illuminance: 0, eventsSubscription: null }),
             created: function() {
                 if (window.AmbientLightSensor) {
                     // eslint-disable-next-line no-undef
                     const sensor = new AmbientLightSensor();
-                    sensor.addEventListener(
-                        'reading',
-                        () => (this.illuminance = sensor.illuminance),
-                    );
+
+                    this.eventsSubscription = createEventsSubscription(sensor);
+
+                    this.eventsSubscription.subscribe('reading', () => {
+                        debugger;
+                        this.illuminance = sensor.illuminance;
+                    });
+
                     sensor.start();
                 } else {
                     this.illuminance = 'Not supported';
                 }
+            },
+            beforeDestroy: function() {
+                this.eventsSubscription.unsubscribeAll();
             },
         }),
         infoArray: [`This example uses AmbientLightSensor`],
