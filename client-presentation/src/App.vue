@@ -30,7 +30,6 @@
 
 <script>
     import io from 'socket.io-client';
-    import ControlPanel from './components/ControlPanel';
     import SessionSummary from './components/SessionSummary';
     import Welcome from './components/Welcome';
     import NotFound from './components/NotFound';
@@ -52,7 +51,6 @@
     export default {
         name: 'app',
         components: {
-            ControlPanel,
             SessionSummary,
             Welcome,
             Presentation,

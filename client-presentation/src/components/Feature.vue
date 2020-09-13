@@ -14,23 +14,29 @@
         </div>
         <hr/>
         <div>
-            <template v-if="feature.testsResult.isSuccess" v-for="(runInClient, runInClientIndex) in [feature.runInClientFn()]">
-                <component v-bind:key="runInClientIndex" v-bind:is="runInClient.component"></component>
-                <ul v-bind:key="runInClientIndex" class="in-browser-results">
-                    <li v-for="(info, index) in runInClient.infoArray" v-bind:key="index">
-                        <code class="code-example-result">{{ info }}</code>
-                    </li>
-                </ul>
+            <template v-if="feature.testsResult.isSuccess">
+                <template v-for="(runInClient, runInClientIndex) in [feature.runInClientFn()]">
+                    <component v-bind:key="runInClientIndex" v-bind:is="runInClient.component"></component>
+                    <ul v-bind:key="runInClientIndex" class="in-browser-results">
+                        <li v-for="(info, index) in runInClient.infoArray" v-bind:key="index">
+                            <code class="code-example-result">{{ info }}</code>
+                        </li>
+                    </ul>
+                </template>
             </template>
         </div>
         <table class='code-samples'>
-            <tr v-if="feature.testsResult.isSuccess" v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="index" class="success">
-                <td>{{ testResult.test | code}}</td>
-            </tr>
+            <template v-if="feature.testsResult.isSuccess">
+                <tr v-for="(testResult, index) in feature.testsResult.passed" v-bind:key="index" class="success">
+                    <td>{{ formatAsCode(testResult.test)}}</td>
+                </tr>
+            </template>
 
-            <tr v-if="feature.testsResult.isFailure" v-for="(testResult, index) in feature.testsResult.failed" v-bind:key="index" class="failed">
-                <td>{{ testResult.test | code}}</td>
-            </tr>
+            <template v-if="feature.testsResult.isFailure">
+                <tr v-for="(testResult, index) in feature.testsResult.failed" v-bind:key="index" class="failed">
+                    <td>{{ formatAsCode(testResult.test)}}</td>
+                </tr>
+            </template>
         </table>
 
     </div>
@@ -55,8 +61,8 @@
                 return this.feature.testsResult;
             }
         },
-        filters: {
-            code: function(value) {
+        methods: {
+            formatAsCode: function(value) {
                 // test functions are either
                 // "() => window.Accelerometer" in dev
                 // or "function(){return window.Accelerometer}" in prod
