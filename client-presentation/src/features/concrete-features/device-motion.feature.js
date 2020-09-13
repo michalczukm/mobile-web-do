@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
 import { createEventsSubscription } from '../../utils';
-import { makeExampleId, humanReadableByKeys } from './features-utils';
+import { axisMotion, rotation } from '../../view/filters';
+import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// based on DeviceMotionEvent
 window.addEventListener('devicemotion', motion => {
@@ -18,11 +19,11 @@ export default new Feature(
         component: Vue.component(makeExampleId('device-motion'), {
             template: `<div>
                         <p>acceleration:</p>
-                        <p><b>{{motion.acceleration || 'loading' | axisMotion}}</b></p>
+                        <p><b>{{motion.acceleration ? axisMotion(motion.acceleration) : 'loading'}}</b></p>
                         <p>accelerationIncludingGravity:</p>
-                        <p><b>{{motion.accelerationIncludingGravity || 'loading' | axisMotion}}</b></p>
+                        <p><b>{{motion.accelerationIncludingGravity ? axisMotion(motion.accelerationIncludingGravity) : 'loading'}}</b></p>
                         <p>rotationRate:</p>
-                        <p><b>{{motion.rotationRate || 'loading' | rotation}}</b></p>
+                        <p><b>{{motion.rotationRate ? rotation(motion.rotationRate) : 'loading'}}</b></p>
                         <p>interval: <b>{{motion.interval || 'loading'}}</b></p>
                     </div>`,
             data: () => ({
@@ -39,9 +40,9 @@ export default new Feature(
             beforeDestroy: function() {
                 this.eventsSubscription.unsubscribeAll();
             },
-            filters: {
-                axisMotion: value => humanReadableByKeys(value, 'x', 'y', 'z'),
-                rotation: value => humanReadableByKeys(value, 'alpha', 'beta', 'gamma'),
+            methods: {
+                axisMotion,
+                rotation,
             },
         }),
         infoArray: [`This example uses DeviceMotionEvent`],

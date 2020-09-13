@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
 import { createEventsSubscription } from '../../utils';
+import { axisMotion } from '../../view/filters';
 import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// based on new GenericSensorAPI
@@ -17,8 +18,8 @@ export default new Feature(
     () => ({
         component: Vue.component(makeExampleId('gyroscope'), {
             template: `<div>
-                        <p>event: {{event}}</p>
-                        <p>gyroscope: <b>{{result || 'loading' | axisMotion}}</b></p>
+                        <p>event: {{JSON.stringify(event, null, 2)}}</p>
+                        <p>gyroscope: <b>{{result ? axisMotion(result) :  'loading' }}</b></p>
                     </div>`,
             data: () => ({
                 result: {},
@@ -41,11 +42,8 @@ export default new Feature(
             beforeDestroy: function() {
                 this.eventsSubscription.unsubscribeAll();
             },
-            filters: {
-                axisMotion: value =>
-                    ['x', 'y', 'z']
-                        .map(key => `${key}: ${(value[key] || 0).toFixed(2)}`, '')
-                        .join(','),
+            methods: {
+                axisMotion,
             },
         }),
         infoArray: [`This example uses Gyroscope`],

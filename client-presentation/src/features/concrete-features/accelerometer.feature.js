@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
 import { createEventsSubscription } from '../../utils';
+import { axisMotion } from '../../view/filters';
 import { makeExampleId } from './features-utils';
 
 export default new Feature(
@@ -16,7 +17,7 @@ accelerometer.start();
         component: Vue.component(makeExampleId('accelerometer'), {
             template: `<div>
                         <p>event: {{JSON.stringify(event, null, 2)}}</p>
-                        <p>acceleration: <b>{{result || 'loading' | axisMotion}}</b></p>
+                        <p>acceleration: <b>{{result ? axisMotion(result) :  'loading' }}</b></p>
                     </div>`,
             data: () => ({
                 result: {},
@@ -39,11 +40,8 @@ accelerometer.start();
             beforeDestroy: function() {
                 this.eventsSubscription.unsubscribeAll();
             },
-            filters: {
-                axisMotion: value =>
-                    ['x', 'y', 'z']
-                        .map(key => `${key}: ${(value[key] || 0).toFixed(2)}`, '')
-                        .join(','),
+            methods: {
+                axisMotion,
             },
         }),
         infoArray: [`This example uses Accelerometer`],
