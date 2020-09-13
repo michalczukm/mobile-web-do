@@ -1,4 +1,4 @@
-import {documentDatabase, Session, ClientIdentifier} from '../../../data';
+import {documentDatabase, Session, ClientIdentifier, BrowserInfo} from '../../../data';
 import {BrowserInfoModel} from '../models';
 import {logger} from '../../../common';
 
@@ -14,7 +14,9 @@ async function add(sessionId: string, clientIdentifier: string, browserInfo: Bro
             }
         });
 
-        await browserInfoDbCollection.create(browserInfo);
+        // todo mm --> Mongoose DB types in DAL models are incompatible with incomming DTO (makes sense)
+        // adding type assertion for now
+        await browserInfoDbCollection.create(browserInfo as BrowserInfo);
     } catch (reason) {
         logger.error(`Cannot add browser into to client: '${clientIdentifier}'`, reason);
         throw reason;

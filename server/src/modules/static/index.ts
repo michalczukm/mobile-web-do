@@ -1,9 +1,9 @@
-import * as Hapi from 'hapi';
-import * as Boom from 'boom';
+import * as Hapi from '@hapi/hapi';
+import * as Boom from '@hapi/boom';
 
 import { ModuleBootstrapper } from '../../common';
 
-const isBoomResponse = (response: Hapi.ResponseObject | Boom): response is Boom => (response as Boom).isBoom !== undefined;
+const isBoomResponse = (response: Hapi.ResponseObject | Boom.Boom): response is Boom.Boom => (response as Boom.Boom).isBoom !== undefined;
 
 export default new ModuleBootstrapper({
     routing: (server => {

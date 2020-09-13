@@ -1,4 +1,4 @@
-import * as Hapi from 'hapi';
+import * as Hapi from '@hapi/hapi';
 import setupServer from './server';
 import { logger } from './common';
 
@@ -13,13 +13,13 @@ function subscribeForNodeExceptions(): void {
 }
 
 function subscribeForNodeSignals(serverInstance: Hapi.Server): void {
-    process.on('SIGINT', () => {
+    process.on('SIGINT', async () => {
         console.log('=== stopping hapi server');
 
-        serverInstance.stop({ timeout: 10000 }).then(error => {
-            console.log('=== hapi server stopped');
-            process.exit((error) ? 1 : 0);
-        });
+        await serverInstance.stop({ timeout: 10000 });
+
+        console.log('=== hapi server stopped');
+        process.exit(0);
     });
 }
 

@@ -1,5 +1,5 @@
-import * as Hapi from 'hapi';
-import * as Boom from 'boom';
+import * as Hapi from '@hapi/hapi';
+import * as Boom from '@hapi/boom';
 import { sessionRepository } from '../data-access';
 import { ClientInfoModel, ClientSessionResults } from '../models';
 import { SystemStatisticWebMode } from './web-models/results';

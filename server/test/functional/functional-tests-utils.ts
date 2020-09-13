@@ -1,31 +1,43 @@
 import * as Mongoose from 'mongoose';
-import * as Hapi from 'hapi';
+import * as Hapi from '@hapi/hapi';
 
 import { seedDatabase } from '../../src/infrastructure';
 
 export interface TestsSetup {
-    setup(): Promise<any>;
+  setup(): Promise<any>;
 
-    tearDown(): Promise<any>;
+  tearDown(): Promise<any>;
 }
 
-const databaseSetup = new class DatabaseSetup implements TestsSetup {
-    setup(): Promise<any> {
-        return seedDatabase({ isProduction: false });
-    }
+const databaseSetup = new (class DatabaseSetup implements TestsSetup {
+  setup(): Promise<any> {
+    return seedDatabase({ isProduction: false });
+  }
 
-    tearDown(): Promise<any> {
-        return Mongoose.connection.db.dropDatabase()
-            .then(() => console.log('Db dropped in tear down.'))
-            .catch(reason => {
-                console.error('Cannot drop database!', reason);
-                throw reason;
-            });
-    }
-}();
+  tearDown(): Promise<any> {
+    return Mongoose.connection.db
+      .dropDatabase()
+      .then(() => console.log('Db dropped in tear down.'))
+      .catch((reason) => {
+        console.error('Cannot drop database!', reason);
+        throw reason;
+      });
+  }
+})();
 
 export const integrationTestsSetupBuilder = {
-    withStandardSetup: (): TestsSetup => databaseSetup
+  withStandardSetup: (): TestsSetup => databaseSetup,
 };
 
-export const getAdminCredentialsToInject = (): Hapi.AuthCredentials => ({scope: ['openid', 'crud:sessions']});
+export const getAdminCredentialsToInject = (): Hapi.AuthCredentials => ({
+  scope: ['openid', 'crud:sessions'],
+});
+
+export const getAuthWithAdminCredentials = (): {
+  auth: Hapi.ServerInjectOptions['auth'];
+} => ({
+  auth: {
+    credentials: getAdminCredentialsToInject(),
+    strategy: 'jwt',
+  },
+});

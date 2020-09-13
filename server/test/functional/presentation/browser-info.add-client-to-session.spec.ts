@@ -1,8 +1,8 @@
 import 'mocha';
 import { expect } from 'chai';
-import * as Hapi from 'hapi';
+import * as Hapi from '@hapi/hapi';
 import setupServer from '../../../src/server'
-import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
+import { seedConstants } from '../../../src/infrastructure/db-seeds/seed.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 describe('browser info: add client to session', function (): void {
@@ -96,7 +96,6 @@ describe('browser info: add client to session', function (): void {
 const callForSessionResults = (server: Hapi.Server) => server.inject({
     method: 'GET',
     url: `/api/sessions/${seedConstants.sessionIdFeatureState}/results`,
-    payload: buildCorrectPayload(),
 });
 
 const getClientsQuantity = (response: Hapi.ServerInjectResponse) => (response.result as any).clientsQuantity;

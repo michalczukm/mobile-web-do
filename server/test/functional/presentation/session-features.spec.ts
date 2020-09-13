@@ -1,10 +1,10 @@
 import 'mocha';
 import { expect } from 'chai';
-import * as Hapi from 'hapi';
+import * as Hapi from '@hapi/hapi';
 
 import setupServer from '../../../src/server'
-import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
-import { getAdminCredentialsToInject, integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
+import { seedConstants } from '../../../src/infrastructure/db-seeds/seed.constants';
+import { getAuthWithAdminCredentials, integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 describe('session: set state', function (): void {
     let server: Hapi.Server;
@@ -34,7 +34,7 @@ describe('session: set state', function (): void {
             headers: {
                 Authorization: 'Bearer x'
             },
-            credentials: getAdminCredentialsToInject()
+            ...getAuthWithAdminCredentials()
         });
 
         expect(actual.statusCode).to.equal(200);
@@ -57,7 +57,7 @@ describe('session: set state', function (): void {
             payload: {
                 slideFeatureId: featureId
             },
-            credentials: getAdminCredentialsToInject()
+            ...getAuthWithAdminCredentials()
         });
 
         // assert
@@ -74,7 +74,7 @@ describe('session: set state', function (): void {
             payload: {
                 slideFeatureId: 'device-RAM-memory'
             },
-            credentials: getAdminCredentialsToInject()
+            ...getAuthWithAdminCredentials()
         });
 
         expect(actual.statusCode).to.equal(400);
@@ -87,7 +87,7 @@ describe('session: set state', function (): void {
             payload: {
                 slideFeatureId: 'device-RAM-memory'
             },
-            credentials: getAdminCredentialsToInject()
+            ...getAuthWithAdminCredentials()
         });
 
         expect(actual.statusCode).to.equal(400);
@@ -100,7 +100,7 @@ describe('session: set state', function (): void {
             server.inject({
                 method: 'GET',
                 url: `/api/sessions/${nonExistingSessionId}/features`,
-                credentials: getAdminCredentialsToInject()
+                ...getAuthWithAdminCredentials()
             });
 
         expect(actual.statusCode).to.equal(404);
@@ -110,7 +110,7 @@ describe('session: set state', function (): void {
         const actual = await server.inject({
             method: 'GET',
             url: `/api/sessions/${seedConstants.sessionIdFeatureState}/features`,
-            credentials: getAdminCredentialsToInject()
+            ...getAuthWithAdminCredentials()
         });
 
         expect(actual.statusCode).to.equal(200);

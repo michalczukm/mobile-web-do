@@ -17,7 +17,7 @@ function add(clientIdentifier: string): Promise<ClientIdentifierModel> {
 function existInSession(clientIdentifier: string, sessionId: string): Promise<boolean> {
     return sessionsDbCollection
         .findById(sessionId)
-        .count({
+        .countDocuments({
             'clientIdentifiers.identifier': clientIdentifier
         })
         .then(count => !!count);
@@ -26,7 +26,7 @@ function existInSession(clientIdentifier: string, sessionId: string): Promise<bo
 function existInSessionResults(clientIdentifier: string, sessionId: string): Promise<boolean> {
     return sessionsDbCollection
         .findById(sessionId)
-        .count({
+        .countDocuments({
             'clientResults.clientIdentifier': clientIdentifier
         })
         .then(count => !!count);

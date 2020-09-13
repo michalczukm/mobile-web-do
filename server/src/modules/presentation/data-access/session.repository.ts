@@ -7,7 +7,7 @@ const sessionsDbCollection = documentDatabase.session;
 
 async function exists(sessionId: string): Promise<boolean> {
     if (isIdValid(sessionId)) {
-        const count = await sessionsDbCollection.count({ _id: sessionId });
+        const count = await sessionsDbCollection.countDocuments({ _id: sessionId });
         return count > 0;
     } else {
         return false;
@@ -19,7 +19,9 @@ function create(session: CreateSessionModel | SessionModel): Promise<SessionMode
     // @ts-ignore
     delete sessionDocument['id'];
 
-    return sessionsDbCollection.create({ ...sessionDocument }).then(mapSessionToSessionModel)
+    // todo mm --> Mongoose DB types in DAL models are incompatible with incomming DTO (makes sense)
+    // adding type assertion for now
+    return sessionsDbCollection.create({ ...sessionDocument } as Session).then(mapSessionToSessionModel)
         .catch(reason => {
             logger.error(`Cannot create session for name: '${session.name}'`, reason);
             throw reason;

@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
-import * as Hapi from 'hapi';
-import { getAdminCredentialsToInject, integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
+import * as Hapi from '@hapi/hapi';
+import { getAuthWithAdminCredentials, integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 import setupServer from '../../../src/server'
 
@@ -31,7 +31,7 @@ describe('session: add new', function (): void {
             payload: {
                 name: 'test session'
             },
-            credentials: getAdminCredentialsToInject()
+            ...getAuthWithAdminCredentials()
         });
 
         // assert
@@ -50,7 +50,7 @@ describe('session: add new', function (): void {
             payload: {
                 name: 'test session'
             },
-            credentials: getAdminCredentialsToInject()
+            ...getAuthWithAdminCredentials()
         });
 
         // assert
@@ -71,7 +71,7 @@ describe('session: add new', function (): void {
             payload: {
                 name: 'another test session'
             },
-            credentials: getAdminCredentialsToInject()
+            ...getAuthWithAdminCredentials()
         });
 
         await server.inject({
@@ -80,7 +80,7 @@ describe('session: add new', function (): void {
             payload: {
                 name: 'another test session'
             },
-            credentials: getAdminCredentialsToInject()
+            ...getAuthWithAdminCredentials()
         });
 
         // assert

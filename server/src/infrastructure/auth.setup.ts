@@ -1,4 +1,4 @@
-import * as Hapi from 'hapi';
+import * as Hapi from '@hapi/hapi';
 import * as jwksRsa from 'jwks-rsa';
 import { EnvironmentConfig } from './environment-config';
 

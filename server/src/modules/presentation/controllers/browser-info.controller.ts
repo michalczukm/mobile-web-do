@@ -1,6 +1,6 @@
-import * as Hapi from 'hapi';
-import * as Boom from 'boom';
-import * as uuid from 'uuid/v4';
+import * as Hapi from '@hapi/hapi';
+import * as Boom from '@hapi/boom';
+import { v4 as uuidv4} from 'uuid'
 
 import { browserInfoRepository, sessionRepository } from '../data-access';
 
@@ -13,7 +13,7 @@ async function create(request: Hapi.Request, responseToolkit: Hapi.ResponseToolk
     const payload: any = getPayload(request);
 
     const sessionId = payload.sessionId;
-    const clientId: string = request.state['client-id'] || uuid();
+    const clientId: string = request.state['client-id'] || uuidv4();
 
     const addBrowserInfo = async () => {
         const browserInfo: BrowserInfoModel = ({

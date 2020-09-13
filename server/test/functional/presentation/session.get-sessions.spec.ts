@@ -1,9 +1,9 @@
 import 'mocha';
 import { expect } from 'chai';
-import * as Hapi from 'hapi';
+import * as Hapi from '@hapi/hapi';
 
 import setupServer from '../../../src/server'
-import seedConstants from '../../../src/infrastructure/db-seeds/seed.constants';
+import { seedConstants } from '../../../src/infrastructure/db-seeds/seed.constants';
 import { integrationTestsSetupBuilder, TestsSetup } from '../functional-tests-utils';
 
 describe('session: get sessions', function (): void {

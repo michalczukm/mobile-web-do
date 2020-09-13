@@ -1,4 +1,4 @@
-import * as Hapi from 'hapi';
+import * as Hapi from '@hapi/hapi';
 const sanitize = require('mongo-sanitize');
 
 export type RequestHandler = (request: Hapi.Request, reply?: Hapi.ResponseToolkit) => Promise<Hapi.Lifecycle.ReturnValueTypes>;

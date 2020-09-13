@@ -1,10 +1,10 @@
-import * as Hapi from 'hapi';
+import * as Hapi from '@hapi/hapi';
 import { logger } from '../common';
 import goodOptions from './configuration/good-plugin.config';
 
 async function logRequests(serverInstance: Hapi.Server): Promise<void> {
     await serverInstance.register({
-        plugin: require('good'),
+        plugin: require('@hapi/good'),
         options: goodOptions,
     });
 }

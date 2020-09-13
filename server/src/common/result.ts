@@ -1,22 +1,22 @@
 export class Result {
-    public get isFail(): boolean {
-        return !this.isSuccess
-    };
+  static fail(errors: string[]): Result {
+    return new Result(false, errors);
+  }
 
-    static success(): Result {
-        return new Result(true);
-    }
+  static success(): Result {
+    return new Result(true);
+  }
 
-    static fail(errors: string[]): Result {
-        return new Result(false, errors);
-    }
+  public get isFail(): boolean {
+    return !this.isSuccess;
+  }
 
-    get errorsMessage(): string {
-        return this.errors.join((','));
-    }
+  get errorsMessage(): string {
+    return this.errors.join(',');
+  }
 
-    private constructor(
-        public isSuccess: boolean,
-        public errors = [] as string[]) {
-    }
+  private constructor(
+    public isSuccess: boolean,
+    public errors = [] as string[]
+  ) {}
 }

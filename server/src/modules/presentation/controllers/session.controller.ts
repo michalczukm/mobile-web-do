@@ -1,5 +1,5 @@
-import * as Hapi from 'hapi';
-import * as Boom from 'boom';
+import * as Hapi from '@hapi/hapi';
+import * as Boom from '@hapi/boom';
 
 import { getPayload, RequestHandler } from '../../../hapi-utils';
 import { SessionModel, ClientSessionResults, CreateSessionModel } from '../models';

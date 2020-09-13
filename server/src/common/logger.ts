@@ -1,4 +1,4 @@
-import * as Hapi from 'hapi';
+import * as Hapi from '@hapi/hapi';
 
 type LogLevel = 'info' | 'debug' | 'error' | 'fatal';
 
