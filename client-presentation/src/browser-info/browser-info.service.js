@@ -4,17 +4,47 @@ import configuration from '../configuration';
 import sessionService from '../sessions';
 import { handleResponse } from '../utils/http-utils';
 
-function getInfo() {
-    // some browsers doesn't allow iteration over 'plugins' and 'mimeTypes'
+const WINDOW_EXCLUDED_PROPS = [
+    'document',
+    'parent',
+    'top',
+    'window',
+    'frames',
+    'self',
+    'navigator',
+    // project specific keys
+    'Prism',
+    'regeneratorRuntime',
+    'FontAwesomeCdnConfig',
+    'webpackJsonp',
+];
+
+// some browsers doesn't allow iteration over 'plugins' and 'mimeTypes'
+const NAVIGATOR_EXCLUDED_PROPS = ['plugins', 'mimeTypes'];
+
+const isChromeExtensionsByConvention = key => !!key.match(/^[__]{2}/);
+
+const getInfo = () => {
     const navigatorInfo = {};
-    for (let i in navigator) navigatorInfo[i] = navigator[i];
-    delete navigatorInfo.plugins;
-    delete navigatorInfo.mimeTypes;
+    // for in gives us not only enumerable fields
+    for (let key in navigator) {
+        if (!NAVIGATOR_EXCLUDED_PROPS.includes(key)) {
+            navigatorInfo[key] = navigator[key];
+        }
+    }
+
+    const windowInfo = {};
+    // for in gives us not only enumerable fields
+    for (let key in window) {
+        if (!(isChromeExtensionsByConvention(key) || WINDOW_EXCLUDED_PROPS.includes(key))) {
+            windowInfo[key] = window[key];
+        }
+    }
 
     // Safari throws Error if we are using uninitialized variable/object - so testing existing classes need type comparison
     return {
         navigator: navigatorInfo,
-        window: window,
+        window: windowInfo,
         'Navigator.prototype': typeof Navigator !== 'undefined' ? Navigator.prototype : null,
         'Window.prototype': typeof Window !== 'undefined' ? Window.prototype : null,
         'ServiceWorker.prototype':
@@ -24,9 +54,9 @@ function getInfo() {
                 ? ServiceWorkerRegistration.prototype
                 : null,
     };
-}
+};
 
-function sendInfo() {
+const sendInfo = async () => {
     const sessionId = sessionService.getCurrentSessionId();
 
     const pruneOptions = {
@@ -60,7 +90,7 @@ function sendInfo() {
         },
         body: payloadString,
     }).then(handleResponse);
-}
+};
 
 export default {
     sendInfo,
