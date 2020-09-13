@@ -1,8 +1,8 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-    "downlevelIteration": true,
-    "module": "esnext",
+        "downlevelIteration": true,
+        "module": "esnext",
         "outDir": "./dist/out-tsc",
         "sourceMap": true,
         "declaration": false,
@@ -10,12 +10,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "target": "es2015",
-        "typeRoots": [
-            "node_modules/@types"
-        ],
-        "lib": [
-            "es2017",
-            "dom"
-        ]
+        "typeRoots": ["node_modules/@types"],
+        "lib": ["es2017", "dom"]
     }
 }
