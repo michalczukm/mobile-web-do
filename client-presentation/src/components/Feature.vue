@@ -108,6 +108,7 @@ export default {
 <style lang="scss" scoped>
 table.code-samples {
     table-layout: fixed;
+    display: table; // milligram uses "display: block;"
     width: 100%;
     margin-bottom: 10%;
 

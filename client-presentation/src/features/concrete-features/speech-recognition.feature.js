@@ -25,7 +25,7 @@ export default new Feature(
                         </button>
                         <button v-on:click="clear" class="button button-clear">Clear the text</button>
                         <p>You said:<p>
-                        <blockquote>
+                        <blockquote v-if="recognitions.length > 0">
                             <p v-for="(recognition, index) in recognitions" v-bind:key="index">
                                 <em>{{recognition.text}}</i> | confidence: {{recognition.confidencePercentage}} %</em>
                             </p>

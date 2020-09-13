@@ -25,7 +25,6 @@ export default new Feature(
                     this.eventsSubscription = createEventsSubscription(sensor);
 
                     this.eventsSubscription.subscribe('reading', () => {
-                        debugger;
                         this.illuminance = sensor.illuminance;
                     });
 
