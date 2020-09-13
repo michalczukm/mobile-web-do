@@ -5,7 +5,6 @@
     "strictPropertyInitialization": false,
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
-    "module": "es2015",
     "types": []
   },
   "exclude": [
