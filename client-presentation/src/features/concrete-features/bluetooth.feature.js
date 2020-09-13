@@ -1,6 +1,7 @@
 import { Feature, specificationType } from '../feature';
 
-export default new Feature('bluetooth',
+export default new Feature(
+    'bluetooth',
     `
     // Connect to a Bluetooth Device
     navigator.bluetooth.requestDevice({ filters: [{ services: ['battery_service'] }] })
@@ -15,5 +16,5 @@ export default new Feature('bluetooth',
         .catch(error => { console.log(error); });
     `,
     () => ({}),
-    { test: () => navigator.bluetooth, specification: specificationType.STANDARD }
+    { test: () => navigator.bluetooth, specification: specificationType.STANDARD },
 );

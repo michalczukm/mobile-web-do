@@ -1,13 +1,9 @@
 import Vue from 'vue';
-import {
-    Feature,
-    specificationType
-} from '../feature';
-import {
-    makeExampleId
-} from './features-utils';
+import { Feature, specificationType } from '../feature';
+import { makeExampleId } from './features-utils';
 
-export default new Feature('accelerometer',
+export default new Feature(
+    'accelerometer',
     `// based on new GenericSensorAPI
 const accelerometer = new Accelerometer();
 accelerometer.addEventListener('reading', result => {
@@ -23,9 +19,9 @@ accelerometer.start();
                     </div>`,
             data: () => ({
                 result: {},
-                event: {}
+                event: {},
             }),
-            created: function () {
+            created: function() {
                 // eslint-disable-next-line no-undef
                 const accelerometer = new Accelerometer();
                 accelerometer.addEventListener('reading', event => {
@@ -35,13 +31,16 @@ accelerometer.start();
                 accelerometer.start();
             },
             filters: {
-                axisMotion: (value) =>
-                    ['x', 'y', 'z'].map(key => `${key}: ${(value[key] || 0).toFixed(2)}`, '').join(',')
-            }
+                axisMotion: value =>
+                    ['x', 'y', 'z']
+                        .map(key => `${key}: ${(value[key] || 0).toFixed(2)}`, '')
+                        .join(','),
+            },
         }),
-        infoArray: [`This example uses Accelerometer`]
-    }), {
+        infoArray: [`This example uses Accelerometer`],
+    }),
+    {
         test: () => window.Accelerometer,
-        specification: specificationType.STANDARD
-    }
+        specification: specificationType.STANDARD,
+    },
 );

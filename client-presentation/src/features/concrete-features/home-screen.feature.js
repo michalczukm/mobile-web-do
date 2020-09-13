@@ -1,7 +1,6 @@
 import { Feature, specificationType } from '../feature';
 
-const exampleUsage =
-`// manifest.json
+const exampleUsage = `// manifest.json
 {
     "icons": {
         "48": "icon.png",
@@ -25,8 +24,7 @@ const exampleUsage =
 <link rel="apple-touch-icon" sizes="192x192" href="assets/launcher/icon-4x.png">
 `;
 
-export default new Feature('home-screen',
-    exampleUsage,
-    () => ({}),
-    { test: () => window.BeforeInstallPromptEvent, specification: specificationType.STANDARD }
-);
+export default new Feature('home-screen', exampleUsage, () => ({}), {
+    test: () => window.BeforeInstallPromptEvent,
+    specification: specificationType.STANDARD,
+});

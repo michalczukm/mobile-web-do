@@ -1,4 +1,4 @@
 export default {
-    apiUrl: process.env.API_URL,
-    wsUrl: process.env.WS_URL
+    apiUrl: process.env.VUE_APP_API_URL,
+    wsUrl: process.env.VUE_APP_WS_URL,
 };

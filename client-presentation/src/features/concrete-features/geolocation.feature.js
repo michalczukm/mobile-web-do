@@ -1,11 +1,6 @@
 import Vue from 'vue';
-import {
-    Feature,
-    specificationType
-} from '../feature';
-import {
-    makeExampleId
-} from './features-utils';
+import { Feature, specificationType } from '../feature';
+import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// get current location
 navigator.geolocation.getCurrentPosition(position => {
@@ -16,7 +11,8 @@ navigator.geolocation.getCurrentPosition(position => {
 // or listen for the changes
 navigator.geolocation.watchLocation(callback)
 `;
-export default new Feature('geolocation',
+export default new Feature(
+    'geolocation',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('geolocation'), {
@@ -25,18 +21,22 @@ export default new Feature('geolocation',
                         <p>longitude: {{position.longitude || 'loading'}}</p>
                     </div>`,
             data: () => ({
-                position: {}
+                position: {},
             }),
-            created: function () {
-                navigator.geolocation.getCurrentPosition(position => (this.position = {
-                    latitude: position.coords.latitude.toFixed(5),
-                    longitude: position.coords.longitude.toFixed(5)
-                }));
-            }
+            created: function() {
+                navigator.geolocation.getCurrentPosition(
+                    position =>
+                        (this.position = {
+                            latitude: position.coords.latitude.toFixed(5),
+                            longitude: position.coords.longitude.toFixed(5),
+                        }),
+                );
+            },
         }),
-        infoArray: [`It might take some time`]
-    }), {
+        infoArray: [`It might take some time`],
+    }),
+    {
         test: () => navigator.geolocation,
-        specification: specificationType.STANDARD
-    }
+        specification: specificationType.STANDARD,
+    },
 );

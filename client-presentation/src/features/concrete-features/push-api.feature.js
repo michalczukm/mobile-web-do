@@ -1,7 +1,6 @@
 import { Feature, specificationType } from '../feature';
 
-const exampleUsage =
-`
+const exampleUsage = `
 // ===== 0. Have service worker and HTTPS
 
 // ===== 1. register service worker
@@ -37,8 +36,10 @@ self.addEventListener('push', e => {
 });
 `;
 
-export default new Feature('push-api',
+export default new Feature(
+    'push-api',
     exampleUsage,
     () => ({ infoArray: ['No server PUSH example provide. You have to trust me :)'] }),
     { test: () => window.PushManager, specification: specificationType.STANDARD },
-    { test: () => window.safari.pushNotification, specification: specificationType.VENDOR });
+    { test: () => window.safari.pushNotification, specification: specificationType.VENDOR },
+);

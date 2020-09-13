@@ -1,11 +1,6 @@
 import Vue from 'vue';
-import {
-    Feature,
-    specificationType
-} from '../feature';
-import {
-    makeExampleId
-} from './features-utils';
+import { Feature, specificationType } from '../feature';
+import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// the absolutely simplest case, when we want only most probable results, no alternatives
 this.recognizer = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -17,7 +12,8 @@ this.recognizer.addEventListener('result', event => {
         .map(res => res[0].transcript));
 });`;
 
-export default new Feature('speech-recognition',
+export default new Feature(
+    'speech-recognition',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('speech-recognition'), {
@@ -37,10 +33,11 @@ export default new Feature('speech-recognition',
             data: () => ({
                 listening: false,
                 recognitions: [],
-                recognizer: {}
+                recognizer: {},
             }),
-            created: function () {
-                this.recognizer = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            created: function() {
+                this.recognizer = new (window.SpeechRecognition ||
+                    window.webkitSpeechRecognition)();
                 this.recognizer.continuous = true;
 
                 this.recognizer.addEventListener('result', event => {
@@ -48,12 +45,12 @@ export default new Feature('speech-recognition',
                         .filter(res => res.isFinal)
                         .map(res => ({
                             text: res[0].transcript,
-                            confidencePercentage: (res[0].confidence * 100).toFixed(2)
+                            confidencePercentage: (res[0].confidence * 100).toFixed(2),
                         }));
                 });
             },
             methods: {
-                listen: function () {
+                listen: function() {
                     this.listening = !this.listening;
 
                     if (this.listening) {
@@ -62,16 +59,18 @@ export default new Feature('speech-recognition',
                         this.recognizer.stop();
                     }
                 },
-                clear: function () {
+                clear: function() {
                     this.recognitions = [];
-                }
-            }
-        })
-    }), {
+                },
+            },
+        }),
+    }),
+    {
         test: () => window.SpeechRecognition,
-        specification: specificationType.STANDARD
-    }, {
+        specification: specificationType.STANDARD,
+    },
+    {
         test: () => window.webkitSpeechRecognition,
-        specification: specificationType.VENDOR
-    }
+        specification: specificationType.VENDOR,
+    },
 );

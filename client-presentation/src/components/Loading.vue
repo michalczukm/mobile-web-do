@@ -6,18 +6,17 @@
 </template>
 
 <script>
-    export default {
-        name: 'loading'
-    };
+export default {
+    name: 'loading',
+};
 </script>
 
 <style lang="scss" scoped>
-    .screen-center {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        margin-top: -0.5em;
-        margin-left: -0.5em;
-    }
-
+.screen-center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -0.5em;
+    margin-left: -0.5em;
+}
 </style>

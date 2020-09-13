@@ -1,6 +1,4 @@
-import {
-    Doughnut
-} from 'vue-chartjs';
+import { Doughnut } from 'vue-chartjs';
 
 export default {
     name: 'doughnut-chart',
@@ -8,11 +6,11 @@ export default {
     props: {
         data: {
             type: Object,
-            required: true
+            required: true,
         },
         options: {
-            type: Object
-        }
+            type: Object,
+        },
     },
     methods: {
         doRender() {
@@ -22,20 +20,20 @@ export default {
 
             const defaultOptions = {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
             };
 
-            this.renderChart(this.data, ({...defaultOptions, ...this.options}));
-        }
+            this.renderChart(this.data, { ...defaultOptions, ...this.options });
+        },
     },
     watch: {
         data: {
-            handler(oldVal, newVal) {
+            handler() {
                 this.doRender();
-            }
-        }
+            },
+        },
     },
     mounted() {
         this.doRender();
-    }
+    },
 };

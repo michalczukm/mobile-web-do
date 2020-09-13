@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import {Feature, specificationType} from '../feature';
-import {makeExampleId} from './features-utils';
+import { Feature, specificationType } from '../feature';
+import { makeExampleId } from './features-utils';
 
-const exampleUsage =
-`// grab the stream
+const exampleUsage = `// grab the stream
 navigator.mediaDevices.getUserMedia({constraints: 'video'})
     .then(stream => {
         // direct the stream to the video element
@@ -11,7 +10,8 @@ navigator.mediaDevices.getUserMedia({constraints: 'video'})
     });
 `;
 
-export default new Feature('camera',
+export default new Feature(
+    'camera',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('camera'), {
@@ -21,44 +21,58 @@ export default new Feature('camera',
                     </div>`,
             methods: {
                 getUserMedia(options, successCallback, failureCallback) {
-                    const api = navigator.getUserMedia || navigator.webkitGetUserMedia ||
-                        navigator.mozGetUserMedia || navigator.msGetUserMedia;
+                    const api =
+                        navigator.getUserMedia ||
+                        navigator.webkitGetUserMedia ||
+                        navigator.mozGetUserMedia ||
+                        navigator.msGetUserMedia;
                     if (api) {
                         return api.bind(navigator)(options, successCallback, failureCallback);
                     }
                 },
-                getVideo: function () {
-                    const constraints = {video: true};
-                    this.getUserMedia(constraints, function (stream) {
-                        const mediaControl = document.querySelector('video');
+                getVideo: function() {
+                    const constraints = { video: true };
+                    this.getUserMedia(
+                        constraints,
+                        function(stream) {
+                            const mediaControl = document.querySelector('video');
 
-                        if ('srcObject' in mediaControl) {
-                            mediaControl.srcObject = stream;
-                        } else if (navigator.mozGetUserMedia) {
-                            mediaControl.mozSrcObject = stream;
-                        } else {
-                            mediaControl.src = (window.URL || window.webkitURL).createObjectURL(stream);
-                        }
-                    }, function (err) {
-                        alert('Error: ' + err);
-                    });
-                }
-            }
-        })
-    }), {
+                            if ('srcObject' in mediaControl) {
+                                mediaControl.srcObject = stream;
+                            } else if (navigator.mozGetUserMedia) {
+                                mediaControl.mozSrcObject = stream;
+                            } else {
+                                mediaControl.src = (window.URL || window.webkitURL).createObjectURL(
+                                    stream,
+                                );
+                            }
+                        },
+                        function(err) {
+                            alert('Error: ' + err);
+                        },
+                    );
+                },
+            },
+        }),
+    }),
+    {
         test: () => navigator.getUserMedia,
-        specification: specificationType.STANDARD
-    }, {
+        specification: specificationType.STANDARD,
+    },
+    {
         test: () => navigator.webkitGetUserMedia,
-        specification: specificationType.VENDOR
-    }, {
+        specification: specificationType.VENDOR,
+    },
+    {
         test: () => navigator.mozGetUserMedia,
-        specification: specificationType.VENDOR
-    }, {
+        specification: specificationType.VENDOR,
+    },
+    {
         test: () => navigator.msGetUserMedia,
-        specification: specificationType.VENDOR
-    }, {
+        specification: specificationType.VENDOR,
+    },
+    {
         test: () => navigator.mediaDevices,
-        specification: specificationType.STANDARD
-    }
+        specification: specificationType.STANDARD,
+    },
 );

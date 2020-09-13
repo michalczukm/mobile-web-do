@@ -1,12 +1,6 @@
 import Vue from 'vue';
-import {
-    Feature,
-    specificationType
-} from '../feature';
-import {
-    makeExampleId,
-    humanReadableByKeys
-} from './features-utils';
+import { Feature, specificationType } from '../feature';
+import { makeExampleId, humanReadableByKeys } from './features-utils';
 
 const exampleUsage = `// based on DeviceMotionEvent
 window.addEventListener('devicemotion', motion => {
@@ -16,7 +10,8 @@ window.addEventListener('devicemotion', motion => {
 });
 `;
 
-export default new Feature('device-motion',
+export default new Feature(
+    'device-motion',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('device-motion'), {
@@ -30,19 +25,20 @@ export default new Feature('device-motion',
                         <p>interval: <b>{{motion.interval || 'loading'}}</b></p>
                     </div>`,
             data: () => ({
-                motion: {}
+                motion: {},
             }),
-            created: function () {
-                window.addEventListener('devicemotion', (motion) => (this.motion = motion), false);
+            created: function() {
+                window.addEventListener('devicemotion', motion => (this.motion = motion), false);
             },
             filters: {
-                axisMotion: (value) => humanReadableByKeys(value, 'x', 'y', 'z'),
-                rotation: (value) => humanReadableByKeys(value, 'alpha', 'beta', 'gamma')
-            }
+                axisMotion: value => humanReadableByKeys(value, 'x', 'y', 'z'),
+                rotation: value => humanReadableByKeys(value, 'alpha', 'beta', 'gamma'),
+            },
         }),
-        infoArray: [`This example uses DeviceMotionEvent`]
-    }), {
+        infoArray: [`This example uses DeviceMotionEvent`],
+    }),
+    {
         test: () => window.DeviceMotionEvent,
-        specification: specificationType.STANDARD
-    }
+        specification: specificationType.STANDARD,
+    },
 );

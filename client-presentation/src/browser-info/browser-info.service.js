@@ -1,10 +1,8 @@
 import prune from 'json-prune';
-import {
-    logger
-} from '../logging';
+import { logger } from '../logging';
 import configuration from '../configuration';
 import sessionService from '../sessions';
-import {handleResponse} from '../utils/http-utils';
+import { handleResponse } from '../utils/http-utils';
 
 function getInfo() {
     // some browsers doesn't allow iteration over 'plugins' and 'mimeTypes'
@@ -19,8 +17,12 @@ function getInfo() {
         window: window,
         'Navigator.prototype': typeof Navigator !== 'undefined' ? Navigator.prototype : null,
         'Window.prototype': typeof Window !== 'undefined' ? Window.prototype : null,
-        'ServiceWorker.prototype': typeof ServiceWorker !== 'undefined' ? ServiceWorker.prototype : null,
-        'ServiceWorkerRegistration.prototype': typeof ServiceWorkerRegistration !== 'undefined' ? ServiceWorkerRegistration.prototype : null
+        'ServiceWorker.prototype':
+            typeof ServiceWorker !== 'undefined' ? ServiceWorker.prototype : null,
+        'ServiceWorkerRegistration.prototype':
+            typeof ServiceWorkerRegistration !== 'undefined'
+                ? ServiceWorkerRegistration.prototype
+                : null,
     };
 }
 
@@ -28,16 +30,20 @@ function sendInfo() {
     const sessionId = sessionService.getCurrentSessionId();
 
     const pruneOptions = {
-        replacer: (value, defaultValue) => typeof value === 'function' ? JSON.stringify(value.toString()) : defaultValue,
-        inheritedProperties: true
+        replacer: (value, defaultValue) =>
+            typeof value === 'function' ? JSON.stringify(value.toString()) : defaultValue,
+        inheritedProperties: true,
     };
 
     let payloadString = {};
     try {
-        payloadString = prune({
-            browserInfo: getInfo(),
-            sessionId: sessionId
-        }, pruneOptions);
+        payloadString = prune(
+            {
+                browserInfo: getInfo(),
+                sessionId: sessionId,
+            },
+            pruneOptions,
+        );
     } catch (error) {
         logger.error('Cannot serialize browser info to JSON', error);
         throw error;
@@ -49,14 +55,13 @@ function sendInfo() {
         redirect: 'follow',
         credentials: 'include',
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
         },
-        body: payloadString
-    })
-        .then(handleResponse);
+        body: payloadString,
+    }).then(handleResponse);
 }
 
 export default {
-    sendInfo
+    sendInfo,
 };

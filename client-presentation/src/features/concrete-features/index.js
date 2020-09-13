@@ -47,5 +47,5 @@ export default [
     storage,
     storageQuota,
     usb,
-    vibration
+    vibration,
 ];

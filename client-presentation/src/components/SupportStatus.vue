@@ -16,20 +16,20 @@
 </template>
 
 <script>
-    import {supportStatus} from '../features/support-status';
+import { supportStatus } from '../features/support-status';
 
-    export default {
-        name: 'support-status',
-        props: {
-            status: {
-                type: String,
-                required: true
-            }
+export default {
+    name: 'support-status',
+    props: {
+        status: {
+            type: String,
+            required: true,
         },
-        created() {
-            this.constants = {
-                supportStatus: supportStatus
-            };
-        }
-    };
+    },
+    created() {
+        this.constants = {
+            supportStatus: supportStatus,
+        };
+    },
+};
 </script>

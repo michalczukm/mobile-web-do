@@ -32,23 +32,27 @@ enum EffectiveConnectionType {
 // The downlinkMax attribute represents an upper bound on the downlink speed of the first network hop. The reported value is in megabits per second
 `;
 
-export default new Feature('network-type-speed',
+export default new Feature(
+    'network-type-speed',
     exampleUsage,
     () => {
-        const connection = navigator.connection || navigator.mozConnection ||
-        navigator.webkitConnection || navigator.msConnection;
+        const connection =
+            navigator.connection ||
+            navigator.mozConnection ||
+            navigator.webkitConnection ||
+            navigator.msConnection;
         return {
             infoArray: [
                 `Your connection type: ${connection.type}`,
                 `Your connection effective type: ${connection.effectiveType}`,
                 `Your RTT: ${connection.rtt}`,
                 `Your downlink: ${connection.downlink}`,
-                `Your downlinkMax: ${connection.downlinkMax}`
-            ]
+                `Your downlinkMax: ${connection.downlinkMax}`,
+            ],
         };
     },
-    {test: () => navigator.connection, specification: specificationType.STANDARD},
-    {test: () => navigator.mozConnection, specification: specificationType.VENDOR},
-    {test: () => navigator.webkitConnection, specification: specificationType.VENDOR},
-    {test: () => navigator.msConnection, specification: specificationType.VENDOR}
+    { test: () => navigator.connection, specification: specificationType.STANDARD },
+    { test: () => navigator.mozConnection, specification: specificationType.VENDOR },
+    { test: () => navigator.webkitConnection, specification: specificationType.VENDOR },
+    { test: () => navigator.msConnection, specification: specificationType.VENDOR },
 );

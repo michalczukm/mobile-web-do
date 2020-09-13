@@ -10,7 +10,8 @@ gyroscope.addEventListener('reading', result => {
 gyroscope.start();
 `;
 
-export default new Feature('gyroscope',
+export default new Feature(
+    'gyroscope',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('gyroscope'), {
@@ -20,9 +21,9 @@ export default new Feature('gyroscope',
                     </div>`,
             data: () => ({
                 result: {},
-                event: {}
+                event: {},
             }),
-            created: function () {
+            created: function() {
                 // eslint-disable-next-line no-undef
                 const gyroscope = new Gyroscope();
                 gyroscope.addEventListener('reading', event => {
@@ -32,13 +33,16 @@ export default new Feature('gyroscope',
                 gyroscope.start();
             },
             filters: {
-                axisMotion: (value) =>
-                    ['x', 'y', 'z'].map(key => `${key}: ${(value[key] || 0).toFixed(2)}`, '').join(',')
-            }
+                axisMotion: value =>
+                    ['x', 'y', 'z']
+                        .map(key => `${key}: ${(value[key] || 0).toFixed(2)}`, '')
+                        .join(','),
+            },
         }),
-        infoArray: [`This example uses Gyroscope`]
-    }), {
+        infoArray: [`This example uses Gyroscope`],
+    }),
+    {
         test: () => window.Gyroscope,
-        specification: specificationType.STANDARD
-    }
+        specification: specificationType.STANDARD,
+    },
 );

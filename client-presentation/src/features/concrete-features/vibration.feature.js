@@ -1,13 +1,9 @@
 import Vue from 'vue';
-import {
-    Feature,
-    specificationType
-} from '../feature';
-import {
-    makeExampleId
-} from './features-utils';
+import { Feature, specificationType } from '../feature';
+import { makeExampleId } from './features-utils';
 
-export default new Feature('vibration',
+export default new Feature(
+    'vibration',
     `// this was the 'melody' you felt
 navigator.vibrate([500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500]);`,
     () => ({
@@ -16,14 +12,36 @@ navigator.vibrate([500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 20
                     <button v-on:click="vibrate">Press me</button>
                 </div>`,
             methods: {
-                vibrate: function () {
-                    navigator.vibrate([500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500]);
-                }
-            }
+                vibrate: function() {
+                    navigator.vibrate([
+                        500,
+                        110,
+                        500,
+                        110,
+                        450,
+                        110,
+                        200,
+                        110,
+                        170,
+                        40,
+                        450,
+                        110,
+                        200,
+                        110,
+                        170,
+                        40,
+                        500,
+                    ]);
+                },
+            },
         }),
-        infoArray: [`The API requires user interaction.`, `You cannot be in non-vibration silent mode`]
-    }), {
+        infoArray: [
+            `The API requires user interaction.`,
+            `You cannot be in non-vibration silent mode`,
+        ],
+    }),
+    {
         test: () => navigator.vibrate,
-        specification: specificationType.STANDARD
-    }
+        specification: specificationType.STANDARD,
+    },
 );

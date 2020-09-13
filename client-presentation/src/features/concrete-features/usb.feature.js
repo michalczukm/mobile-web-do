@@ -1,9 +1,7 @@
-import {
-    Feature,
-    specificationType
-} from '../feature';
+import { Feature, specificationType } from '../feature';
 
-export default new Feature('usb',
+export default new Feature(
+    'usb',
     `
 // Talk to an Arduino USB board
 var device;
@@ -28,8 +26,9 @@ navigator.usb.requestDevice({ filters: [{ vendorId: 0x2341 }] })
     })
     .catch(error => { console.log(error); });
 `,
-    () => ({}), {
+    () => ({}),
+    {
         test: () => navigator.usb,
-        specification: specificationType.STANDARD
-    }
+        specification: specificationType.STANDARD,
+    },
 );

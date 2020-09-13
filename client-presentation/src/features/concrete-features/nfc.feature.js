@@ -14,8 +14,10 @@ navigator.nfc.push({
   });
 `;
 
-export default new Feature('nfc',
+export default new Feature(
+    'nfc',
     exampleUsage,
     () => ({}),
     { test: () => navigator.nfc, specification: specificationType.STANDARD },
-    { test: () => navigator.mozNfz, specification: specificationType.VENDOR });
+    { test: () => navigator.mozNfz, specification: specificationType.VENDOR },
+);

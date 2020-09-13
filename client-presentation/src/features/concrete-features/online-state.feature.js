@@ -1,11 +1,6 @@
 import Vue from 'vue';
-import {
-    Feature,
-    specificationType
-} from '../feature';
-import {
-    makeExampleId
-} from './features-utils';
+import { Feature, specificationType } from '../feature';
+import { makeExampleId } from './features-utils';
 
 const exampleUsage = `//add listeners for online state change
 window.addEventListener('online', () => {
@@ -16,7 +11,8 @@ window.addEventListener('offline', () => {
 });
 `;
 
-export default new Feature('online-state',
+export default new Feature(
+    'online-state',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('online-state'), {
@@ -24,17 +20,18 @@ export default new Feature('online-state',
                         <h4>{{ onlineState ? 'online' : 'offline' }}</h4>
                     </div>`,
             data: () => ({
-                onlineState: false
+                onlineState: false,
             }),
-            created: function () {
+            created: function() {
                 window.addEventListener('online', () => (this.onlineState = true));
                 window.addEventListener('offline', () => (this.onlineState = false));
                 this.onlineState = navigator.onLine;
-            }
+            },
         }),
-        infoArray: []
-    }), {
+        infoArray: [],
+    }),
+    {
         test: () => navigator.onLine,
-        specification: specificationType.STANDARD
-    }
+        specification: specificationType.STANDARD,
+    },
 );

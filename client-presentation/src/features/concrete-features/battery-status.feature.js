@@ -14,19 +14,21 @@ battery.addEventListener('chargingtimechange', listener)
 battery.addEventListener('dischargingtimechange', listener)
 battery.addEventListener('levelchange', listener)`;
 
-export default new Feature('battery-status',
+export default new Feature(
+    'battery-status',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('battery-status'), {
-            template:
-                `<div>Your device has {{level}}% battery</div>`,
-            data: () => ({level: 0}),
+            template: `<div>Your device has {{level}}% battery</div>`,
+            data: () => ({ level: 0 }),
             created: function() {
-                (navigator.getBattery() || Promise.resolve(navigator.battery)).then(battery => (this.level = Math.round(battery.level * 100)));
-            }
+                (navigator.getBattery() || Promise.resolve(navigator.battery)).then(
+                    battery => (this.level = Math.round(battery.level * 100)),
+                );
+            },
         }),
-        infoArray: []
+        infoArray: [],
     }),
-    {test: () => navigator.battery, specification: specificationType.OLD},
-    {test: () => navigator.getBattery, specification: specificationType.STANDARD}
+    { test: () => navigator.battery, specification: specificationType.OLD },
+    { test: () => navigator.getBattery, specification: specificationType.STANDARD },
 );

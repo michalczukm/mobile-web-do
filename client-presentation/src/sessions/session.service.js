@@ -1,17 +1,15 @@
 import featuresService from '../features/features.service';
 import configuration from '../configuration';
-import {
-    logger
-} from '../logging/logger';
-import {handleResponse} from '../utils/http-utils';
+import { logger } from '../logging/logger';
+import { handleResponse } from '../utils/http-utils';
 
-const getCurrentSessionId = () => (new URL(document.location)).searchParams.get('sessionId');
+const getCurrentSessionId = () => new URL(document.location).searchParams.get('sessionId');
 
 function sendClientSessionResults() {
     const sessionId = getCurrentSessionId();
     const featureResults = featuresService.get().map(feature => ({
         featureId: feature.id,
-        status: feature.status
+        status: feature.status,
     }));
 
     return fetch(`${configuration.apiUrl}/sessions/${sessionId}/results`, {
@@ -20,10 +18,10 @@ function sendClientSessionResults() {
         redirect: 'follow',
         credentials: 'include',
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(featureResults)
+        body: JSON.stringify(featureResults),
     })
         .then(handleResponse)
         .catch(reason => logger.error('Sending client results failed', reason));
@@ -34,7 +32,7 @@ function getSessionResults() {
 
     return fetch(`${configuration.apiUrl}/sessions/${sessionId}/results`, {
         mode: 'cors',
-        redirect: 'follow'
+        redirect: 'follow',
     })
         .then(handleResponse)
         .then(response => response.json())
@@ -42,13 +40,12 @@ function getSessionResults() {
 }
 
 function getFeatureResult(featureId) {
-    return getSessionResults()
-        .then(result => ({
-            clientsQuantity: result.clientsQuantity,
-            systems: result.systems,
-            browsers: result.browsers,
-            result: result.results.find(r => r.featureId === featureId)
-        }));
+    return getSessionResults().then(result => ({
+        clientsQuantity: result.clientsQuantity,
+        systems: result.systems,
+        browsers: result.browsers,
+        result: result.results.find(r => r.featureId === featureId),
+    }));
 }
 
 function getCurrentSession() {
@@ -56,7 +53,7 @@ function getCurrentSession() {
 
     return fetch(`${configuration.apiUrl}/sessions/${sessionId}`, {
         mode: 'cors',
-        redirect: 'follow'
+        redirect: 'follow',
     })
         .then(handleResponse)
         .then(response => response.json());
@@ -67,5 +64,5 @@ export default {
     sendClientSessionResults,
     getSessionResults,
     getCurrentSession,
-    getFeatureResult
+    getFeatureResult,
 };

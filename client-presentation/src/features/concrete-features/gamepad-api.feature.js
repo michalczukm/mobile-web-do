@@ -1,11 +1,6 @@
 import Vue from 'vue';
-import {
-    Feature,
-    specificationType
-} from '../feature';
-import {
-    makeExampleId
-} from './features-utils';
+import { Feature, specificationType } from '../feature';
+import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// get connected gamepads 
 var gamepads = navigator.getGamepads();
@@ -19,7 +14,8 @@ window.addEventListener("gamepadconnected", (event) => {
 });
 `;
 
-export default new Feature('gamepad-api',
+export default new Feature(
+    'gamepad-api',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('gamepad-api'), {
@@ -28,15 +24,16 @@ export default new Feature('gamepad-api',
                         <h5>{{ gamepads }}</h5>
                     </div>`,
             data: () => ({
-                gamepads: []
+                gamepads: [],
             }),
-            created: function () {
+            created: function() {
                 this.gamepads = navigator.getGamepads();
-            }
+            },
         }),
-        infoArray: ['It would be nice to have a gamepad now']
-    }), {
+        infoArray: ['It would be nice to have a gamepad now'],
+    }),
+    {
         test: () => navigator.getGamepads,
-        specification: specificationType.STANDARD
-    }
+        specification: specificationType.STANDARD,
+    },
 );

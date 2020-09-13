@@ -1,16 +1,18 @@
-import {
-    supportStatus
-} from './support-status';
-import {
-    logger
-} from '../logging';
+import { supportStatus } from './support-status';
+import { logger } from '../logging';
 
-const statusFor = (testsResult) => {
+const statusFor = testsResult => {
     if (testsResult.isFailure) {
         return supportStatus.NO_SUPPORT;
-    } else if (testsResult.isSuccess && testsResult.passed.some(test => test.specification === specificationType.STANDARD)) {
+    } else if (
+        testsResult.isSuccess &&
+        testsResult.passed.some(test => test.specification === specificationType.STANDARD)
+    ) {
         return supportStatus.STANDARD;
-    } else if (testsResult.isSuccess && testsResult.passed.some(test => test.specification === specificationType.VENDOR)) {
+    } else if (
+        testsResult.isSuccess &&
+        testsResult.passed.some(test => test.specification === specificationType.VENDOR)
+    ) {
         return supportStatus.VENDOR_SPECIFIC;
     } else {
         logger.error(`Unhandled test result state for results: ${JSON.stringify(testsResult)}`);
@@ -21,7 +23,7 @@ const statusFor = (testsResult) => {
 export const specificationType = {
     OLD: 'OLD',
     STANDARD: 'STANDARD',
-    VENDOR: 'VENDOR'
+    VENDOR: 'VENDOR',
 };
 
 export class Feature {
@@ -36,7 +38,9 @@ export class Feature {
             try {
                 return runInClientFn();
             } catch (ex) {
-                logger.error(`Failed with running 'runInClientFn' for '${this.id}' feature. Error: ${ex}`);
+                logger.error(
+                    `Failed with running 'runInClientFn' for '${this.id}' feature. Error: ${ex}`,
+                );
                 return {};
             }
         };
@@ -63,9 +67,7 @@ export class TestResult {
 
         tests.forEach(test => {
             try {
-                test.test()
-                    ? passed.push(test)
-                    : failed.push(test);
+                test.test() ? passed.push(test) : failed.push(test);
             } catch (ex) {
                 failed.push(test);
             }

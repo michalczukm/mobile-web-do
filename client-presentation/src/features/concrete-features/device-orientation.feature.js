@@ -8,7 +8,8 @@ window.addEventListener('deviceorientation', (orientation) => {
 });
 `;
 
-export default new Feature('device-orientation',
+export default new Feature(
+    'device-orientation',
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('device-orientation'), {
@@ -20,21 +21,27 @@ export default new Feature('device-orientation',
                         <li>gamma: {{orientation.gamma | round}}</li>
                     </ul>
                 </div>`,
-            data: () => ({orientation: {
-                alpha: 0,
-                beta: 0,
-                gamma: 0
-            }}),
+            data: () => ({
+                orientation: {
+                    alpha: 0,
+                    beta: 0,
+                    gamma: 0,
+                },
+            }),
             created: function() {
-                window.addEventListener('deviceorientation', (orientation) => (this.orientation = orientation), false);
+                window.addEventListener(
+                    'deviceorientation',
+                    orientation => (this.orientation = orientation),
+                    false,
+                );
             },
             filters: {
-                round: (value) => Math.round(value)
-            }
+                round: value => Math.round(value),
+            },
         }),
-        infoArray: ['This example uses `window.DeviceOrientationEvent`']
+        infoArray: ['This example uses `window.DeviceOrientationEvent`'],
     }),
-    {test: () => window.DeviceOrientationEvent, specification: specificationType.STANDARD},
-    {test: () => window.AbsoluteOrientationSensor, specification: specificationType.STANDARD},
-    {test: () => window.RelativeOrientationSensor, specification: specificationType.STANDARD}
+    { test: () => window.DeviceOrientationEvent, specification: specificationType.STANDARD },
+    { test: () => window.AbsoluteOrientationSensor, specification: specificationType.STANDARD },
+    { test: () => window.RelativeOrientationSensor, specification: specificationType.STANDARD },
 );
