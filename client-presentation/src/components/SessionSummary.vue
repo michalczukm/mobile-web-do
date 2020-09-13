@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import FeaturesSummary from './FeaturesSummary';
+import FeaturesSummary from './FeaturesSummary.vue';
 
 export default {
     name: 'session-summary',
