@@ -19,7 +19,8 @@ export default new Feature(
     exampleUsage,
     () => ({
         component: Vue.component(makeExampleId('gamepad-api'), {
-            template: `<div>
+            template: `
+                    <div>
                         <h4>Connected Gamepads:</h4>
                         <h5>
                             {{ connectedGamepads }}
