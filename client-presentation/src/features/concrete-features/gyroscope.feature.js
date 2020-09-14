@@ -5,11 +5,11 @@ import { axisMotion } from '../../view/filters';
 import { makeExampleId } from './features-utils';
 
 const exampleUsage = `// based on new GenericSensorAPI
-const gyroscope = new Gyroscope();
-gyroscope.addEventListener('reading', () => {
+const sensor = new Gyroscope();
+sensor.addEventListener('reading', () => {
     [x, y, z] = gyroscope;
 }));
-gyroscope.start();
+sensor.start();
 `;
 
 export default new Feature(
@@ -28,16 +28,16 @@ export default new Feature(
             }),
             created: function() {
                 // eslint-disable-next-line no-undef
-                const gyroscope = new Gyroscope();
+                const sensor = new Gyroscope();
 
-                this.eventsSubscription = createEventsSubscription(gyroscope);
+                this.eventsSubscription = createEventsSubscription(sensor);
 
                 this.eventsSubscription.subscribe('reading', event => {
                     this.event = event;
-                    this.result = gyroscope;
+                    this.result = sensor;
                 });
 
-                gyroscope.start();
+                sensor.start();
             },
             beforeDestroy: function() {
                 this.eventsSubscription.unsubscribeAll();

@@ -5,19 +5,19 @@ import { axisMotion } from '../../view/filters';
 import { makeExampleId } from './features-utils';
 
 export default new Feature(
-    'accelerometer',
+    'magnetometer',
     `// based on new GenericSensorAPI
-const sensor = new Accelerometer();
-accelerometer.addEventListener('reading', () => {
+const sensor = new Magnetometer({ frequency: 60 });
+sensor.addEventListener('reading', () => {
     [x, y, z] = sensor;
 }));
-sensor.start();
+accelerometer.start();
 `,
     () => ({
-        component: Vue.component(makeExampleId('accelerometer'), {
+        component: Vue.component(makeExampleId('magnetometer'), {
             template: `<div>
                         <p>event: {{JSON.stringify(event, null, 2)}}</p>
-                        <p>acceleration: <b>{{result ? axisMotion(result) :  'loading' }}</b></p>
+                        <p>Magnetic field: <b>{{result ? axisMotion(result) :  'loading' }}</b></p>
                     </div>`,
             data: () => ({
                 result: {},
@@ -26,7 +26,7 @@ sensor.start();
             }),
             created: function() {
                 // eslint-disable-next-line no-undef
-                const sensor = new Accelerometer();
+                const sensor = new Magnetometer();
 
                 this.eventsSubscription = createEventsSubscription(sensor);
 
@@ -44,10 +44,10 @@ sensor.start();
                 axisMotion,
             },
         }),
-        infoArray: [`This example uses Accelerometer`],
+        infoArray: [`This example uses Magnetometer`],
     }),
     {
-        test: () => window.Accelerometer,
+        test: () => window.Magnetometer,
         specification: specificationType.STANDARD,
     },
 );

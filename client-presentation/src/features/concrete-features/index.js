@@ -11,6 +11,7 @@ import geolocation from './geolocation.feature';
 import gyroscope from './gyroscope.feature';
 import homeScreen from './home-screen.feature';
 import networkTypeSpeed from './network-type-speed.feature';
+import magnetometer from './magnetometr.feature';
 import nfc from './nfc.feature';
 import notificationsApi from './notifications-api.feature';
 import onlineState from './online-state.feature';
@@ -38,6 +39,7 @@ export default [
     gyroscope,
     homeScreen,
     networkTypeSpeed,
+    magnetometer,
     nfc,
     notificationsApi,
     onlineState,
