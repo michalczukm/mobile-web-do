@@ -31,7 +31,7 @@ describe('browser info: add new client', function(): void {
             payload: buildCorrectPayload()
         });
 
-        expect(actual.statusCode).to.equal(200);
+        expect(actual.statusCode).to.equal(204);
     });
 
     it('should return client 404 error for non existing session', async () => {
@@ -109,7 +109,7 @@ describe('browser info: add new client', function(): void {
 
     it('should not set cookie `client-id` if it exists in request', async () => {
         const fixedClientIdCookie = `client-id=ImExNDQ5ZGY3LTIyNDQtNGRmMy1hYzQxLThhZTFiYzhmYmNiMCI=`;
-        const expected = `${fixedClientIdCookie}; HttpOnly`;
+        const expected = `${fixedClientIdCookie}; Secure; HttpOnly; SameSite=None`;
 
         const actual = await server.inject({
             method: 'POST',
@@ -120,7 +120,7 @@ describe('browser info: add new client', function(): void {
             }
         });
 
-        expect(actual.statusCode).to.equal(200);
+        expect(actual.statusCode).to.equal(204);
         // tslint:disable-next-line:no-unused-expression
         expect(actual.headers['set-cookie'][0]).equal(expected);
     });
