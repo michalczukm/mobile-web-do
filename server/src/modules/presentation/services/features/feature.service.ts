@@ -27,7 +27,8 @@ const FEATURES = [
         { id: 'usb', name: 'Web USB' },
         { id: 'nfc', name: 'NFC' },
         { id: 'camera', name: 'Camera' },
-        { id: 'gamepad-api', name: 'Gamepad API' }
+        { id: 'gamepad-api', name: 'Gamepad API' },
+        { id: 'wake-lock', name: 'Wake Lock' },
     ];
 
 function getPresentationSet(): FeatureDto[] {

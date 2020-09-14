@@ -11,7 +11,7 @@ const sensor = new Magnetometer({ frequency: 60 });
 sensor.addEventListener('reading', () => {
     [x, y, z] = sensor;
 }));
-accelerometer.start();
+sensor.start();
 `,
     () => ({
         component: Vue.component(makeExampleId('magnetometer'), {

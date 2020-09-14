@@ -106,7 +106,7 @@ export default {
 
                 logger.info('WS message:', message);
             });
-            socket.on('finish', () => console.log('=== finish'));
+            socket.on('finish', () => logger.info('WS finished'));
             socket.open();
 
             browserInfoService

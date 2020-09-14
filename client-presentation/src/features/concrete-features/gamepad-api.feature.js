@@ -30,7 +30,7 @@ export default new Feature(
                             <p>Axes: {{ showAxes(gamepadInfo.axes) }}</p>
 
                             <h5>Buttons</h5>
-                            <table>
+                            <table style="display: table">
                                 <thead>
                                     <tr>
                                         <th>Button</th>
@@ -69,7 +69,7 @@ export default new Feature(
                     this.gamepadInfo = gamepads.length >= 1 ? gamepads[0] : null;
                 };
 
-                this.loopIntervalHandler = setInterval(loop, 300);
+                this.loopIntervalHandler = setInterval(loop, 100);
             },
             methods: {
                 showAxes: function(axes) {
@@ -78,7 +78,6 @@ export default new Feature(
             },
             beforeDestroy: function() {
                 clearInterval(this.loopIntervalHandler);
-                console.log('===gamepad api destroyed');
             },
         }),
         infoArray: ['If you already connected gamepad - please press any button'],

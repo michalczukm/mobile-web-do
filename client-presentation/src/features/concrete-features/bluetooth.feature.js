@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
+import { logger } from '../../logging';
 import { makeExampleId } from './features-utils';
 
 const exampleUsage = `
@@ -45,7 +46,7 @@ export default new Feature(
                             this.connectedDevices.push(device);
                         })
                         .catch(error => {
-                            console.log(':( bluetooth API example failed', error);
+                            logger.error('Bluetooth API example failed', error);
                         });
                 },
             },
