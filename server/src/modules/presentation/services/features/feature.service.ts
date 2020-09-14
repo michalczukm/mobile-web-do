@@ -29,6 +29,7 @@ const FEATURES = [
         { id: 'camera', name: 'Camera' },
         { id: 'gamepad-api', name: 'Gamepad API' },
         { id: 'wake-lock', name: 'Wake Lock' },
+        { id: 'idle-detector', name: 'Idle Detector' },
     ];
 
 function getPresentationSet(): FeatureDto[] {

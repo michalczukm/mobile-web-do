@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { Feature, specificationType } from '../feature';
 import { createEventsSubscription } from '../../utils';
-import { axisMotion } from '../../view/filters';
 import { logger } from '../../logging';
 import { makeExampleId } from './features-utils';
 
@@ -31,7 +30,18 @@ export default new Feature(
                             <tbody>
                                 <tr v-for="({time, type}, index) in events" v-bind:key="index">
                                     <td>{{ time }}</td>
-                                    <td>{{ type }}</td>
+                                    <td>
+                                        <template v-if="type === 'locked'">
+                                            <i class="fa fa-lock"></i>
+                                        </template>
+                                        <template v-if="type === 'released'">
+                                            <i class="fa fa-unlock"></i>
+                                        </template>
+                                        <template v-if="type === 'error'">
+                                            <i class="fa fa-exclamation-circle" style="color: red"></i>
+                                        </template>
+                                        {{ type }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -62,7 +72,7 @@ export default new Feature(
                         recordEvent('locked');
                         logger.info('Screen Wake Lock is active');
                     } catch (error) {
-                        recordEvent('failed');
+                        recordEvent('error');
                         logger.error('Screen Wake Lock failed', error);
                     }
                 };
@@ -86,11 +96,7 @@ export default new Feature(
                 this.wakeLock.release();
                 this.wakeLock = null;
             },
-            methods: {
-                axisMotion,
-            },
         }),
-        infoArray: [],
     }),
     {
         test: () => navigator.wakeLock,
