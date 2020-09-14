@@ -1,7 +1,4 @@
-FROM node:8.11.4-jessie
-
-# update npm to newer - for `ci` command
-RUN npm i -g npm@6.2.0
+FROM node:12.18.3-buster
 
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies:
