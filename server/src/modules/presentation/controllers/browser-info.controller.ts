@@ -24,14 +24,15 @@ async function create(request: Hapi.Request, responseToolkit: Hapi.ResponseToolk
             clientIdentifiersRepository.add(clientId),
             browserInfoRepository.add(sessionId, clientId, browserInfo)
         ]);
-        responseToolkit.state('client-id', clientId);
+
+        return responseToolkit.response().state('client-id', clientId);
     };
 
     const exists = await sessionRepository.exists(sessionId);
     if (!exists) {
         throw Boom.notFound(`Session ${sessionId} not found`);
     } else if (!await clientIdentifiersRepository.existInSession(clientId, sessionId)) {
-        await addBrowserInfo();
+        return await addBrowserInfo();
     }
 
     return {};

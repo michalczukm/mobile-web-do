@@ -34,12 +34,12 @@ const setupConnection = (): Hapi.Server => {
 
   server.state('client-id', {
     ttl: null,
-    isSecure: false,
+    isSecure: true,
     isHttpOnly: true,
     encoding: 'base64json',
     clearInvalid: false,
     strictHeader: true,
-    isSameSite: false,
+    isSameSite: 'None',
   });
 
   return server;
