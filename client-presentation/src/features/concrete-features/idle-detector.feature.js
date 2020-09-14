@@ -28,8 +28,8 @@ export default new Feature(
         component: Vue.component(makeExampleId('idle-detector'), {
             template: `
                     <div>
+                        <p v-if="!!permissionState"><b>Permission state:</b> {{ permissionState }}</p>
                         <h4>Idle detector records</h4>
-                        <p v-if="!!permissionState"><b>Permission state:</b>{{ permissionState }}</p>
                         <table style="padding: 5%; display: table">
                             <thead>
                                 <tr>
@@ -114,7 +114,10 @@ export default new Feature(
                 this.abortController.abort();
             },
         }),
-        infoArray: [`Please grant permission to see the result`],
+        infoArray: [
+            'Please grant permission to see the result',
+            'New implementation is guarded by own permissions, but previous is hidden behind `notification`',
+        ],
     }),
     {
         test: () => window.IdleDetector,

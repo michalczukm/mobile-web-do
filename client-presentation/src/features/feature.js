@@ -11,7 +11,11 @@ const statusFor = testsResult => {
         return supportStatus.STANDARD;
     } else if (
         testsResult.isSuccess &&
-        testsResult.passed.some(test => test.specification === specificationType.VENDOR)
+        testsResult.passed.some(
+            test =>
+                test.specification === specificationType.VENDOR ||
+                test.specification === specificationType.OLD,
+        )
     ) {
         return supportStatus.VENDOR_SPECIFIC;
     } else {

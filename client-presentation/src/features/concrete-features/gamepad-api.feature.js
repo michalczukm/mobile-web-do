@@ -91,11 +91,11 @@ export default new Feature(
         specification: specificationType.VENDOR,
     },
     {
-        test: () => window.ongamepadconnected,
+        test: () => 'ongamepadconnected' in window,
         specification: specificationType.STANDARD,
     },
     {
-        test: () => window.ongamepaddisconnected,
+        test: () => 'ongamepaddisconnected' in window,
         specification: specificationType.STANDARD,
     },
 );

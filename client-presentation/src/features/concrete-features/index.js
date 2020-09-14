@@ -23,6 +23,7 @@ import share from './share.feature';
 import speechRecognition from './speech-recognition.feature';
 import storage from './storage.feature';
 import storageQuota from './storage-quota.feature';
+import proximity from './proximity.feature';
 import wakeLock from './wake-lock.feature';
 import usb from './usb.feature';
 import vibration from './vibration.feature';
@@ -53,6 +54,7 @@ export default [
     storage,
     storageQuota,
     usb,
+    proximity,
     wakeLock,
     vibration,
     relativeOrientationSensor,
