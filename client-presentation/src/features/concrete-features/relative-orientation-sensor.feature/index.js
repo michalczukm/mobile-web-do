@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Quaternion from 'quaternion';
-import { Feature, specificationType } from '../feature';
-import { createEventsSubscription } from '../../utils';
-import { axisMotion } from '../../view/filters';
-import { makeExampleId } from './features-utils';
+import { Feature, specificationType } from '../../feature';
+import { createEventsSubscription } from '../../../utils';
+import { axisMotion } from '../../../view/filters';
+import { makeExampleId } from '../features-utils';
 
-import RotateVisualization from './relative-orientation-sensor/RotateVisualization.vue';
+import RotateVisualization from './RotateVisualization.vue';
 
 export default new Feature(
     'relative-orientation-sensor',
