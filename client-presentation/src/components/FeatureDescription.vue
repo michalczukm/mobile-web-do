@@ -1,33 +1,58 @@
 <template>
     <div>
         <h1>{{ feature.id }}</h1>
-        <loading v-if="isLoading" />
+        <template v-if="isLoading">
+            <div class="placeholder"></div>
+            <loading />
+        </template>
         <template v-else>
             <h2>
                 <b>{{ featureResult.clientsQuantity }}</b
                 >&nbsp;<i class="fa primary-color fa-user-o"></i> attented!
             </h2>
-            <div key="foo" class="charts-container">
-                <div class="chart">
-                    <h3>Operating systems</h3>
-                    <doughnut-chart key="operating-systems" v-bind:data="operatingSystemsStats" />
-                </div>
+            <div class="container">
+                <div class="row">
+                    <div class="column column-70">
+                        <feature-across-browsers
+                            v-bind:featureStatuses="featureStatuses"
+                        ></feature-across-browsers>
+                    </div>
 
-                <div class="chart">
-                    <h3>Browsers</h3>
-                    <doughnut-chart v-bind:data="browsersStats" />
-                </div>
-                <div class="chart">
-                    <h3>Your results</h3>
-                    <doughnut-chart v-bind:data="statusesStats" />
+                    <div class="column column-30">
+                        <button
+                            v-on:click="toggleExtraChartsVisibility"
+                            class="button button-outline"
+                        >
+                            {{ extraChartsVisibility ? 'Hide other stats' : 'Show other stats' }}
+                        </button>
+                        <div key="feature-description-charts" class="charts-container">
+                            <template v-if="extraChartsVisibility">
+                                <div class="chart">
+                                    <h3>Operating systems</h3>
+                                    <doughnut-chart
+                                        key="operating-systems"
+                                        v-bind:data="operatingSystemsStats"
+                                    />
+                                </div>
+
+                                <div class="chart">
+                                    <h3>Browsers</h3>
+                                    <doughnut-chart v-bind:data="browsersStats" />
+                                </div>
+                            </template>
+                            <div class="chart">
+                                <h3>Your results</h3>
+                                <doughnut-chart v-bind:data="statusesStats" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <hr />
+
+            <h2>Usage</h2>
+            <pre v-html="exampleUsage"></pre>
         </template>
-
-        <hr />
-
-        <h2>Usage</h2>
-        <pre v-html="exampleUsage"></pre>
     </div>
 </template>
 
@@ -36,7 +61,8 @@ import Prism from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
-import Loading from './Loading';
+import Loading from './Loading.vue';
+import FeatureAcrossBrowsers from './FeatureAcrossBrowsers.vue';
 import sessionService from '../sessions';
 import DoughnutChart from './reports/DoughnutChart';
 import chartDataService from './reports/chart-data.service';
@@ -47,6 +73,7 @@ export default {
     components: {
         Loading,
         DoughnutChart,
+        FeatureAcrossBrowsers,
     },
     data: function() {
         return {
@@ -55,6 +82,7 @@ export default {
             operatingSystemsStats: [],
             browsersStats: [],
             statusesStats: [],
+            extraChartsVisibility: false,
         };
     },
     props: {
@@ -75,6 +103,9 @@ export default {
         mapStatusesToChartData: function(statuses) {
             return chartDataService.mapStatusesToChartData(statuses);
         },
+        toggleExtraChartsVisibility: function() {
+            this.extraChartsVisibility = !this.extraChartsVisibility;
+        },
     },
     watch: {
         feature: {
@@ -92,8 +123,9 @@ export default {
                             this.featureResult.systems,
                         );
                         this.statusesStats = this.mapStatusesToChartData(
-                            this.featureResult.result.statuses,
+                            this.featureResult.result.statuses.map(stat => stat.status),
                         );
+                        this.featureStatuses = this.featureResult.result.statuses;
                     })
                     .catch(reason =>
                         logger.error(`Cannot load feature '${this.feature.id}' results`, reason),
@@ -111,5 +143,8 @@ pre {
     padding-left: 0.5em;
     font-size: 1.6em;
     margin-bottom: 3em;
+}
+.placeholder {
+    height: 50vh;
 }
 </style>

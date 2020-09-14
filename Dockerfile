@@ -39,8 +39,8 @@ ENV AUTH_WHITELISTED_DOMAIN=$AUTH_WHITELISTED_DOMAIN
 ENV PRESENTATION_HOST_URL=$PRESENTATION_HOST_URL
 ENV API_HOST_URL=$API_HOST_URL
 
-RUN (cd client-presentation && npm run build && cp -r dist/ ../server/src/client-dist/presentation/)
 RUN (cd client-admin && npm run build -- --base-href /admin/ && cp -r dist/ ../server/src/client-dist/admin/)
+RUN (cd client-presentation && npm run build && cp -r dist/ ../server/src/client-dist/presentation/)
 
 WORKDIR server
 

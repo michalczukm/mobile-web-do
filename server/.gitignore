@@ -68,3 +68,5 @@ fabric.properties
 dist
 .env
 log
+
+.vscode

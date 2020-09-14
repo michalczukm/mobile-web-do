@@ -37,7 +37,9 @@
                     class="chart"
                 >
                     <h3>{{ result.featureId }}</h3>
-                    <doughnut-chart v-bind:data="mapStatusesToChartData(result.statuses)" />
+                    <doughnut-chart
+                        v-bind:data="mapStatusesToChartData(getStatusesFromResult(result))"
+                    />
                 </div>
             </div>
         </template>
@@ -69,6 +71,9 @@ export default {
         },
         mapStatusesToChartData: function(statuses) {
             return chartDataService.mapStatusesToChartData(statuses);
+        },
+        getStatusesFromResult: function(result) {
+            return result.statuses.map(stat => stat.status);
         },
     },
     mounted: function() {

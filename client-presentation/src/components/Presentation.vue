@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import Feature from './Feature';
-import FeatureDescription from './FeatureDescription';
+import Feature from './Feature.vue';
+import FeatureDescription from './FeatureDescription.vue';
 
 export default {
     name: 'presentation',
